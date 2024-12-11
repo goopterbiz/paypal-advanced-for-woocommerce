@@ -105,29 +105,29 @@ var {registerExpressPaymentMethod, registerPaymentMethod} = wc.wcBlocksRegistry;
                         u = n(3),
                         a = n(1);
 
-                const l = Object(u.getSetting)("angelleye_ppcp_cc_data", {});
+                const l = Object(u.getSetting)("goopter_ppcp_cc_data", {});
                 const iconsElements = l.icons.map(icon => (
-                            createElement("img", {src: icon, style: {float: "right", marginRight: "10px"}})
+                            createElement("img", {key: icon, src: icon, style: {float: "right", marginRight: "10px"}})
                             ));
                 const p = () => Object(a.decodeEntities)(l.description || "");
-                const ppcp_settings = angelleye_ppcp_manager_block.settins;
-                const {is_order_confirm_page, is_paylater_enable_incart_page, page} = angelleye_ppcp_manager_block;
+                const ppcp_settings = goopter_ppcp_manager_block.settins;
+                const {is_order_confirm_page, is_paylater_enable_incart_page, page} = goopter_ppcp_manager_block;
                 const {useEffect} = window.wp.element;
 
                 const Content_PPCP_CC = (props) => {
                     const {eventRegistration, emitResponse, onSubmit, billing, shippingData} = props;
                     const {onPaymentSetup} = eventRegistration;
                     useEffect(() => {
-                        jQuery(document.body).trigger('trigger_angelleye_ppcp_cc');
+                        jQuery(document.body).trigger('trigger_goopter_ppcp_cc');
                         jQuery(document.body).on('ppcp_cc_checkout_updated', function () {
                             let address = {
                                 'billing': billing.billingAddress,
                                 'shipping': shippingData.shippingAddress
                             };
-                            angelleyeOrder.ppcp_address = [];
-                            angelleyeOrder.ppcp_address = address;
-                            jQuery('#wc-angelleye_ppcp_cc-form').unblock();
-                            angelleyeOrder.renderPaymentButtons();
+                            goopterOrder.ppcp_address = [];
+                            goopterOrder.ppcp_address = address;
+                            jQuery('#wc-goopter_ppcp_cc-form').unblock();
+                            goopterOrder.renderPaymentButtons();
                         });
                         const unsubscribe = onPaymentSetup(async () => {
                             wp.data.dispatch(wc.wcBlocksData.CHECKOUT_STORE_KEY).__internalSetIdle();
@@ -138,15 +138,15 @@ var {registerExpressPaymentMethod, registerPaymentMethod} = wc.wcBlocksRegistry;
                     }, [onPaymentSetup]);
                     return createElement(
                             "fieldset",
-                            {id: "wc-angelleye_ppcp_cc-form", className: "wc-credit-card-form wc-payment-form"},
-                            createElement("div", {id: "angelleye_ppcp_cc-card-number"}),
-                            createElement("div", {id: "angelleye_ppcp_cc-card-expiry"}),
-                            createElement("div", {id: "angelleye_ppcp_cc-card-cvc"})
+                            {key: "wc-goopter_ppcp_cc-form", id: "wc-goopter_ppcp_cc-form", className: "wc-credit-card-form wc-payment-form"},
+                            createElement("div", {key: "goopter_ppcp_cc-card-number", id: "goopter_ppcp_cc-card-number"}),
+                            createElement("div", {key: "goopter_ppcp_cc-card-expiry", id: "goopter_ppcp_cc-card-expiry"}),
+                            createElement("div", {key: "goopter_ppcp_cc-card-cvc", id: "goopter_ppcp_cc-card-cvc"})
                             );
                 };
 
                 const s = {
-                    name: "angelleye_ppcp_cc",
+                    name: "goopter_ppcp_cc",
                     label: createElement(
                             "span",
                             {style: {width: "100%"}},
@@ -154,7 +154,7 @@ var {registerExpressPaymentMethod, registerPaymentMethod} = wc.wcBlocksRegistry;
                             iconsElements
                             ),
                     icons: ["https://www.paypalobjects.com/webstatic/mktg/Logo/pp-logo-100px.png"],
-                    placeOrderButtonLabel: Object(i.__)(angelleye_ppcp_cc_manager_block.placeOrderButtonLabel),
+                    placeOrderButtonLabel: Object(i.__)(goopter_ppcp_cc_manager_block.placeOrderButtonLabel),
                     content: createElement(Content_PPCP_CC, null),
                     edit: Object(r.createElement)(p, null),
                     canMakePayment: () => Promise.resolve(true),
@@ -171,7 +171,7 @@ var {registerExpressPaymentMethod, registerPaymentMethod} = wc.wcBlocksRegistry;
                     const shouldShowDiv = is_paylater_enable_incart_page === 'yes';
                     return shouldShowDiv && (
                             wp.element.createElement(ExperimentalOrderMeta, null,
-                                    Object(r.createElement)("div", {className: "angelleye_ppcp_message_cart"})
+                                    Object(r.createElement)("div", {className: "goopter_ppcp_message_cart"})
                                     )
                             );
                 };

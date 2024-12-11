@@ -113,5 +113,4 @@ if ( ! defined( 'ABSPATH' ) ) {
 			</div>
 		<?php endif; ?>
 	</td>
-        <td class="ppcp_shipment_tracking" width="5%" style="display: none;"></td>
 </tr>

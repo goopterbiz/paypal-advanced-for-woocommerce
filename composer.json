@@ -1,12 +1,12 @@
 {
-    "name": "angelleye/paypal-woocommerce",
+    "name": "goopter/paypal-advanced-for-woocommerce",
     "description": "PayPal payment gateway extension for WooCommerce.",
     "type": "wordpress-plugin",
     "license": "GPL-3.0",
     "authors": [
         {
-            "name": "Angell EYE",
-            "email": "service@angelleye.com"
+            "name": "Goopter",
+            "email": "info@goopter.com"
         }
     ],
     "require": {

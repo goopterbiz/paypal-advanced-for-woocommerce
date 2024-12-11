@@ -1,17 +1,17 @@
-.angelleye_cart_button a.paypal_checkout_button, a.paypal_checkout_button {
+.goopter_cart_button a.paypal_checkout_button, a.paypal_checkout_button {
     clear: both;
     float: left;
     border: none;
     position: relative;
 }
-.angelleye_cart_button a.paypal_checkout_button.img, a.paypal_checkout_button.img {
+.goopter_cart_button a.paypal_checkout_button.img, a.paypal_checkout_button.img {
     border: none; padding: 0;
     box-shadow: none;
 }
 p.woocommerce-SavedPaymentMethods-saveNew {
     margin-bottom: 8px;
 }
-.angelleye_ec_save_to_accoount_box {
+.goopter_ec_save_to_accoount_box {
     clear: both;
     position: relative;
 }
@@ -33,10 +33,10 @@ p.woocommerce-SavedPaymentMethods-saveNew {
 .ec_checkout_page_button_type_pc {
     width: 148px; height: 26px; border: none; padding: 0; margin: 0;
 }
-.angelleyeOverlay {
+.goopterOverlay {
     display:none;z-index: 1000; border: none; margin: 0px; padding: 0px; width: 100%; height: 100%; top: 0px; left: 0px; opacity: 0.6; cursor: default; position: absolute;
 }
-form.woocommerce-cart-form div.angelleye_cart_button a.paypal_checkout_button img, a.paypal_checkout_button image {
+form.woocommerce-cart-form div.goopter_cart_button a.paypal_checkout_button img, a.paypal_checkout_button image {
     max-width: 100%;
     box-shadow:none;
 }
@@ -50,14 +50,14 @@ div.wc-proceed-to-checkout a.paypal_checkout_button img, a.paypal_checkout_butto
 a.paypal_checkout_button {
     box-shadow: none;
 }
-form.woocommerce-cart-form div.angelleye_cart_button a.paypal_checkout_button img.ec_checkout_page_button_type_paypalimage, a.paypal_checkout_button img.ec_checkout_page_button_type_paypalimage {
+form.woocommerce-cart-form div.goopter_cart_button a.paypal_checkout_button img.ec_checkout_page_button_type_paypalimage, a.paypal_checkout_button img.ec_checkout_page_button_type_paypalimage {
     border: medium none;
 }
 a.paypal_checkout_button img.ec_checkout_page_button_type_pc {
     border: medium none;
     padding: 0;
 }
-.wc-proceed-to-checkout.angelleye_cart_button {
+.wc-proceed-to-checkout.goopter_cart_button {
     margin-bottom: 5px;
     margin-top: 5px;
 }
@@ -65,10 +65,10 @@ div.wc-proceed-to-checkout a.paypal_checkout_button {
     border: medium none;
 }
 
-.angelleye_smart_button_top, .angelleye_smart_button_bottom {
+.goopter_smart_button_top, .goopter_smart_button_bottom {
     max-width: 500px;
 }
-.angelleye-proceed-to-checkout-button-separator {
+.goopter-proceed-to-checkout-button-separator {
     display:block;
     opacity: .8;
     margin: 0 0 1em;
@@ -81,11 +81,11 @@ a.paypal_checkout_button_bottom {
     float: none;
     text-align: center;
 }
-.wc-proceed-to-checkout.angelleye_cart_button {
+.wc-proceed-to-checkout.goopter_cart_button {
     text-align: left;
 }
 @media screen and (max-width: 400px) {
-    .angelleye_smart_button_top, .angelleye_smart_button_bottom {
+    .goopter_smart_button_top, .goopter_smart_button_bottom {
         width: 100%;
     }
 }

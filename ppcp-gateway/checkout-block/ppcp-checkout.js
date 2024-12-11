@@ -101,10 +101,11 @@ var {addAction} = wp.hooks;
                         i = n(2),
                         u = n(3),
                         a = n(1);
-                const l = Object(u.getSetting)("angelleye_ppcp_data", {});
+                const l = Object(u.getSetting)("goopter_ppcp_data", {});
                 const p = () => Object(a.decodeEntities)(l.description || "");
                 const {useEffect} = window.wp.element;
 
+                // checkout 
                 const Content_PPCP_Smart_Button = (props) => {
                     const {billing, shippingData} = props;
                     jQuery(document.body).on(
@@ -114,22 +115,50 @@ var {addAction} = wp.hooks;
                                     billing: billing.billingAddress,
                                     shipping: shippingData.shippingAddress,
                                 };
-                                angelleyeOrder.ppcp_address = [];
-                                angelleyeOrder.ppcp_address = address;
-                                jQuery("#angelleye_ppcp_checkout").unblock();
-                                angelleyeOrder.renderPaymentButtons();
+                                goopterOrder.ppcp_address = [];
+                                goopterOrder.ppcp_address = address;
+                                jQuery("#goopter_ppcp_checkout").unblock();
+                                goopterOrder.renderPaymentButtons();
                             }
                     );
-                    return createElement("div", {id: "angelleye_ppcp_checkout"});
+                    let renderComponents = [createElement("div", {key: "default", id: "goopter_ppcp_checkout"})];
+                    if (goopterOrder.isApplePayEnabled()) {
+                        jQuery.each(goopter_ppcp_manager.apple_pay_btn_selector, function (key) {
+                            renderComponents.push(createElement("div", {key, id: key}));
+                        });
+                    }
+                    if (goopterOrder.isGooglePayEnabled()) {
+                        jQuery.each(goopter_ppcp_manager.google_pay_btn_selector, function (key) {
+                            renderComponents.push(createElement("div", {key, id: key}));
+                        });
+                    }
+                    return renderComponents;
                 };
 
+                // cart
                 const Content_PPCP_Smart_Button_Express = () => {
                     useEffect(() => {
-                        angelleyeOrder.renderPaymentButtons();
+                        goopterOrder.renderPaymentButtons();
                     }, []);
-                    return createElement("div", {id: "angelleye_ppcp_checkout_top"});
+                    
+                    let renderComponents = [createElement("div", {key: "default", id: "goopter_ppcp_checkout_top"})];
+                    if (goopterOrder.isApplePayEnabled()) {
+                        jQuery.each(goopter_ppcp_manager.apple_pay_btn_selector, function (key) {
+                            renderComponents.push(createElement("div", {key, id: key}));
+                        });
+                    }
+                    if (goopterOrder.isGooglePayEnabled()) {
+                        jQuery.each(goopter_ppcp_manager.google_pay_btn_selector, function (key) {
+                            renderComponents.push(createElement("div", {key, id: key}));
+                        });
+                    }
+                    return renderComponents;
                 };
 
+                jQuery(document.body).on('added_to_cart', () => {
+                    location.reload();
+                });
+                
                 const render = () => {
                     useEffect(() => {
                         jQuery(document.body).trigger("ppcp_block_paylater_ready");
@@ -137,12 +166,13 @@ var {addAction} = wp.hooks;
                     const shouldShowDiv =
                             is_paylater_enable_incart_page === "yes";
                     return shouldShowDiv ? (
-                            createElement(ExperimentalOrderMeta, null, createElement("div", {className: "angelleye_ppcp_message_cart"}))
+                            createElement(ExperimentalOrderMeta, null, createElement("div", {className: "goopter_ppcp_message_cart"}))
                             ) : null;
                 };
 
+                // checkout
                 const s = {
-                    name: "angelleye_ppcp",
+                    name: goopter_ppcp_manager_block.payment_method,
                     label: createElement(
                             "span",
                             {style: {width: "100%"}},
@@ -153,7 +183,7 @@ var {addAction} = wp.hooks;
                             })
                             ),
                     placeOrderButtonLabel: Object(i.__)(
-                            angelleye_ppcp_manager_block.placeOrderButtonLabel
+                            goopter_ppcp_manager_block.placeOrderButtonLabel
                             ),
                     content: createElement(Content_PPCP_Smart_Button, null),
                     edit: Object(r.createElement)(p, null),
@@ -172,14 +202,16 @@ var {addAction} = wp.hooks;
                 Object(c.registerPaymentMethod)(s);
 
                 const ppcp_settings =
-                        angelleye_ppcp_manager_block.settins;
+                        goopter_ppcp_manager_block.settins;
                 const {
                     is_order_confirm_page,
                     is_paylater_enable_incart_page,
                     page,
-                } = angelleye_ppcp_manager_block;
+                } = goopter_ppcp_manager_block;
+                
+                // cart
                 const commonExpressPaymentMethodConfig = {
-                    name: "angelleye_ppcp_top",
+                    name: "goopter_ppcp_top",
                     label: Object(a.decodeEntities)(
                             l.title ||
                             Object(i.__)("Payment via PayPal", "woo-gutenberg-products-block")
@@ -191,7 +223,7 @@ var {addAction} = wp.hooks;
                             Object(i.__)("Payment via PayPal", "woo-gutenberg-products-block")
                             ),
                     canMakePayment: () => !0,
-                    paymentMethodId: "angelleye_ppcp",
+                    paymentMethodId: "goopter_ppcp",
                     supports: {
                         features: l.supports || [],
                     },
@@ -252,7 +284,7 @@ const ppcp_uniqueEvents = new Set([
 
 ppcp_uniqueEvents.forEach(function (action) {
     addAction(action, "c", function () {
-        jQuery("#angelleye_ppcp_checkout").block({
+        jQuery("#goopter_ppcp_checkout").block({
             message: null,
             overlayCSS: {background: "#fff", opacity: 0.6},
         });

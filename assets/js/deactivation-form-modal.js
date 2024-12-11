@@ -8,7 +8,7 @@ $(document).ready(function () {
         e.preventDefault();
         
         var data = {
-            action: 'angelleye_send_deactivation',
+            action: 'goopter_send_deactivation',
             reason_details: $("#reason-other-details").val(),
             reason: $("input[name='reason']:checked"). val()
             
@@ -30,7 +30,7 @@ function ModalWpr(aElem) {
     this.radio = $('input[name=reason]', aElem);
     this.closer = $('.deactivation-Modal-close, .deactivation-Modal-cancel', aElem);
     this.return = $('.deactivation-Modal-return', aElem);
-    this.opener = $('.plugins [data-slug="paypal-for-woocommerce"] .deactivate');
+    this.opener = $('.plugins [data-slug="paypal-advanced-for-woocommerce"] .deactivate');
     this.question = $('.deactivation-Modal-question', aElem);
     this.button = $('.button-primary', aElem);
     this.title = $('.deactivation-Modal-header h2', aElem);

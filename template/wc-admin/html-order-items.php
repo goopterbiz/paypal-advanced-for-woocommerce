@@ -63,7 +63,6 @@ if ( wc_tax_enabled() ) {
 				endif;
 				?>
 				<th class="wc-order-edit-line-item" width="1%">&nbsp;</th>
-                <th class="ppcp_shipment_tracking" width="5%" style="display: none;">Shipment Tracking</th>
 			</tr>
 		</thead>
 		<tbody id="order_line_items">

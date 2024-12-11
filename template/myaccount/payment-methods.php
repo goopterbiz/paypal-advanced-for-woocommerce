@@ -18,12 +18,12 @@
  */
 defined('ABSPATH') || exit;
 
-if (!class_exists('AngellEYE_PayPal_PPCP_Vault_Sync')) {
-    include_once ( PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-angelleye-paypal-ppcp-vault-sync.php');
+if (!class_exists('Goopter_PayPal_PPCP_Vault_Sync')) {
+    include_once ( PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-goopter-paypal-ppcp-vault-sync.php');
 }
 
-$vault_sync = AngellEYE_PayPal_PPCP_Vault_Sync::instance();
-$saved_methods = $vault_sync->angelleye_ppcp_wc_get_customer_saved_methods_list();
+$vault_sync = Goopter_PayPal_PPCP_Vault_Sync::instance();
+$saved_methods = $vault_sync->goopter_ppcp_wc_get_customer_saved_methods_list();
 
 $has_methods = (bool) $saved_methods;
 $types = wc_get_account_payment_methods_types();
@@ -55,8 +55,8 @@ $available_payment_gateways = WC()->payment_gateways->get_available_payment_gate
                                 do_action('woocommerce_account_payment_methods_column_' . $column_id, $method);
                             } elseif ('method' === $column_id) {
                                 if (!empty($method['method']['last4'])) {
-                                    if (in_array($method['method']['gateway'], ['angelleye_ppcp', 'angelleye_ppcp_apple_pay'])) {
-                                        $paymentMethod = $method['_angelleye_ppcp_used_payment_method'];
+                                    if (in_array($method['method']['gateway'], ['goopter_ppcp', 'goopter_ppcp_apple_pay'])) {
+                                        $paymentMethod = $method['_goopter_ppcp_used_payment_method'];
                                         // FIXME Check if there are any other payment methods in PPCP which will fall to this as we don't have fallback logic here
                                         if (in_array($paymentMethod, ['apple_pay', 'paypal', 'venmo'])) {
                                             $image_path = PAYPAL_FOR_WOOCOMMERCE_ASSET_URL . 'ppcp-gateway/images/icon/' . $paymentMethod . '.png';
@@ -64,7 +64,7 @@ $available_payment_gateways = WC()->payment_gateways->get_available_payment_gate
                                             <img class='ppcp_payment_method_icon' src='<?php echo $image_path; ?>' alt='<?php echo ucwords(str_replace('_', ' ', $paymentMethod)) ?>'><?php
                                             echo $paymentMethod == 'apple_pay' ? $ccEndingText($method) : '&nbsp;&nbsp;&nbsp;&nbsp;' . esc_html(wc_get_credit_card_type_label($method['method']['brand']));
                                         }
-                                    } elseif ($method['method']['gateway'] === 'angelleye_ppcp_cc') {
+                                    } elseif ($method['method']['gateway'] === 'goopter_ppcp_cc') {
                                         $brand = strtolower($method['method']['brand']);
                                         $brand = str_replace(['-', '_'], '', $brand);
                                         $icon_url = array(
@@ -81,16 +81,14 @@ $available_payment_gateways = WC()->payment_gateways->get_available_payment_gate
                                             echo sprintf('<img class="ppcp_payment_method_icon" src="%s" alt="Credit Card" />', $icon_url[$brand]);
                                         }
                                         echo $ccEndingText($method);
-                                        do_action('angelleye_ppcp_display_deprecated_tag_myaccount', $method, $available_payment_gateways);
                                     } else {
                                         echo $ccEndingText($method);
-                                        do_action('angelleye_ppcp_display_deprecated_tag_myaccount', $method, $available_payment_gateways);
                                     }
                                 } else {
                                     echo esc_html(wc_get_credit_card_type_label($method['method']['brand']));
                                 }
                             } elseif ('expires' === $column_id) {
-                                echo $method['method']['gateway'] !== 'angelleye_ppcp' ? esc_html($method['expires']) : 'N/A';
+                                echo $method['method']['gateway'] !== 'goopter_ppcp' ? esc_html($method['expires']) : 'N/A';
                             } elseif ('actions' === $column_id) {
                                 foreach ($method['actions'] as $key => $action) { // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
                                     echo sprintf('<a href="%s" class="button %s">%s</a>', esc_url($action['url']), sanitize_html_class($key), esc_html($action['name']));
@@ -106,12 +104,12 @@ $available_payment_gateways = WC()->payment_gateways->get_available_payment_gate
 
 <?php else : ?>
 
-    <p class="woocommerce-Message woocommerce-Message--info woocommerce-info"><?php esc_html_e('No saved methods found.', 'paypal-for-woocommerce'); ?></p>
+    <p class="woocommerce-Message woocommerce-Message--info woocommerce-info"><?php esc_html_e('No saved methods found.', 'paypal-advanced-for-woocommerce'); ?></p>
 
 <?php endif; ?>
 
 <?php do_action('woocommerce_after_account_payment_methods', $has_methods); ?>
 
 <?php if ($available_payment_gateways) : ?>
-    <a class="button" href="<?php echo esc_url(wc_get_endpoint_url('add-payment-method')); ?>"><?php esc_html_e('Add payment method', 'paypal-for-woocommerce'); ?></a>
+    <a class="button" href="<?php echo esc_url(wc_get_endpoint_url('add-payment-method')); ?>"><?php esc_html_e('Add payment method', 'paypal-advanced-for-woocommerce'); ?></a>
 <?php endif; ?>

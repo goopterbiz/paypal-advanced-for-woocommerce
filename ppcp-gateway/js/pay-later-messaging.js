@@ -1,20 +1,20 @@
 const payLaterMessaging = {
     init: () => {
-        if (typeof angelleye_pay_later_messaging === 'undefined') {
+        if (typeof goopter_pay_later_messaging === 'undefined') {
             return false;
         }
-        if (typeof angelleye_paypal_sdk === 'undefined') {
+        if (typeof goopter_paypal_sdk === 'undefined') {
             console.log('Unable to render the PayLaterMessaging: PayPal lib not defined.')
             return;
         }
-        if (typeof angelleye_paypal_sdk.Messages === 'undefined') {
+        if (typeof goopter_paypal_sdk.Messages === 'undefined') {
             console.log('PayLaterMessaging is not enabled for this merchant account.')
             return;
         }
         // console.log('Init PayLater');
-        let amount = angelleye_pay_later_messaging.amount;
-        let currencyCode = angelleye_pay_later_messaging.currencyCode;
-        let placementsConfig = angelleye_pay_later_messaging.placements;
+        let amount = goopter_pay_later_messaging.amount;
+        let currencyCode = goopter_pay_later_messaging.currencyCode;
+        let placementsConfig = goopter_pay_later_messaging.placements;
         let placementsKeys = Object.keys(placementsConfig);
         for (let i = 0; i < placementsKeys.length; i++) {
             let placement = placementsKeys[i];
@@ -27,7 +27,7 @@ const payLaterMessaging = {
         payLaterMessaging.handleVariationProduct();
 
         // handle shortcodes stuff
-        jQuery('.angelleye_ppcp_message_shortcode').each(function () {
+        jQuery('.goopter_ppcp_message_shortcode').each(function () {
             let dataKey = jQuery(this).attr('data-key');
             let shortcodeConfig = window[dataKey];
             if (typeof shortcodeConfig !== 'undefined') {
@@ -39,7 +39,7 @@ const payLaterMessaging = {
     },
     render: (amount, currencyCode, placement, styleConfig, renderDiv) => {
         if (typeof renderDiv === 'undefined') {
-            renderDiv = '.angelleye_ppcp_message_cart';
+            renderDiv = '.goopter_ppcp_message_cart';
         }
         if (jQuery(renderDiv).length && jQuery(renderDiv).is(":visible")) {
             // Known issues, if we pass the difference currency than merchant account currency it will not work
@@ -50,7 +50,7 @@ const payLaterMessaging = {
                 placement: placement,
                 style: styleConfig
             };
-            angelleye_paypal_sdk.Messages(payLaterConfig).render(renderDiv);
+            goopter_paypal_sdk.Messages(payLaterConfig).render(renderDiv);
         } else {
         }
     },
@@ -74,46 +74,46 @@ const payLaterMessaging = {
         return styleConfig;
     },
     handleVariationProduct: () => {
-        if (!angelleyeOrder.isProductPage())
+        if (!goopterOrder.isProductPage())
             return;
         if (jQuery('.variations_form').length) {
             jQuery('.variations_form').on('show_variation', function () {
-                jQuery('.angelleye_ppcp_message_product').show();
+                jQuery('.goopter_ppcp_message_product').show();
             }).on('hide_variation', function () {
-                jQuery('.angelleye_ppcp_message_product').hide();
+                jQuery('.goopter_ppcp_message_product').hide();
             });
         }
     }
 };
 (function () {
     'use strict';
-    angelleyeLoadPayPalScript({
-        url: angelleye_ppcp_manager.paypal_sdk_url,
-        script_attributes: angelleye_ppcp_manager.paypal_sdk_attributes
+    goopterLoadPayPalScript({
+        url: goopter_ppcp_manager.paypal_sdk_url,
+        script_attributes: goopter_ppcp_manager.paypal_sdk_attributes
     }, function () {
         console.log('PayPal lib loaded, initialize pay later messaging.');
         jQuery(document.body).on('ppcp_block_ready, ppcp_block_paylater_ready', async function () {
             payLaterMessaging.init();
         });
         payLaterMessaging.init();
-        if (angelleyeOrder.isCartPage() || angelleyeOrder.isCheckoutPage()) {
-            jQuery(document.body).on('angelleye_cart_total_updated ppcp_block_ready', async function () {
-                const cartDetails = angelleyeOrder.getCartDetails();
+        if (goopterOrder.isCartPage() || goopterOrder.isCheckoutPage()) {
+            jQuery(document.body).on('goopter_cart_total_updated ppcp_block_ready', async function () {
+                const cartDetails = goopterOrder.getCartDetails();
                 // console.log('PayLater amount update', cartDetails.totalAmount);
-                angelleye_pay_later_messaging.amount = cartDetails.totalAmount;
-                angelleye_pay_later_messaging.currencyCode = cartDetails.currencyCode;
+                goopter_pay_later_messaging.amount = cartDetails.totalAmount;
+                goopter_pay_later_messaging.currencyCode = cartDetails.currencyCode;
                 payLaterMessaging.init();
             });
         }
 
-        if( angelleyeOrder.isProductPage()) {
+        if( goopterOrder.isProductPage()) {
             let variationsForm = jQuery('form.variations_form');
             if( variationsForm.length > 0 ) {
                 jQuery('form.variations_form select').on('change', function() {
                     const myTimeout = setTimeout( function (){
                         let variationPrice = variationsForm.find( '.single_variation_wrap .woocommerce-variation-price' ).text();
-                        variationPrice = (variationPrice) ? variationPrice.replace( angelleye_pay_later_messaging.currencySymbol, "" ): 0;
-                        angelleye_pay_later_messaging.amount = variationPrice;
+                        variationPrice = (variationPrice) ? variationPrice.replace( goopter_pay_later_messaging.currencySymbol, "" ): 0;
+                        goopter_pay_later_messaging.amount = variationPrice;
                         payLaterMessaging.init();
                         clearTimeout(myTimeout);
                     }, 500);

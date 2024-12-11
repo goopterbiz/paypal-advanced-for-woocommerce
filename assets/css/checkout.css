@@ -60,18 +60,13 @@ background-position: right center;
     font-size: 1.5em;
     padding: 8px;
 }
-#add_payment_method #payment .payment_method_paypal_express img, .woocommerce-checkout #payment .payment_method_paypal_express img {
-    max-height: 52px;
-    vertical-align: middle;
-    max-width: 330px;
-}
 p.woocommerce-SavedPaymentMethods-saveNew {
     margin-bottom: 8px;
 }
-.angelleye_ec_save_to_accoount_box {
+.goopter_ec_save_to_accoount_box {
     clear: both;
 }
-.angelleyeOverlay {
+.goopterOverlay {
     display:none;z-index: 1000; border: none; margin: 0px; padding: 0px; width: 100%; height: 100%; top: 0px; left: 0px; opacity: 0.6; cursor: default; position: absolute;
 }
 .woocommerce-checkout #payment ul.payment_methods li input[type=checkbox] {
@@ -80,10 +75,4 @@ p.woocommerce-SavedPaymentMethods-saveNew {
 }
 p.woocommerce-SavedPaymentMethods-saveNew label {
     vertical-align: middle;
-}
-
-@media screen and (max-width: 400px) {
-    #add_payment_method #payment .payment_method_paypal_express img, .woocommerce-checkout #payment .payment_method_paypal_express img {
-        width: 77px;
-    }
 }
