@@ -392,13 +392,13 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
                     'fields' => 'id=>parent',
                 );
                 $where_args['meta_query'] = array();
-                $pfw_bulk_action_type = (isset($_POST["actionType"])) ? $_POST['actionType'] : FALSE;
-                $pfw_bulk_action_target_type = (isset($_POST["actionTargetType"])) ? $_POST['actionTargetType'] : FALSE;
-                $pfw_bulk_action_target_where_type = (isset($_POST["actionTargetWhereType"])) ? $_POST['actionTargetWhereType'] : FALSE;
-                $pfw_bulk_action_target_where_category = (isset($_POST["actionTargetWhereCategory"])) ? $_POST['actionTargetWhereCategory'] : FALSE;
-                $pfw_bulk_action_target_where_product_type = (isset($_POST["actionTargetWhereProductType"])) ? $_POST['actionTargetWhereProductType'] : FALSE;
-                $pfw_bulk_action_target_where_price_value = (isset($_POST["actionTargetWherePriceValue"])) ? $_POST['actionTargetWherePriceValue'] : FALSE;
-                $pfw_bulk_action_target_where_stock_value = (isset($_POST["actionTargetWhereStockValue"])) ? $_POST['actionTargetWhereStockValue'] : FALSE;
+                $pfw_bulk_action_type = (isset($_POST["actionType"])) ? sanitize_text_field(wp_unslash($_POST['actionType'])) : FALSE;
+                $pfw_bulk_action_target_type = (isset($_POST["actionTargetType"])) ? sanitize_text_field(wp_unslash($_POST['actionTargetType'])) : FALSE;
+                $pfw_bulk_action_target_where_type = (isset($_POST["actionTargetWhereType"])) ? sanitize_text_field(wp_unslash($_POST['actionTargetWhereType'])) : FALSE;
+                $pfw_bulk_action_target_where_category = (isset($_POST["actionTargetWhereCategory"])) ? sanitize_text_field(wp_unslash($_POST['actionTargetWhereCategory'])) : FALSE;
+                $pfw_bulk_action_target_where_product_type = (isset($_POST["actionTargetWhereProductType"])) ? sanitize_text_field(wp_unslash($_POST['actionTargetWhereProductType'])) : FALSE;
+                $pfw_bulk_action_target_where_price_value = (isset($_POST["actionTargetWherePriceValue"])) ? sanitize_text_field(wp_unslash($_POST['actionTargetWherePriceValue'])) : FALSE;
+                $pfw_bulk_action_target_where_stock_value = (isset($_POST["actionTargetWhereStockValue"])) ? sanitize_text_field(wp_unslash($_POST['actionTargetWhereStockValue'])) : FALSE;
 
                 if (!$pfw_bulk_action_type || !$pfw_bulk_action_target_type) {
                     $errors = TRUE;
@@ -519,11 +519,11 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
                             if (get_post_type($target_product_id) == 'product' && !in_array($target_product_id, $processed_product_id)) {
                                 if (!update_post_meta($target_product_id, $action_key, $is_enable)) {
                                     if (!empty($_POST['payment_action'])) {
-                                        if (update_post_meta($target_product_id, 'woo_product_payment_action', wc_clean($_POST['payment_action']))) {
+                                        if (update_post_meta($target_product_id, 'woo_product_payment_action', wc_clean(sanitize_text_field(wp_unslash($_POST['payment_action']))))) {
                                             $processed_product_id[$target_product_id] = $target_product_id;
                                         }
                                         if ($_POST['payment_action'] == 'Authorization') {
-                                            if (update_post_meta($target_product_id, 'woo_product_payment_action_authorization', wc_clean($_POST['authorization_type']))) {
+                                            if (update_post_meta($target_product_id, 'woo_product_payment_action_authorization', wc_clean(sanitize_text_field(wp_unslash($_POST['authorization_type']))))) {
                                                 $processed_product_id[$target_product_id] = $target_product_id;
                                             }
                                         } else {
@@ -534,11 +534,11 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
                                     }
                                 } else {
                                     if (!empty($_POST['payment_action'])) {
-                                        if (update_post_meta($target_product_id, 'woo_product_payment_action', wc_clean($_POST['payment_action']))) {
+                                        if (update_post_meta($target_product_id, 'woo_product_payment_action', wc_clean(sanitize_text_field(wp_unslash($_POST['payment_action']))))) {
                                             $processed_product_id[$target_product_id] = $target_product_id;
                                         }
                                         if ($_POST['payment_action'] == 'Authorization') {
-                                            if (update_post_meta($target_product_id, 'woo_product_payment_action_authorization', wc_clean($_POST['authorization_type']))) {
+                                            if (update_post_meta($target_product_id, 'woo_product_payment_action_authorization', wc_clean(sanitize_text_field(wp_unslash($_POST['authorization_type']))))) {
                                                 $processed_product_id[$target_product_id] = $target_product_id;
                                             }
                                         } else {
@@ -634,7 +634,7 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
                     }
                 }
                 if (isset($_POST['data'])) {
-                    add_user_meta($user_id, wc_clean($_POST['data']), 'true', true);
+                    add_user_meta($user_id, wc_clean(sanitize_text_field(wp_unslash($_POST['data']))), 'true', true);
                     wp_send_json_success();
                 }
             }
@@ -658,10 +658,10 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
             } else {
                 update_post_meta($post_id, 'enable_payment_action', '');
             }
-            $woo_product_payment_action = !empty($_POST['woo_product_payment_action']) ? wc_clean($_POST['woo_product_payment_action']) : '';
+            $woo_product_payment_action = !empty($_POST['woo_product_payment_action']) ? wc_clean(sanitize_text_field(wp_unslash($_POST['woo_product_payment_action']))) : '';
             update_post_meta($post_id, 'woo_product_payment_action', $woo_product_payment_action);
             if (!empty($woo_product_payment_action) && 'Authorization' == $woo_product_payment_action) {
-                $woo_product_payment_action_authorization = !empty($_POST['woo_product_payment_action_authorization']) ? wc_clean($_POST['woo_product_payment_action_authorization']) : '';
+                $woo_product_payment_action_authorization = !empty($_POST['woo_product_payment_action_authorization']) ? wc_clean(sanitize_text_field(wp_unslash($_POST['woo_product_payment_action_authorization']))) : '';
                 update_post_meta($post_id, 'woo_product_payment_action_authorization', $woo_product_payment_action_authorization);
             } else {
                 update_post_meta($post_id, 'woo_product_payment_action_authorization', '');

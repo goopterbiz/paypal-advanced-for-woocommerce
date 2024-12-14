@@ -139,7 +139,7 @@ class Goopter_Admin_Order_Payment_Process {
 
     public function goopter_admin_create_reference_order($post_id, $post_or_order_object) {
         if (!empty($_POST['goopter_create_reference_order_submit_button']) && $_POST['goopter_create_reference_order_submit_button'] == 'Create Reference Transaction Order') {
-            if (wp_verify_nonce($_POST['goopter_create_reference_order_sec'], 'goopter_create_reference_order_sec')) {
+            if (wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['goopter_create_reference_order_sec'])), 'goopter_create_reference_order_sec')) {
                 $order = ( $post_or_order_object instanceof WP_Post ) ? wc_get_order( $post_or_order_object->ID ) : $post_or_order_object;
                 if (ae_is_active_screen(ae_get_shop_order_screen_id())) {
                     do_action('goopter_admin_create_reference_order_action_hook', $order);
@@ -151,7 +151,7 @@ class Goopter_Admin_Order_Payment_Process {
 
     public function goopter_admin_order_process_payment($post_id, $post_or_order_object) {
         if (!empty($_POST['goopter_admin_order_payment_process_submit_button']) && $_POST['goopter_admin_order_payment_process_submit_button'] == 'Process Reference Transaction') {
-            if (wp_verify_nonce($_POST['goopter_admin_order_payment_process_sec'], 'goopter_admin_order_payment_process_sec')) {
+            if (wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['goopter_admin_order_payment_process_sec'])), 'goopter_admin_order_payment_process_sec')) {
                 $order = ( $post_or_order_object instanceof WP_Post ) ? wc_get_order( $post_or_order_object->ID ) : $post_or_order_object;
                 if (ae_is_active_screen(ae_get_shop_order_screen_id())) {
                     do_action('goopter_admin_order_process_payment_action_hook', $order);

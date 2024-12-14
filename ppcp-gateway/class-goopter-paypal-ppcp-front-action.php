@@ -118,7 +118,7 @@ class Goopter_PayPal_PPCP_Front_Action {
 
                     // check if billing and shipping details posted from frontend then update cart
                     if (isset($_REQUEST['billing_address_source'])) {
-                        $billing_address = json_decode(stripslashes($_REQUEST['billing_address_source']), true);
+                        $billing_address = json_decode(stripslashes(sanitize_text_field(wp_unslash($_REQUEST['billing_address_source']))), true);
                         if (!empty($billing_address)) {
                             !empty($billing_address['addressLines'][0]) ? $woocommerce->customer->set_billing_address_1($billing_address['addressLines'][0]) : null;
                             !empty($billing_address['addressLines'][1]) ? $woocommerce->customer->set_billing_address_2($billing_address['addressLines'][1]) : null;
@@ -131,7 +131,7 @@ class Goopter_PayPal_PPCP_Front_Action {
                         }
                     }
                     if (isset($_REQUEST['shipping_address_source'])) {
-                        $shipping_address = json_decode(stripslashes($_REQUEST['shipping_address_source']), true);
+                        $shipping_address = json_decode(stripslashes(sanitize_text_field(wp_unslash($_REQUEST['shipping_address_source']))), true);
                         if (!empty($shipping_address)) {
                             !empty($shipping_address['addressLines'][0]) ? $woocommerce->customer->set_shipping_address_1($shipping_address['addressLines'][0]) : null;
                             !empty($shipping_address['addressLines'][1]) ? $woocommerce->customer->set_shipping_address_2($shipping_address['addressLines'][1]) : null;
@@ -145,14 +145,14 @@ class Goopter_PayPal_PPCP_Front_Action {
                         }
                     }
 
-                    $request_from_page = $_GET['from'] ?? '';
+                    $request_from_page = sanitize_text_field(wp_unslash($_GET['from'])) ?? '';
 
                     Goopter_Session_Manager::set('from', $request_from_page);
 
                     self::$checkout_started_from = $request_from_page;
 
                     if ('pay_page' === $request_from_page) {
-                        $woo_order_id = $_POST['woo_order_id'];
+                        $woo_order_id = sanitize_text_field(wp_unslash($_POST['woo_order_id']));
                         if (isset(WC()->session) && !WC()->session->has_session()) {
                             WC()->session->set_customer_session_cookie(true);
                         }
@@ -176,20 +176,20 @@ class Goopter_PayPal_PPCP_Front_Action {
                         if (isset($_POST) && !empty($_POST)) {
                             self::$is_user_logged_in_before_checkout = is_user_logged_in();
                             $address = array();
-                            if (isset($_POST['address']) && strlen($_POST['address']) > 2) {
+                            if (isset($_POST['address']) && strlen(sanitize_text_field(wp_unslash($_POST['address']))) > 2) {
                                 $address = array();
-                                $address_data = json_decode(stripslashes($_POST['address']), true);
+                                $address_data = json_decode(stripslashes(sanitize_text_field(wp_unslash($_POST['address']))), true);
                                 foreach ($address_data as $key => $address_value) {
                                     foreach ($address_value as $sub_key => $value) {
                                         $address[$key . '_' . $sub_key] = $value;
                                     }
                                 }
                                 if (isset($_POST['goopter_ppcp_payment_method_title'])) {
-                                    $address['goopter_ppcp_payment_method_title'] = wc_clean($_POST['goopter_ppcp_payment_method_title']);
+                                    $address['goopter_ppcp_payment_method_title'] = wc_clean(sanitize_text_field(wp_unslash($_POST['goopter_ppcp_payment_method_title'])));
                                 }
                                 if (isset($_POST['radio-control-wc-payment-method-options'])) {
-                                    $address['radio-control-wc-payment-method-options'] = wc_clean($_POST['radio-control-wc-payment-method-options']);
-                                    $address['payment_method'] = wc_clean($_POST['radio-control-wc-payment-method-options']);
+                                    $address['radio-control-wc-payment-method-options'] = wc_clean(sanitize_text_field(wp_unslash($_POST['radio-control-wc-payment-method-options'])));
+                                    $address['payment_method'] = wc_clean(sanitize_text_field(wp_unslash($_POST['radio-control-wc-payment-method-options'])));
                                 }
                                 Goopter_Session_Manager::set('checkout_post', $address);
                                 $_POST = $address;
@@ -234,8 +234,8 @@ class Goopter_PayPal_PPCP_Front_Action {
                             if (!class_exists('Goopter_PayPal_PPCP_Product')) {
                                 include_once ( PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-goopter-paypal-ppcp-product.php');
                             }
-                            $paymentMethod = $_REQUEST['goopter_ppcp_payment_method_title'] ?? null;
-                            $addToCart = $_REQUEST['goopter_ppcp-add-to-cart'] ?? null;
+                            $paymentMethod = sanitize_text_field(wp_unslash($_REQUEST['goopter_ppcp_payment_method_title'])) ?? null;
+                            $addToCart = sanitize_text_field(wp_unslash($_REQUEST['goopter_ppcp-add-to-cart'])) ?? null;
 
                             if (!empty($addToCart) && goopter_ppcp_get_order_total() > 0) {
                                 WC()->cart->empty_cart();
@@ -272,10 +272,10 @@ class Goopter_PayPal_PPCP_Front_Action {
                     break;
                 case 'shipping_address_update':
                     global $woocommerce;
-                    $paymentMethod = $_REQUEST['goopter_ppcp_payment_method_title'] ?? null;
-                    $woo_order_id = $_POST['woo_order_id'] ?? null;
+                    $paymentMethod = sanitize_text_field(wp_unslash($_REQUEST['goopter_ppcp_payment_method_title'])) ?? null;
+                    $woo_order_id = sanitize_text_field(wp_unslash($_POST['woo_order_id'])) ?? null;
                     if (isset($_REQUEST['shipping_address_source'])) {
-                        $shipping_address = json_decode(stripslashes($_REQUEST['shipping_address_source']), true);
+                        $shipping_address = json_decode(stripslashes(sanitize_text_field(wp_unslash($_REQUEST['shipping_address_source']))), true);
                         $shipping_address = $shipping_address['shippingDetails'] ?? null;
                         if (!empty($shipping_address)) {
                             Goopter_Session_Manager::set('shipping_address_updated_from_callback', time());
@@ -298,7 +298,7 @@ class Goopter_PayPal_PPCP_Front_Action {
                         }
                     }
                     if (isset($_REQUEST['billing_address_source'])) {
-                        $billing_address = json_decode(stripslashes($_REQUEST['billing_address_source']), true);
+                        $billing_address = json_decode(stripslashes(sanitize_text_field(wp_unslash($_REQUEST['billing_address_source']))), true);
                         $billing_address = $billing_address['billingDetails'] ?? null;
                         if (!empty($billing_address)) {
                             isset($billing_address['givenName']) && $woocommerce->customer->set_billing_first_name($billing_address['givenName']);
@@ -321,7 +321,7 @@ class Goopter_PayPal_PPCP_Front_Action {
                         }
                     }
                     $orderTotal = WC()->cart->get_total('');
-                    $addToCart = $_REQUEST['goopter_ppcp-add-to-cart'] ?? null;
+                    $addToCart = sanitize_text_field(wp_unslash($_REQUEST['goopter_ppcp-add-to-cart'])) ?? null;
                     if (!empty($addToCart)) {
                         try {
                             if (!class_exists('Goopter_PayPal_PPCP_Product')) {
@@ -355,19 +355,19 @@ class Goopter_PayPal_PPCP_Front_Action {
                 case "handle_js_errors":
                     $_POST = json_decode(file_get_contents('php://input'), true);
                     if (isset($_POST['error']['msg']) && isset($_POST['error']['source']) && isset($_POST['error']['line'])) {
-                        $errorLine = html_entity_decode($_POST['error']['msg'], ENT_QUOTES) . ', file: ' . $_POST['error']['source'] . ', line:' . $_POST['error']['line'];
+                        $errorLine = html_entity_decode(sanitize_text_field(wp_unslash($_POST['error']['msg'])), ENT_QUOTES) . ', file: ' . sanitize_text_field(wp_unslash($_POST['error']['source'])) . ', line:' . sanitize_text_field(wp_unslash($_POST['error']['line']));
                     } else {
-                        $errorLine = !empty($_POST['error']) ? print_r($_POST['error'], true) : '';
+                        $errorLine = !empty($_POST['error']) ? wp_json_encode(sanitize_text_field(wp_unslash($_POST['error'])), true) : '';
                     }
                     if (isset($_POST['logTrace'])) {
-                        $errorLine .= "\nLog Trace: " . print_r($_POST['logTrace'], true);
+                        $errorLine .= "\nLog Trace: " . wp_json_encode(sanitize_text_field(wp_unslash($_POST['logTrace'])), true);
                     }
                     wc_get_logger()->error($errorLine, array('source' => 'goopter_ppcp_js_errors'));
                     break;
                 case "cc_capture":
                     wc_clear_notices();
                     // Required for order pay form, as there will be no data in session
-                    Goopter_Session_Manager::set('paypal_order_id', wc_clean($_GET['paypal_order_id']));
+                    Goopter_Session_Manager::set('paypal_order_id', wc_clean(sanitize_text_field(wp_unslash($_GET['paypal_order_id']))));
 
                     $from = Goopter_Session_Manager::get('from', '');
 
@@ -384,7 +384,7 @@ class Goopter_PayPal_PPCP_Front_Action {
                         WC()->session->set('reload_checkout', true);
                         wp_send_json_success(array(
                             'result' => 'success',
-                            'redirect' => add_query_arg(array('paypal_order_id' => wc_clean($_GET['paypal_order_id']), 'utm_nooverride' => '1', 'wfacp_is_checkout_override' => 'yes'), untrailingslashit(wc_get_checkout_url())),
+                            'redirect' => add_query_arg(array('paypal_order_id' => wc_clean(sanitize_text_field(wp_unslash($_GET['paypal_order_id']))), 'utm_nooverride' => '1', 'wfacp_is_checkout_override' => 'yes'), untrailingslashit(wc_get_checkout_url())),
                         ));
                         exit();
                     } else {
@@ -392,8 +392,8 @@ class Goopter_PayPal_PPCP_Front_Action {
                     }
                     break;
                 case "direct_capture":
-                    Goopter_Session_Manager::set('paypal_order_id', wc_clean($_GET['paypal_order_id']));
-                    Goopter_Session_Manager::set('paypal_payer_id', wc_clean($_GET['paypal_payer_id']));
+                    Goopter_Session_Manager::set('paypal_order_id', wc_clean(sanitize_text_field(wp_unslash($_GET['paypal_order_id']))));
+                    Goopter_Session_Manager::set('paypal_payer_id', wc_clean(sanitize_text_field(wp_unslash($_GET['paypal_payer_id']))));
                     $this->goopter_ppcp_direct_capture();
                     break;
                 case "regular_capture":
@@ -427,8 +427,8 @@ class Goopter_PayPal_PPCP_Front_Action {
                         if (class_exists('WooCommerce')) {
                             $error_messages = wc_get_notices('error');
                             wc_clear_notices();
-                            $product_id = sanitize_text_field($_REQUEST['goopter_ppcp-add-to-cart']);
-                            $quantity = !empty($_REQUEST['quantity']) ? sanitize_text_field($_REQUEST['quantity']) : 0;
+                            $product_id = sanitize_text_field(wp_unslash($_REQUEST['goopter_ppcp-add-to-cart']));
+                            $quantity = !empty($_REQUEST['quantity']) ? sanitize_text_field(wp_unslash($_REQUEST['quantity'])) : 0;
                             $cart = WC()->cart;
                             foreach ($cart->get_cart() as $cart_item_key => $cart_item) {
                                 if (!empty($cart_item['product_id']) && $cart_item['product_id'] == $product_id) {
@@ -461,7 +461,7 @@ class Goopter_PayPal_PPCP_Front_Action {
 
     public function goopter_ppcp_regular_capture() {
         if (isset($_GET['token']) && !empty($_GET['token'])) {
-            Goopter_Session_Manager::set('paypal_order_id', wc_clean($_GET['token']));
+            Goopter_Session_Manager::set('paypal_order_id', wc_clean(sanitize_text_field(wp_unslash($_GET['token']))));
         } else {
             wp_redirect(wc_get_checkout_url());
             exit();
@@ -604,7 +604,7 @@ class Goopter_PayPal_PPCP_Front_Action {
                 exit();
             }
             $order = wc_get_order($order_id);
-            $this->payment_request->goopter_ppcp_update_woo_order_data($_GET['paypal_order_id']);
+            $this->payment_request->goopter_ppcp_update_woo_order_data(sanitize_text_field(wp_unslash($_GET['paypal_order_id'])));
             WC()->cart->empty_cart();
             Goopter_Session_Manager::clear();
             wp_safe_redirect(apply_filters('woocommerce_get_return_url', $order->get_checkout_order_received_url(), $order));
@@ -720,7 +720,7 @@ class Goopter_PayPal_PPCP_Front_Action {
 
     public function goopter_ppcp_liability_shift($order, $response_object) {
         if (!empty($response_object)) {
-            $response = json_decode(json_encode($response_object), true);
+            $response = json_decode(wp_json_encode($response_object), true);
             if (!empty($response['payment_source']['card']['authentication_result']['liability_shift'])) {
                 $LiabilityShift = isset($response['payment_source']['card']['authentication_result']['liability_shift']) ? strtoupper($response['payment_source']['card']['authentication_result']['liability_shift']) : '';
                 $EnrollmentStatus = isset($response['payment_source']['card']['authentication_result']['three_d_secure']['enrollment_status']) ? strtoupper($response['payment_source']['card']['authentication_result']['three_d_secure']['enrollment_status']) : '';
@@ -827,7 +827,7 @@ class Goopter_PayPal_PPCP_Front_Action {
     public function goopter_ppcp_delete_files($dir) {
         $files = array_diff(scandir($dir), array('.', '..'));
         foreach ($files as $file) {
-            (is_dir("$dir/$file")) ? $this->goopter_ppcp_delete_files("$dir/$file") : unlink("$dir/$file");
+            (is_dir("$dir/$file")) ? $this->goopter_ppcp_delete_files("$dir/$file") : wp_delete_file("$dir/$file");
         }
         return rmdir($dir);
     }

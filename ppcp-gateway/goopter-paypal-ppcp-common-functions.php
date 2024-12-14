@@ -67,7 +67,7 @@ if (!function_exists('goopter_ppcp_is_local_server')) {
         if (!isset($_SERVER['HTTP_HOST'])) {
             return;
         }
-        if ($_SERVER['HTTP_HOST'] === 'localhost' || substr($_SERVER['REMOTE_ADDR'], 0, 3) === '10.' || substr($_SERVER['REMOTE_ADDR'], 0, 7) === '192.168') {
+        if ($_SERVER['HTTP_HOST'] === 'localhost' || substr(sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR'])), 0, 3) === '10.' || substr(sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR'])), 0, 7) === '192.168') {
             return true;
         }
         $live_sites = [
@@ -182,7 +182,7 @@ if (!function_exists('goopter_ppcp_get_mapped_billing_address')) {
             if (!empty($checkout_details->payer->phone->phone_number->national_number)) {
                 $phone = $checkout_details->payer->phone->phone_number->national_number;
             } elseif (!empty($_POST['billing_phone'])) {
-                $phone = wc_clean($_POST['billing_phone']);
+                $phone = wc_clean(sanitize_text_field(wp_unslash($_POST['billing_phone'])));
             }
             $billing_address = array();
             $billing_address['first_name'] = !empty($checkout_details->payer->name->given_name) ? $checkout_details->payer->name->given_name : '';
@@ -976,7 +976,7 @@ if (!function_exists('ae_get_checkout_url')) {
     function ae_get_checkout_url(): string {
         $checkout_page_url = wc_get_checkout_url();
         if (isset($_REQUEST['wfacp_id'])) {
-            $checkout_page_url = get_permalink($_REQUEST['wfacp_id']);
+            $checkout_page_url = get_permalink(sanitize_text_field(wp_unslash($_REQUEST['wfacp_id'])));
         }
         return $checkout_page_url;
     }

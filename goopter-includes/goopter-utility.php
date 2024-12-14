@@ -68,7 +68,7 @@ class Goopter_Utility {
                     $this->payment_method = $order->get_payment_method();
                 }
                 if (!empty($_POST['goopter_payment_action'])) {
-                    $action = wc_clean($_POST['goopter_payment_action']);
+                    $action = wc_clean(sanitize_text_field(wp_unslash($_POST['goopter_payment_action'])));
                     $hook_name = 'wc_' . $this->payment_method . '_' . strtolower($action);
                     if (!did_action('woocommerce_order_action_' . sanitize_title($hook_name))) {
                         do_action('woocommerce_order_action_' . sanitize_title($hook_name), $order);

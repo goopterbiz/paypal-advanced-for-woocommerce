@@ -387,7 +387,7 @@ class WC_Gateway_PPCP_Goopter extends WC_Payment_Gateway {
             $token_id = null;
             foreach ($saved_tokens as $saved_token) {
                 if (!empty($_POST[$saved_token]) && $_POST[$saved_token] !== 'new') {
-                    $token_id = wc_clean($_POST[$saved_token]);
+                    $token_id = wc_clean(sanitize_text_field(wp_unslash($_POST[$saved_token])));
                 }
             }
 
@@ -473,7 +473,7 @@ class WC_Gateway_PPCP_Goopter extends WC_Payment_Gateway {
         try {
             $payment_method_title = '';
             if (isset($_GET['post'])) {
-                $theorder = wc_get_order($_GET['post']);
+                $theorder = wc_get_order(sanitize_text_field(wp_unslash($_GET['post'])));
                 if ($theorder) {
                     $payment_method_title = $theorder->get_payment_method_title();
                 }
@@ -655,7 +655,7 @@ class WC_Gateway_PPCP_Goopter extends WC_Payment_Gateway {
         try {
             if ((!empty($_POST['wc-goopter_ppcp-payment-token']) && $_POST['wc-goopter_ppcp-payment-token'] != 'new')) {
                 $order = wc_get_order($order_id);
-                $token_id = wc_clean($_POST['wc-goopter_ppcp-payment-token']);
+                $token_id = wc_clean(sanitize_text_field(wp_unslash($_POST['wc-goopter_ppcp-payment-token'])));
                 $token = WC_Payment_Tokens::get($token_id);
                 $used_payment_method = get_metadata('payment_token', $token_id, '_goopter_ppcp_used_payment_method', true);
                 $order->update_meta_data('_goopter_ppcp_used_payment_method', $used_payment_method);
@@ -677,7 +677,7 @@ class WC_Gateway_PPCP_Goopter extends WC_Payment_Gateway {
         try {
             if ((!empty($_POST['wc-goopter_ppcp-payment-token']) && $_POST['wc-goopter_ppcp-payment-token'] != 'new')) {
                 $order = wc_get_order($order_id);
-                $token_id = wc_clean($_POST['wc-goopter_ppcp-payment-token']);
+                $token_id = wc_clean(sanitize_text_field(wp_unslash($_POST['wc-goopter_ppcp-payment-token'])));
                 $token = WC_Payment_Tokens::get($token_id);
                 $order->payment_complete($token->get_token());
                 $this->payment_request->save_payment_token($order, $token->get_token());
@@ -1088,7 +1088,7 @@ class WC_Gateway_PPCP_Goopter extends WC_Payment_Gateway {
     }
 
     public function validate_color_picker_field($key, $value) {
-        return $_POST[$key] ?? $value;
+        return sanitize_text_field(wp_unslash($_POST[$key])) ?? $value;
     }
 
     public function validate_checkbox_enable_paypal_google_pay_field($key, $value) {

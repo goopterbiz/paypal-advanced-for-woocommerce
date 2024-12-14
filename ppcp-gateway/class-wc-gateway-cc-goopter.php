@@ -147,7 +147,7 @@ class WC_Gateway_CC_Goopter extends WC_Payment_Gateway_CC {
         try {
             if (!empty($_POST['wc-goopter_ppcp_cc-payment-token']) && $_POST['wc-goopter_ppcp_cc-payment-token'] != 'new') {
                 $order = wc_get_order($woo_order_id);
-                $token_id = wc_clean($_POST['wc-goopter_ppcp_cc-payment-token']);
+                $token_id = wc_clean(sanitize_text_field(wp_unslash($_POST['wc-goopter_ppcp_cc-payment-token'])));
                 $token = WC_Payment_Tokens::get($token_id);
                 $order->update_meta_data('_goopter_ppcp_used_payment_method', 'card');
                 goopter_ppcp_add_used_payment_method_name_to_subscription($woo_order_id);
@@ -315,7 +315,7 @@ class WC_Gateway_CC_Goopter extends WC_Payment_Gateway_CC {
         try {
             if ((!empty($_POST['wc-goopter_ppcp_cc-payment-token']) && $_POST['wc-goopter_ppcp_cc-payment-token'] != 'new')) {
                 $order = wc_get_order($order_id);
-                $token_id = wc_clean($_POST['wc-goopter_ppcp_cc-payment-token']);
+                $token_id = wc_clean(sanitize_text_field(wp_unslash($_POST['wc-goopter_ppcp_cc-payment-token'])));
                 $token = WC_Payment_Tokens::get($token_id);
                 $order->update_meta_data('_goopter_ppcp_used_payment_method', 'card');
                 $order->save();
@@ -337,7 +337,7 @@ class WC_Gateway_CC_Goopter extends WC_Payment_Gateway_CC {
         try {
             if (!empty($_POST['wc-goopter_ppcp_cc-payment-token']) && $_POST['wc-goopter_ppcp_cc-payment-token'] != 'new') {
                 $order = wc_get_order($order_id);
-                $token_id = wc_clean($_POST['wc-goopter_ppcp_cc-payment-token']);
+                $token_id = wc_clean(sanitize_text_field(wp_unslash($_POST['wc-goopter_ppcp_cc-payment-token'])));
                 $token = WC_Payment_Tokens::get($token_id);
                 $order->payment_complete($token->get_token());
                 $this->payment_request->save_payment_token($order, $token->get_token());
@@ -354,8 +354,8 @@ class WC_Gateway_CC_Goopter extends WC_Payment_Gateway_CC {
 
     public function get_posted_card() {
         try {
-            $card_number = isset($_POST['goopter_ppcp_cc-card-number']) ? wc_clean($_POST['goopter_ppcp_cc-card-number']) : '';
-            $cc_card_expiry = isset($_POST['goopter_ppcp_cc-card-expiry']) ? wc_clean($_POST['goopter_ppcp_cc-card-expiry']) : '';
+            $card_number = isset($_POST['goopter_ppcp_cc-card-number']) ? wc_clean(sanitize_text_field(wp_unslash($_POST['goopter_ppcp_cc-card-number']))) : '';
+            $cc_card_expiry = isset($_POST['goopter_ppcp_cc-card-expiry']) ? wc_clean(sanitize_text_field(wp_unslash($_POST['goopter_ppcp_cc-card-expiry']))) : '';
             $card_number = str_replace(array(' ', '-'), '', $card_number);
             $card_expiry = array_map('trim', explode('/', $cc_card_expiry));
             $card_exp_month = str_pad($card_expiry[0], 2, "0", STR_PAD_LEFT);

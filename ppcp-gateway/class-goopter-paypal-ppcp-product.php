@@ -23,7 +23,7 @@ class Goopter_PayPal_PPCP_Product extends WC_Form_Handler {
 
     public static function goopter_ppcp_add_to_cart_action($url = null) {
         try {
-            if (!isset($_REQUEST['goopter_ppcp-add-to-cart']) || !is_numeric(wp_unslash($_REQUEST['goopter_ppcp-add-to-cart']))) {
+            if (!isset($_REQUEST['goopter_ppcp-add-to-cart']) || !is_numeric(sanitize_text_field(wp_unslash($_REQUEST['goopter_ppcp-add-to-cart'])))) {
                 return;
             }
             wc_nocache_headers();
@@ -53,7 +53,7 @@ class Goopter_PayPal_PPCP_Product extends WC_Form_Handler {
 
     private static function goopter_ppcp_add_to_cart_handler_simple($product_id) {
         try {
-            $quantity = empty($_REQUEST['quantity']) ? 1 : wc_stock_amount(wp_unslash($_REQUEST['quantity']));
+            $quantity = empty($_REQUEST['quantity']) ? 1 : wc_stock_amount(sanitize_text_field(wp_unslash($_REQUEST['quantity'])));
             $passed_validation = apply_filters('woocommerce_add_to_cart_validation', true, $product_id, $quantity);
 
             if ($passed_validation && false !== WC()->cart->add_to_cart($product_id, $quantity)) {
@@ -71,7 +71,7 @@ class Goopter_PayPal_PPCP_Product extends WC_Form_Handler {
         try {
             $was_added_to_cart = false;
             $added_to_cart = array();
-            $items = isset($_REQUEST['quantity']) && is_array($_REQUEST['quantity']) ? wp_unslash($_REQUEST['quantity']) : array();
+            $items = isset($_REQUEST['quantity']) && is_array($_REQUEST['quantity']) ? sanitize_text_field(wp_unslash($_REQUEST['quantity'])) : array();
             if (!empty($items)) {
                 $quantity_set = false;
                 foreach ($items as $item => $quantity) {
@@ -107,7 +107,7 @@ class Goopter_PayPal_PPCP_Product extends WC_Form_Handler {
     private static function goopter_ppcp_add_to_cart_handler_variable($product_id) {
         try {
             $variation_id = empty($_REQUEST['variation_id']) ? '' : absint(wp_unslash($_REQUEST['variation_id']));
-            $quantity = empty($_REQUEST['quantity']) ? 1 : wc_stock_amount(wp_unslash($_REQUEST['quantity']));
+            $quantity = empty($_REQUEST['quantity']) ? 1 : wc_stock_amount(sanitize_text_field(wp_unslash($_REQUEST['quantity'])));
             $missing_attributes = array();
             $variations = array();
             $adding_to_cart = wc_get_product($product_id);
@@ -132,7 +132,7 @@ class Goopter_PayPal_PPCP_Product extends WC_Form_Handler {
                     if ($attribute['is_taxonomy']) {
                         $value = sanitize_title(wp_unslash($_REQUEST[$attribute_key]));
                     } else {
-                        $value = html_entity_decode(wc_clean(wp_unslash($_REQUEST[$attribute_key])), ENT_QUOTES, get_bloginfo('charset'));
+                        $value = html_entity_decode(wc_clean(sanitize_text_field(wp_unslash($_REQUEST[$attribute_key]))), ENT_QUOTES, get_bloginfo('charset'));
                     }
                     $posted_attributes[$attribute_key] = $value;
                 }

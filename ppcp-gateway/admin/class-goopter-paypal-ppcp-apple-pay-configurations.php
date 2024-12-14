@@ -266,7 +266,7 @@ class Goopter_PayPal_PPCP_Apple_Pay_Configurations
 
     public function registerApplePayDomain()
     {
-        $domainNameToRegister = $_POST['apple_pay_domain'] ?? parse_url( get_site_url(), PHP_URL_HOST );
+        $domainNameToRegister = sanitize_text_field(wp_unslash($_POST['apple_pay_domain'])) ?? parse_url( get_site_url(), PHP_URL_HOST );
 
         try {
             $result = $this->registerDomain($domainNameToRegister);
@@ -279,7 +279,7 @@ class Goopter_PayPal_PPCP_Apple_Pay_Configurations
 
     public function removeApplePayDomain()
     {
-        $domainNameToRemove = $_REQUEST['domain'] ?? parse_url( get_site_url(), PHP_URL_HOST );
+        $domainNameToRemove = sanitize_text_field(wp_unslash($_REQUEST['domain'])) ?? parse_url( get_site_url(), PHP_URL_HOST );
         $result = $this->removeDomain($domainNameToRemove);
         wp_send_json($result);
         die;
@@ -305,8 +305,8 @@ class Goopter_PayPal_PPCP_Apple_Pay_Configurations
             throw new Exception("Unable to update the verification file content. Error: " . $exception->getMessage());
         }
         if (file_exists($targetLocation)) {
-            @unlink($targetLocation);
-            @unlink($targetLocation . '.txt');
+            wp_delete_file($targetLocation);
+            wp_delete_file($targetLocation . '.txt');
         }
         if (!copy($localFileLoc, $targetLocation)) {
             throw new Exception(sprintf('Unable to copy the files from %s to location %s', $localFileLoc, $targetLocation));

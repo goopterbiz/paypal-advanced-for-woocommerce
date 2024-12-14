@@ -4,8 +4,8 @@
  */
 ?>
 <?php
-$active_tab = isset($_GET['tab']) ? wc_clean($_GET['tab']) : 'general_settings';
-$gateway = isset($_GET['gateway']) ? wc_clean($_GET['gateway']) : 'paypal_payment_gateway_products';
+$active_tab = isset($_GET['tab']) ? wc_clean(sanitize_text_field(wp_unslash($_GET['tab']))) : 'general_settings';
+$gateway = isset($_GET['gateway']) ? wc_clean(sanitize_text_field(wp_unslash($_GET['gateway']))) : 'paypal_payment_gateway_products';
 ?>
 <div class="wrap">
 

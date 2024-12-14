@@ -214,7 +214,7 @@ class Goopter_PayPal_PPCP_Admin_Action {
             }
             if (!empty($_POST['order_metabox_goopter_ppcp_payment_action'])) {
                 $order_data = wc_clean($_POST);
-                $action = wc_clean($_POST['order_metabox_goopter_ppcp_payment_action']);
+                $action = wc_clean(sanitize_text_field(wp_unslash($_POST['order_metabox_goopter_ppcp_payment_action'])));
                 switch ($action) {
                     case 'void':
                         $this->goopter_ppcp_admin_void_action_handler($order, $order_data);
@@ -274,7 +274,7 @@ class Goopter_PayPal_PPCP_Admin_Action {
                 'is_dismiss' => true,
             );
             $result = $this->seller_onboarding->goopter_track_seller_onboarding_status_from_cache($this->merchant_id);
-            $notice_data = json_decode(json_encode($notice_data));
+            $notice_data = json_decode(wp_json_encode($notice_data));
             $notice_type = goopter_ppcp_display_upgrade_notice_type($result);
 
             $ae_ppcp_account_reconnect_notice = get_option('ae_ppcp_account_reconnect_notice');
@@ -290,7 +290,7 @@ class Goopter_PayPal_PPCP_Admin_Action {
                     'ans_button_label' => 'Settings',
                     'is_dismiss' => false
                 );
-                goopter_ppcp_display_notice(json_decode(json_encode($notice_data_account_reconnect)));
+                goopter_ppcp_display_notice(json_decode(wp_json_encode($notice_data_account_reconnect)));
             }
 
             if (!empty($notice_type)) {

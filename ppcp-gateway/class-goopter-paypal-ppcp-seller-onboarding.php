@@ -229,7 +229,7 @@ class Goopter_PayPal_PPCP_Seller_Onboarding {
         try {
             $posted_raw = goopter_ppcp_get_raw_data();
             $this->api_log->log('goopter_ppcp_login_seller', 'error');
-            $this->api_log->log(print_r($posted_raw, true), 'error');
+            $this->api_log->log(wp_json_encode($posted_raw, true), 'error');
             if (empty($posted_raw)) {
                 return false;
             }

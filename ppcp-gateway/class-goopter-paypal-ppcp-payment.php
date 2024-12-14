@@ -183,8 +183,8 @@ class Goopter_PayPal_PPCP_Payment {
             $decimals = $this->goopter_ppcp_get_number_of_decimal_digits();
             $reference_id = wc_generate_order_key();
             Goopter_Session_Manager::set('reference_id', $reference_id);
-            $payment_method = wc_clean(!empty($_POST['goopter_ppcp_payment_method_title']) ? $_POST['goopter_ppcp_payment_method_title'] : '');
-            $payment_method_id = wc_clean(!empty($_POST['payment_method']) ? $_POST['payment_method'] : '');
+            $payment_method = wc_clean(!empty($_POST['goopter_ppcp_payment_method_title']) ? sanitize_text_field(wp_unslash($_POST['goopter_ppcp_payment_method_title'])) : '');
+            $payment_method_id = wc_clean(!empty($_POST['payment_method']) ? sanitize_text_field(wp_unslash($_POST['payment_method'])) : '');
             if (!empty($payment_method_id)) {
                 Goopter_Session_Manager::set('payment_method_id', $payment_method_id);
             }
@@ -194,7 +194,7 @@ class Goopter_PayPal_PPCP_Payment {
                 Goopter_Session_Manager::set('used_payment_method', $payment_method);
                 $this->goopter_ppcp_used_payment_method = $payment_method;
             } elseif (!empty($_POST['goopter_ppcp_cc_payment_method_title'])) {
-                $payment_method_title = goopter_ppcp_get_payment_method_title(wc_clean($_POST['goopter_ppcp_cc_payment_method_title']));
+                $payment_method_title = goopter_ppcp_get_payment_method_title(wc_clean(sanitize_text_field(wp_unslash($_POST['goopter_ppcp_cc_payment_method_title']))));
                 Goopter_Session_Manager::set('payment_method_title', $payment_method_title);
                 Goopter_Session_Manager::set('used_payment_method', 'card');
                 $this->goopter_ppcp_used_payment_method = 'card';
@@ -703,7 +703,7 @@ class Goopter_PayPal_PPCP_Payment {
                             $desc .= ' ' . ucwords($value['name']);
                         }
                         if (!empty($value['price'])) {
-                            $desc .= ' (' . strip_tags(wc_price($value['price'], array('currency' => get_woocommerce_currency()))) . ')';
+                            $desc .= ' (' . wp_strip_all_tags(wc_price($value['price'], array('currency' => get_woocommerce_currency()))) . ')';
                         }
                         if (!empty($value['value'])) {
                             $desc .= ': ' . $value['value'];
@@ -890,7 +890,7 @@ class Goopter_PayPal_PPCP_Payment {
         $shipping_preference = 'GET_FROM_FILE';
         $page = null;
         if (isset($_GET) && !empty($_GET['from'])) {
-            $page = $_GET['from'];
+            $page = sanitize_text_field(wp_unslash($_GET['from']));
         } elseif (is_cart()) {
             $page = 'cart';
         } elseif (is_checkout() || is_checkout_pay_page()) {
@@ -1011,13 +1011,13 @@ class Goopter_PayPal_PPCP_Payment {
 
         if ($addr == -1) {
             if (array_key_exists('SERVER_ADDR', $_SERVER)) {
-                $addr = ip2long($_SERVER['SERVER_ADDR']);
+                $addr = ip2long(sanitize_text_field(wp_unslash($_SERVER['SERVER_ADDR'])));
             } else {
                 $addr = php_uname('n');
             }
         }
 
-        return $addr . $pid . $_SERVER['REQUEST_TIME'] . mt_rand(0, 0xffff);
+        return $addr . $pid . sanitize_text_field(wp_unslash($_SERVER['REQUEST_TIME'])) . wp_rand(0, 0xffff);
     }
 
     public function goopter_ppcp_get_readable_message($error, $error_email_notification_param = array()) {
@@ -1083,12 +1083,12 @@ class Goopter_PayPal_PPCP_Payment {
                 'cookies' => array()
             );
             $api_response = $this->api_request->request($this->paypal_order_api . $paypal_order_id, $args, 'get_order');
-            $api_response = json_decode(json_encode($api_response), true);
+            $api_response = json_decode(wp_json_encode($api_response), true);
             if (isset($api_response['id'])) {
                 return $api_response;
             }
             $this->api_log->log("Unable to find the PayPal order: " . $paypal_order_id, 'error');
-            $this->api_log->log(print_r($api_response, true), 'error');
+            $this->api_log->log(wp_json_encode($api_response, true), 'error');
         } catch (Exception $ex) {
             $this->api_log->log("The exception was created on line: " . $ex->getFile() . ' ' . $ex->getLine(), 'error');
             $this->api_log->log($ex->getMessage(), 'error');
@@ -1123,7 +1123,7 @@ class Goopter_PayPal_PPCP_Payment {
                 'cookies' => array()
             );
             $this->api_response = $this->api_request->request($this->paypal_order_api . $paypal_order_id, $args, 'get_order');
-            $this->api_response = json_decode(json_encode($this->api_response), FALSE);
+            $this->api_response = json_decode(wp_json_encode($this->api_response), FALSE);
             Goopter_Session_Manager::set('paypal_order_id', $paypal_order_id);
             Goopter_Session_Manager::set('paypal_transaction_details', $this->api_response);
             return $this->api_response;
@@ -1934,7 +1934,7 @@ class Goopter_PayPal_PPCP_Payment {
                 'cookies' => array()
             );
             $this->api_response = $this->api_request->request($this->auth . $authorization_id, $args, 'get_authorized');
-            $this->api_response = json_decode(json_encode($this->api_response), FALSE);
+            $this->api_response = json_decode(wp_json_encode($this->api_response), FALSE);
             Goopter_Session_Manager::set('paypal_transaction_details', $this->api_response);
             return $this->api_response;
         } catch (Exception $ex) {
@@ -1962,7 +1962,7 @@ class Goopter_PayPal_PPCP_Payment {
                 $args['body'] = $void_arg;
             }
             $this->api_response = $this->api_request->request($this->auth . $authorization_id . '/void', $args, 'void_authorized');
-            $this->api_response = json_decode(json_encode($this->api_response), true);
+            $this->api_response = json_decode(wp_json_encode($this->api_response), true);
             if (isset($this->api_response['status']) && strtolower($this->api_response['status']) == 'voided') {
                 return $this->api_response;
             } else {
@@ -2124,12 +2124,12 @@ class Goopter_PayPal_PPCP_Payment {
         $temp = array(
             "alg" => "none"
         );
-        $returnData = base64_encode(json_encode($temp)) . '.';
+        $returnData = base64_encode(wp_json_encode($temp)) . '.';
         $temp = array(
             "iss" => $this->partner_client_id,
             "payer_id" => $this->merchant_id
         );
-        $returnData .= base64_encode(json_encode($temp)) . '.';
+        $returnData .= base64_encode(wp_json_encode($temp)) . '.';
         return $returnData;
     }
     
@@ -2467,7 +2467,7 @@ class Goopter_PayPal_PPCP_Payment {
                 $message .= "<strong>" . __('User IP: ', 'paypal-advanced-for-woocommerce') . "</strong>" . WC_Geolocation::get_ip_address() . PHP_EOL;
                 $message = apply_filters('ae_ppec_error_email_message', $message);
                 $message = $mailer->wrap_message($error_email_notify_subject, $message);
-                $mailer->send(get_option('admin_email'), strip_tags($error_email_notify_subject), $message);
+                $mailer->send(get_option('admin_email'), wp_strip_all_tags($error_email_notify_subject), $message);
             } catch (Exception $ex) {
                 $this->api_log->log("The exception was created on line: " . $ex->getFile() . ' ' . $ex->getLine(), 'error');
                 $this->api_log->log($ex->getMessage(), 'error');
@@ -2646,7 +2646,7 @@ class Goopter_PayPal_PPCP_Payment {
                 'cookies' => array()
             );
             $this->api_response = $this->api_request->request($this->paypal_order_api . $paypal_order_id, $args, 'get_order');
-            $this->api_response = json_decode(json_encode($this->api_response), true);
+            $this->api_response = json_decode(wp_json_encode($this->api_response), true);
             return $this->api_response;
         } catch (Exception $ex) {
             $this->api_log->log("The exception was created on line: " . $ex->getFile() . ' ' . $ex->getLine(), 'error');
@@ -2666,7 +2666,7 @@ class Goopter_PayPal_PPCP_Payment {
                 'cookies' => array()
             );
             $this->api_response = $this->api_request->request($this->auth . $authorization_id, $args, 'get_authorized');
-            $this->api_response = json_decode(json_encode($this->api_response), true);
+            $this->api_response = json_decode(wp_json_encode($this->api_response), true);
             return $this->api_response;
         } catch (Exception $ex) {
             $this->api_log->log("The exception was created on line: " . $ex->getFile() . ' ' . $ex->getLine(), 'error');
@@ -2797,7 +2797,7 @@ class Goopter_PayPal_PPCP_Payment {
                         if (!empty($item_amount)) {
                             $transaction_id = isset($this->api_response['transaction_id']) ? $this->api_response['transaction_id'] : $transaction_id;
                             $transaction_amount = isset($this->api_response['amount']['value']) ? $this->api_response['amount']['value'] : $item_amount;
-                            $transaction_date = date('m/d/y H:i', strtotime($this->api_response['update_time']));
+                            $transaction_date = gmdate('m/d/y H:i', strtotime($this->api_response['update_time']));
                             $ppcp_capture_details[] = array(
                                 '_ppcp_transaction_id' => $transaction_id,
                                 '_ppcp_transaction_date' => $transaction_date,
@@ -3141,7 +3141,7 @@ class Goopter_PayPal_PPCP_Payment {
                         if (isset($this->api_response['payment_source']['card']['from_request']['expiry'])) {
                             $token_id = '';
                             if (!empty($_POST['wc-goopter_ppcp_cc-payment-token']) && $_POST['wc-goopter_ppcp_cc-payment-token'] != 'new') {
-                                $token_id = wc_clean($_POST['wc-goopter_ppcp_cc-payment-token']);
+                                $token_id = wc_clean(sanitize_text_field(wp_unslash($_POST['wc-goopter_ppcp_cc-payment-token'])));
                             } else {
                                 $payment_tokens_id = goopter_ppcp_get_post_meta($order, '_payment_tokens_id', true);
                                 $token_id = goopter_ppcp_get_token_id_by_token($payment_tokens_id);
@@ -3164,8 +3164,8 @@ class Goopter_PayPal_PPCP_Payment {
                                         $token->set_expiry_month($card_exp_month);
                                         $token->set_expiry_year($card_exp_year);
                                     } else {
-                                        $token->set_expiry_month(date('m'));
-                                        $token->set_expiry_year(date('Y', strtotime('+5 years')));
+                                        $token->set_expiry_month(gmdate('m'));
+                                        $token->set_expiry_year(gmdate('Y', strtotime('+5 years')));
                                     }
                                 }
                                 if ($token->validate()) {
@@ -3504,7 +3504,7 @@ class Goopter_PayPal_PPCP_Payment {
             $body_request = array();
             if (isset($_GET[APPROVAL_TOKEN_ID_PARAM_NAME]) && isset($_GET['order_id'])) {
                 $body_request['payment_source']['token'] = array(
-                    'id' => wc_clean($_GET[APPROVAL_TOKEN_ID_PARAM_NAME]),
+                    'id' => wc_clean(sanitize_text_field(wp_unslash($_GET[APPROVAL_TOKEN_ID_PARAM_NAME]))),
                     'type' => 'SETUP_TOKEN'
                 );
                 $args = array(
@@ -3521,7 +3521,7 @@ class Goopter_PayPal_PPCP_Payment {
                     if (isset($customer_id) && !empty($customer_id)) {
                         $this->ppcp_payment_token->goopter_ppcp_add_paypal_generated_customer_id($customer_id, $this->is_sandbox);
                     }
-                    $order_id = wc_clean($_GET['order_id']);
+                    $order_id = wc_clean(sanitize_text_field(wp_unslash($_GET['order_id'])));
                     $order = wc_get_order($order_id);
                     $order->update_meta_data('_goopter_ppcp_used_payment_method', 'paypal');
                     $order->save();
@@ -3544,8 +3544,8 @@ class Goopter_PayPal_PPCP_Payment {
                         $token->set_gateway_id($order->get_payment_method());
                         $token->set_card_type($email_address);
                         $token->set_last4(substr($this->api_response['id'], -4));
-                        $token->set_expiry_month(date('m'));
-                        $token->set_expiry_year(date('Y', strtotime('+20 years')));
+                        $token->set_expiry_month(gmdate('m'));
+                        $token->set_expiry_year(gmdate('Y', strtotime('+20 years')));
                         $token->set_user_id($customer_id);
                         if ($token->validate()) {
                             $token->save();
@@ -3595,7 +3595,7 @@ class Goopter_PayPal_PPCP_Payment {
                 // so clear those notices to show the clean notice to users
                 wc_clear_notices();
                 $body_request['payment_source']['token'] = array(
-                    'id' => wc_clean($_GET[APPROVAL_TOKEN_ID_PARAM_NAME]),
+                    'id' => wc_clean(sanitize_text_field(wp_unslash($_GET[APPROVAL_TOKEN_ID_PARAM_NAME]))),
                     'type' => 'SETUP_TOKEN'
                 );
                 $args = array(
@@ -3626,8 +3626,8 @@ class Goopter_PayPal_PPCP_Payment {
                         $token->set_gateway_id('goopter_ppcp');
                         $token->set_card_type($email_address);
                         $token->set_last4(substr($this->api_response['id'], -4));
-                        $token->set_expiry_month(date('m'));
-                        $token->set_expiry_year(date('Y', strtotime('+20 years')));
+                        $token->set_expiry_month(gmdate('m'));
+                        $token->set_expiry_year(gmdate('Y', strtotime('+20 years')));
                         $token->set_user_id($wc_customer_id);
                         if ($token->validate()) {
                             $token->save();
@@ -3730,7 +3730,7 @@ class Goopter_PayPal_PPCP_Payment {
             $body_request = array();
             if (isset($_GET[APPROVAL_TOKEN_ID_PARAM_NAME])) {
                 $body_request['payment_source']['token'] = array(
-                    'id' => wc_clean($_GET[APPROVAL_TOKEN_ID_PARAM_NAME]),
+                    'id' => wc_clean(sanitize_text_field(wp_unslash($_GET[APPROVAL_TOKEN_ID_PARAM_NAME]))),
                     'type' => 'SETUP_TOKEN'
                 );
                 $args = array(
@@ -3769,8 +3769,8 @@ class Goopter_PayPal_PPCP_Payment {
                                 $token->set_expiry_month($card_exp_month);
                                 $token->set_expiry_year($card_exp_year);
                             } else {
-                                $token->set_expiry_month(date('m'));
-                                $token->set_expiry_year(date('Y', strtotime('+5 years')));
+                                $token->set_expiry_month(gmdate('m'));
+                                $token->set_expiry_year(gmdate('Y', strtotime('+5 years')));
                             }
                         }
                         $token->set_user_id($wc_customer_id);
@@ -3814,7 +3814,7 @@ class Goopter_PayPal_PPCP_Payment {
             $body_request = array();
             if (isset($_GET[APPROVAL_TOKEN_ID_PARAM_NAME]) && isset($_GET['order_id'])) {
                 $body_request['payment_source']['token'] = array(
-                    'id' => wc_clean($_GET[APPROVAL_TOKEN_ID_PARAM_NAME]),
+                    'id' => wc_clean(sanitize_text_field(wp_unslash($_GET[APPROVAL_TOKEN_ID_PARAM_NAME]))),
                     'type' => 'SETUP_TOKEN'
                 );
                 $args = array(
@@ -3831,8 +3831,8 @@ class Goopter_PayPal_PPCP_Payment {
                     if (isset($customer_id) && !empty($customer_id)) {
                         $this->ppcp_payment_token->goopter_ppcp_add_paypal_generated_customer_id($customer_id, $this->is_sandbox);
                     }
-                    $order_id = wc_clean($_GET['order_id']);
-                    $order = wc_get_order(wc_clean($_GET['order_id']));
+                    $order_id = wc_clean(sanitize_text_field(wp_unslash($_GET['order_id'])));
+                    $order = wc_get_order(wc_clean(sanitize_text_field(wp_unslash($_GET['order_id']))));
                     $order->update_meta_data('_goopter_ppcp_used_payment_method', 'card');
                     $order->save();
                     $this->save_payment_token($order, $this->api_response['id']);
@@ -3862,8 +3862,8 @@ class Goopter_PayPal_PPCP_Payment {
                                 $token->set_expiry_month($card_exp_month);
                                 $token->set_expiry_year($card_exp_year);
                             } else {
-                                $token->set_expiry_month(date('m'));
-                                $token->set_expiry_year(date('Y', strtotime('+5 years')));
+                                $token->set_expiry_month(gmdate('m'));
+                                $token->set_expiry_year(gmdate('Y', strtotime('+5 years')));
                             }
                         }
                         $token->set_user_id($customer_id);
@@ -4090,7 +4090,7 @@ class Goopter_PayPal_PPCP_Payment {
             $body_request = array();
             if (isset($_GET[APPROVAL_TOKEN_ID_PARAM_NAME]) && isset($_GET['order_id'])) {
                 $body_request['payment_source']['token'] = array(
-                    'id' => wc_clean($_GET[APPROVAL_TOKEN_ID_PARAM_NAME]),
+                    'id' => wc_clean(sanitize_text_field(wp_unslash($_GET[APPROVAL_TOKEN_ID_PARAM_NAME]))),
                     'type' => 'SETUP_TOKEN'
                 );
                 $args = array(
@@ -4102,8 +4102,8 @@ class Goopter_PayPal_PPCP_Payment {
                 if (ob_get_length()) {
                     ob_end_clean();
                 }
-                $order_id = wc_clean($_GET['order_id']);
-                $order = wc_get_order(wc_clean($_GET['order_id']));
+                $order_id = wc_clean(sanitize_text_field(wp_unslash($_GET['order_id'])));
+                $order = wc_get_order(wc_clean(sanitize_text_field(wp_unslash($_GET['order_id']))));
                 if (!empty($this->api_response['id'])) {
                     $customer_id = $this->api_response['customer']['id'] ?? '';
                     if (isset($customer_id) && !empty($customer_id)) {
@@ -4138,8 +4138,8 @@ class Goopter_PayPal_PPCP_Payment {
                                 $token->set_expiry_month($card_exp_month);
                                 $token->set_expiry_year($card_exp_year);
                             } else {
-                                $token->set_expiry_month(date('m'));
-                                $token->set_expiry_year(date('Y', strtotime('+5 years')));
+                                $token->set_expiry_month(gmdate('m'));
+                                $token->set_expiry_year(gmdate('Y', strtotime('+5 years')));
                             }
                         }
                         $token->set_user_id($customer_id);
@@ -4234,7 +4234,7 @@ class Goopter_PayPal_PPCP_Payment {
             $body_request = array();
             if (isset($_GET[APPROVAL_TOKEN_ID_PARAM_NAME]) && isset($_GET['order_id'])) {
                 $body_request['payment_source']['token'] = array(
-                    'id' => wc_clean($_GET[APPROVAL_TOKEN_ID_PARAM_NAME]),
+                    'id' => wc_clean(sanitize_text_field(wp_unslash($_GET[APPROVAL_TOKEN_ID_PARAM_NAME]))),
                     'type' => 'SETUP_TOKEN'
                 );
                 $args = array(
@@ -4246,8 +4246,8 @@ class Goopter_PayPal_PPCP_Payment {
                 if (ob_get_length()) {
                     ob_end_clean();
                 }
-                $order_id = wc_clean($_GET['order_id']);
-                $order = wc_get_order(wc_clean($_GET['order_id']));
+                $order_id = wc_clean(sanitize_text_field(wp_unslash($_GET['order_id'])));
+                $order = wc_get_order(wc_clean(sanitize_text_field(wp_unslash($_GET['order_id']))));
                 if (!empty($this->api_response['id'])) {
                     $customer_id = $this->api_response['customer']['id'] ?? '';
                     if (isset($customer_id) && !empty($customer_id)) {
@@ -4274,8 +4274,8 @@ class Goopter_PayPal_PPCP_Payment {
                         $token->set_gateway_id($order->get_payment_method());
                         $token->set_card_type('PayPal Vault');
                         $token->set_last4(substr($this->api_response['id'], -4));
-                        $token->set_expiry_month(date('m'));
-                        $token->set_expiry_year(date('Y', strtotime('+20 years')));
+                        $token->set_expiry_month(gmdate('m'));
+                        $token->set_expiry_year(gmdate('Y', strtotime('+20 years')));
                         $token->set_user_id($wc_customer_id);
                         if ($token->validate()) {
                             $token->save();
@@ -4702,7 +4702,7 @@ class Goopter_PayPal_PPCP_Payment {
                 $order->add_order_note(
                         sprintf(__('Refunded %1$s - Refund ID: %2$s', 'paypal-advanced-for-woocommerce'), wc_price($gross_amount, array('currency' => $currency_code)), $refund_transaction_id)
                 );
-                $refund_date = date('m/d/y H:i', strtotime($this->api_response['update_time']));
+                $refund_date = gmdate('m/d/y H:i', strtotime($this->api_response['update_time']));
                 $ppcp_refund_details[] = array(
                     '_ppcp_refund_id' => $refund_transaction_id,
                     '_ppcp_refund_date' => $refund_date,
@@ -4745,12 +4745,12 @@ class Goopter_PayPal_PPCP_Payment {
                 'cookies' => array()
             );
             $api_response = $this->api_request->request($this->paypal_refund_api . $capture_id, $args, 'get_capture');
-            $api_response = json_decode(json_encode($api_response), true);
+            $api_response = json_decode(wp_json_encode($api_response), true);
             if (isset($api_response['id'])) {
                 return $api_response;
             }
             $this->api_log->log("Unable to find the PayPal capture: " . $capture_id, 'error');
-            $this->api_log->log(print_r($api_response, true), 'error');
+            $this->api_log->log(wp_json_encode($api_response, true), 'error');
         } catch (Exception $ex) {
             $this->api_log->log("The exception was created on line: " . $ex->getFile() . ' ' . $ex->getLine(), 'error');
             $this->api_log->log($ex->getMessage(), 'error');
