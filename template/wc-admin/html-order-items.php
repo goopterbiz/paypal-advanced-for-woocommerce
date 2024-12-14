@@ -453,7 +453,11 @@ if ( wc_tax_enabled() ) {
 								</tr>
 							</thead>
 						<?php
-						$rates = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}woocommerce_tax_rates ORDER BY tax_rate_name LIMIT 100" );
+						$data_store = WC_Data_Store::load('tax-rate');
+						$rates = $data_store->search_tax_rates([
+    						'limit' => 100,           // Limit the number of results
+    						'orderby' => 'name',      // Order by tax rate name
+						]);
 						foreach ( $rates as $rate ) {
 							echo '
 									<tr>

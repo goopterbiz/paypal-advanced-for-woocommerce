@@ -721,21 +721,41 @@ if (!function_exists('goopter_ppcp_is_save_payment_method')) {
 
 if (!function_exists('goopter_ppcp_get_token_id_by_token')) {
 
+    // function goopter_ppcp_get_token_id_by_token($token_id) {
+    //     try {
+    //         global $wpdb;
+    //         $tokens = $wpdb->get_row(
+    //                 $wpdb->prepare(
+    //                         "SELECT token_id FROM {$wpdb->prefix}woocommerce_payment_tokens WHERE token = %s",
+    //                         $token_id
+    //                 )
+    //         );
+    //         if (isset($tokens->token_id)) {
+    //             return $tokens->token_id;
+    //         }
+    //         return '';
+    //     } catch (Exception $ex) {
+
+    //     }
+    // }
+
     function goopter_ppcp_get_token_id_by_token($token_id) {
         try {
-            global $wpdb;
-            $tokens = $wpdb->get_row(
-                    $wpdb->prepare(
-                            "SELECT token_id FROM {$wpdb->prefix}woocommerce_payment_tokens WHERE token = %s",
-                            $token_id
-                    )
-            );
-            if (isset($tokens->token_id)) {
-                return $tokens->token_id;
+            // Get the WooCommerce payment token data store
+            $data_store = WC_Data_Store::load('payment-token');
+    
+            // Search for tokens matching the provided token string
+            $tokens = $data_store->search_tokens($token_id, 'token', 'payment_tokens', true);
+    
+            // If tokens are found, return the first token ID
+            if (!empty($tokens) && is_array($tokens)) {
+                return reset($tokens); // Return the first token ID
             }
+    
             return '';
         } catch (Exception $ex) {
-
+            // Handle exceptions if necessary
+            return '';
         }
     }
 
