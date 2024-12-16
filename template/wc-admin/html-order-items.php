@@ -116,7 +116,17 @@ if ( wc_tax_enabled() ) {
 				<li><strong><?php esc_html_e( 'Coupon(s)', 'woocommerce' ); ?></strong></li>
 				<?php
 				foreach ( $coupons as $item_id => $item ) :
-					$post_id = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_title = %s AND post_type = 'shop_coupon' AND post_status = 'publish' LIMIT 1;", $item->get_code() ) ); // phpcs:disable WordPress.WP.GlobalVariablesOverride.Prohibited
+					// $post_id = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_title = %s AND post_type = 'shop_coupon' AND post_status = 'publish' LIMIT 1;", $item->get_code() ) ); // phpcs:disable WordPress.WP.GlobalVariablesOverride.Prohibited
+					$data_store = WC_Data_Store::load('coupon');
+					// Search for the coupon by code
+					$coupons = $data_store->search([
+    					'search'      => $item->get_code(),
+    					'search_type' => 'exact', // Ensures an exact match
+    					'limit'       => 1,       // Limit to one result
+					]);
+					// Get the post ID if a coupon is found
+					$post_id = !empty($coupons) ? $coupons[0] : null;
+
 					$class   = $order->is_editable() ? 'code editable' : 'code';
 					?>
 					<li class="<?php echo esc_attr( $class ); ?>">

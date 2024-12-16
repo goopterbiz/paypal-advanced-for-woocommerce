@@ -785,26 +785,69 @@ class Goopter_PayPal_PPCP_Front_Action {
         $this->goopter_ppcp_create_woo_order();
     }
 
+    // public function goopter_ppcp_download_zip_file($github_zip_url, $plugin_zip_path) {
+    //     $request_headers = array();
+    //     $request_headers[] = 'Accept: */*';
+    //     $request_headers[] = 'Accept-Encoding: gzip, deflate, br';
+    //     $request_headers[] = 'Connection: keep-alive';
+    //     $fp = fopen($plugin_zip_path, 'w+');
+    //     $ch = curl_init($github_zip_url);
+    //     curl_setopt($ch, CURLOPT_HTTPHEADER, $request_headers);
+    //     curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);
+    //     curl_setopt($ch, CURLOPT_TIMEOUT, -1);
+    //     curl_setopt($ch, CURLOPT_VERBOSE, false);
+    //     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+    //     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    //     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    //     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    //     $data = curl_exec($ch);
+    //     fwrite($fp, $data);
+    //     curl_close($ch);
+    //     fclose($fp);
+    // }
+
     public function goopter_ppcp_download_zip_file($github_zip_url, $plugin_zip_path) {
-        $request_headers = array();
-        $request_headers[] = 'Accept: */*';
-        $request_headers[] = 'Accept-Encoding: gzip, deflate, br';
-        $request_headers[] = 'Connection: keep-alive';
-        $fp = fopen($plugin_zip_path, 'w+');
-        $ch = curl_init($github_zip_url);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $request_headers);
-        curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, -1);
-        curl_setopt($ch, CURLOPT_VERBOSE, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        $data = curl_exec($ch);
-        fwrite($fp, $data);
-        curl_close($ch);
-        fclose($fp);
+        // Set up request arguments
+        $args = [
+            'headers' => [
+                'Accept' => '*/*',
+                'Accept-Encoding' => 'gzip, deflate, br',
+                'Connection' => 'keep-alive',
+            ],
+            'timeout' => 0, // No timeout (equivalent to CURLOPT_TIMEOUT -1)
+            'sslverify' => false, // Disable SSL verification (equivalent to CURLOPT_SSL_VERIFYPEER and CURLOPT_SSL_VERIFYHOST)
+        ];
+    
+        // Perform the GET request
+        $response = wp_remote_get($github_zip_url, $args);
+    
+        // Use the WooCommerce logger
+        $logger = wc_get_logger();
+    
+        // Check for request errors
+        if (is_wp_error($response)) {
+            $logger->error('Error downloading the zip file: ' . $response->get_error_message(), ['source' => 'goopter_ppcp']);
+            return;
+        }
+    
+        // Get the response body
+        $body = wp_remote_retrieve_body($response);
+    
+        // Write the file to the specified path
+        if (!empty($body)) {
+            $fp = fopen($plugin_zip_path, 'w+');
+            if ($fp) {
+                fwrite($fp, $body);
+                fclose($fp);
+            } else {
+                $logger->error('Unable to write to file: ' . $plugin_zip_path, ['source' => 'goopter_ppcp']);
+            }
+        } else {
+            $logger->error('Error: Response body is empty.', ['source' => 'goopter_ppcp']);
+        }
     }
+    
+    
 
     public function goopter_ppcp_add_zipdata($source, $inside_folder, $destination) {
         $plugin_folder_name = $inside_folder;

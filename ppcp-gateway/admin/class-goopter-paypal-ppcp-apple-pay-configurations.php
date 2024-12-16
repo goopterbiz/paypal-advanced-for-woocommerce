@@ -124,7 +124,7 @@ class Goopter_PayPal_PPCP_Apple_Pay_Configurations
         }
 
         if ($addedDomains['status'] && count($addedDomains['domains'])) {
-            $domainName = parse_url( get_site_url(), PHP_URL_HOST );
+            $domainName = wp_parse_url( get_site_url(), PHP_URL_HOST );
             foreach ($addedDomains['domains'] as $addedDomain) {
                 if ($addedDomain['domain'] == $domainName) {
                     return true;
@@ -158,7 +158,7 @@ class Goopter_PayPal_PPCP_Apple_Pay_Configurations
                     $instance->addDomainValidationFiles();
                 } catch (Exception $exception) {}
 
-                $domainNameToRegister = parse_url( get_site_url(), PHP_URL_HOST );
+                $domainNameToRegister = wp_parse_url( get_site_url(), PHP_URL_HOST );
                 $result = $instance->registerDomain($domainNameToRegister);
                 return $result['status'];
             } else {
@@ -177,7 +177,7 @@ class Goopter_PayPal_PPCP_Apple_Pay_Configurations
     {
         if (self::isApplePayDomainAdded()) {
             $instance = Goopter_PayPal_PPCP_Apple_Pay_Configurations::instance();
-            $domainNameToRemove = parse_url(get_site_url(), PHP_URL_HOST);
+            $domainNameToRemove = wp_parse_url(get_site_url(), PHP_URL_HOST);
             $result = $instance->removeDomain($domainNameToRemove);
             return $result['status'];
         }
@@ -266,7 +266,7 @@ class Goopter_PayPal_PPCP_Apple_Pay_Configurations
 
     public function registerApplePayDomain()
     {
-        $domainNameToRegister = sanitize_text_field(wp_unslash($_POST['apple_pay_domain'])) ?? parse_url( get_site_url(), PHP_URL_HOST );
+        $domainNameToRegister = sanitize_text_field(wp_unslash($_POST['apple_pay_domain'])) ?? wp_parse_url( get_site_url(), PHP_URL_HOST );
 
         try {
             $result = $this->registerDomain($domainNameToRegister);
@@ -279,7 +279,7 @@ class Goopter_PayPal_PPCP_Apple_Pay_Configurations
 
     public function removeApplePayDomain()
     {
-        $domainNameToRemove = sanitize_text_field(wp_unslash($_REQUEST['domain'])) ?? parse_url( get_site_url(), PHP_URL_HOST );
+        $domainNameToRemove = sanitize_text_field(wp_unslash($_REQUEST['domain'])) ?? wp_parse_url( get_site_url(), PHP_URL_HOST );
         $result = $this->removeDomain($domainNameToRemove);
         wp_send_json($result);
         die;
@@ -316,21 +316,58 @@ class Goopter_PayPal_PPCP_Apple_Pay_Configurations
         return true;
     }
 
+    // private function updateDomainVerificationFileContent($localFileLocation)
+    // {
+    //     $ch = curl_init();
+    //     curl_setopt($ch, CURLOPT_URL, $this->payPalDomainValidationFile);
+    //     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    //     curl_setopt($ch, CURLOPT_HEADER, false);
+    //     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    //     $response = curl_exec($ch);
+    //     $resultStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    //     curl_close($ch);
+
+    //     if (in_array($resultStatus, [200, 304])) {
+    //         $fp = fopen($localFileLocation, "w");
+    //         fwrite($fp, $response);
+    //         fclose($fp);
+    //     }
+    // }
+
     private function updateDomainVerificationFileContent($localFileLocation)
     {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $this->payPalDomainValidationFile);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HEADER, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        $response = curl_exec($ch);
-        $resultStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-
+        $logger = wc_get_logger(); // WooCommerce logger
+        $context = ['source' => 'paypal-domain-verification'];
+    
+        // Perform the GET request using wp_remote_get
+        $response = wp_remote_get($this->payPalDomainValidationFile, [
+            'sslverify' => false, // Disable SSL verification if necessary
+        ]);
+    
+        // Check for errors in the request
+        if (is_wp_error($response)) {
+            $logger->error('Error fetching PayPal domain validation file: ' . $response->get_error_message(), $context);
+            return;
+        }
+    
+        // Get the HTTP status code
+        $resultStatus = wp_remote_retrieve_response_code($response);
+    
+        // Check if the response status is 200 or 304
         if (in_array($resultStatus, [200, 304])) {
-            $fp = fopen($localFileLocation, "w");
-            fwrite($fp, $response);
-            fclose($fp);
+            // Retrieve the response body
+            $body = wp_remote_retrieve_body($response);
+    
+            // Write the response body to the specified file location
+            if ($fp = fopen($localFileLocation, "w")) {
+                fwrite($fp, $body);
+                fclose($fp);
+            } else {
+                $logger->error("Unable to write to file: $localFileLocation", $context);
+            }
+        } else {
+            $logger->warning("Unexpected HTTP status code: $resultStatus", $context);
         }
     }
+    
 }
