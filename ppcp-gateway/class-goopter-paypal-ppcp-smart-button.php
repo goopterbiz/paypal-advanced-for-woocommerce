@@ -408,6 +408,9 @@ class Goopter_PayPal_PPCP_Smart_Button {
         }
         //disable the instant order confirmation sent by Germanized
         add_filter('woocommerce_germanized_send_instant_order_confirmation', array($this, 'goopter_ppcp_disable_instant_order_confirmation'), 99, 2);
+
+        // if there is an unfinshed previous order exists, remove it using clearing session manager in checkout page
+        add_action('template_redirect', array($this, 'goopter_ppcp_remove_unfinished_order'));
     }
 
     public function goopter_load_js_sdk() {
@@ -2088,5 +2091,11 @@ class Goopter_PayPal_PPCP_Smart_Button {
             return false; 
         }
         return $bool;
+    }
+
+    public function goopter_ppcp_remove_unfinished_order() {
+        if (is_checkout() && !goopter_ppcp_has_active_session() && !isset($_GET['paypal_order_id']) && Goopter_Session_Manager::get('used_payment_method')) {
+            Goopter_Session_Manager::clear();
+        }   
     }
 }
