@@ -1018,7 +1018,10 @@ class Goopter_PayPal_PPCP_Payment {
             }
         }
 
-        return $addr . $pid . sanitize_text_field(wp_unslash($_SERVER['REQUEST_TIME'])) . wp_rand(0, 0xffff);
+        // return $addr . $pid . sanitize_text_field(wp_unslash($_SERVER['REQUEST_TIME'])) . wp_rand(0, 0xffff);
+        return $addr . $pid . (isset($_SERVER['REQUEST_TIME']) 
+            ? sanitize_text_field(wp_unslash($_SERVER['REQUEST_TIME'])) 
+            : time()) . wp_rand(0, 0xffff);
     }
 
     public function goopter_ppcp_get_readable_message($error, $error_email_notification_param = array()) {
@@ -1315,7 +1318,7 @@ class Goopter_PayPal_PPCP_Payment {
                             }, 20, 2);
                             $order->payment_complete($transaction_id);
                             // Translators: %1$s is the payment method title, %2$s is the payment status.
-                            $order->add_order_note(sprintf(__('Payment via %s: %s.', 'paypal-advanced-for-woocommerce'), $order->get_payment_method_title(), ucfirst(strtolower($payment_status))));
+                            $order->add_order_note(sprintf(__('Payment via %1$s: %2$s.', 'paypal-advanced-for-woocommerce'), $order->get_payment_method_title(), ucfirst(strtolower($payment_status))));
                         } else {
                             $payment_status_reason = isset($this->api_response['purchase_units']['0']['payments']['captures']['0']['status_details']['reason']) ? $this->api_response['purchase_units']['0']['payments']['captures']['0']['status_details']['reason'] : '';
                             $this->goopter_ppcp_update_woo_order_status($woo_order_id, $payment_status, $payment_status_reason);
@@ -1363,7 +1366,7 @@ class Goopter_PayPal_PPCP_Payment {
                     $order->update_meta_data('_payment_status', $payment_status);
                     $order->save();
                     // Translators: %1$s is the payment method title, %2$s is the capture transaction ID.
-                    $order->add_order_note(sprintf(__('%s Capture Transaction ID: %s', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $transaction_id));
+                    $order->add_order_note(sprintf(__('%1$s Capture Transaction ID: %2$s', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $transaction_id));
                     $order->add_order_note('Seller Protection Status: ' . goopter_ppcp_readable($seller_protection));
                     return true;
                 } else {
@@ -1717,7 +1720,7 @@ class Goopter_PayPal_PPCP_Payment {
                 $refund_transaction_id = $this->api_response['id'] ?? '';
                 $pending_reason_text = $this->api_response['status_details']['reason'] ?? '';
                 // Translators: %1$s is the payment method title, %2$s is the pending reason text.
-                $order->add_order_note(sprintf(__('Payment via %s Pending. Pending reason: %s.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $pending_reason_text));
+                $order->add_order_note(sprintf(__('Payment via %1$s Pending. Pending reason: %2$s.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $pending_reason_text));
                 $order->add_order_note(
                     // Translators: %1$s is the refunded amount with currency, %2$s is the refund transaction ID.
                         sprintf(__('Refund Amount %1$s - Refund ID: %2$s', 'paypal-advanced-for-woocommerce'), wc_price($gross_amount, array('currency' => $currency_code)), $refund_transaction_id)
@@ -1880,7 +1883,7 @@ class Goopter_PayPal_PPCP_Payment {
                         }, 20, 2);
                         $order->payment_complete($transaction_id);
                         // Translators: %1$s is the payment method title, %2$s is the payment status.
-                        $order->add_order_note(sprintf(__('Payment via %s: %s.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, ucfirst(strtolower($payment_status))));
+                        $order->add_order_note(sprintf(__('Payment via %1$s: %2$s.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, ucfirst(strtolower($payment_status))));
                     } elseif ($payment_status === 'DECLINED') {
                         // Translators: %s is the payment method title.
                         $order->update_status('failed', sprintf(__('Payment via %s declined.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title));
@@ -1896,7 +1899,7 @@ class Goopter_PayPal_PPCP_Payment {
                     $order->update_meta_data('_auth_transaction_id', $transaction_id);
                     $order->update_meta_data('_paymentaction', 'authorize');
                     // Translators: %1$s is the payment method title, %2$s is the authorization transaction ID.
-                    $order->add_order_note(sprintf(__('%s Authorization Transaction ID: %s', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $transaction_id));
+                    $order->add_order_note(sprintf(__('%1$s Authorization Transaction ID: %2$s', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $transaction_id));
                     $order->add_order_note('Seller Protection Status: ' . goopter_ppcp_readable($seller_protection));
                     if (class_exists('Goopter_PayPal_PPCP_Admin_Action')) {
                         Goopter_PayPal_PPCP_Admin_Action::instance()->removeAutoCaptureHooks();
@@ -2102,13 +2105,13 @@ class Goopter_PayPal_PPCP_Payment {
                 }, 20, 2);
                 $order->payment_complete($transaction_id);
                 // Translators: %1$s is the payment method title, %2$s is the payment status.
-                $order->add_order_note(sprintf(__('Payment via %s: %s .', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, ucfirst(strtolower($payment_status))));
+                $order->add_order_note(sprintf(__('Payment via %1$s: %2$s .', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, ucfirst(strtolower($payment_status))));
             } else {
                 $payment_status_reason = $this->checkout_details->purchase_units[0]->payments->captures[0]->status_details->reason ?? '';
                 $this->goopter_ppcp_update_woo_order_status($order_id, $payment_status, $payment_status_reason);
             }
             // Translators: %1$s is the payment method title, %2$s is the capture transaction ID.
-            $order->add_order_note(sprintf(__('%s Capture Transaction ID: %s', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $transaction_id));
+            $order->add_order_note(sprintf(__('%1$s Capture Transaction ID: %2$s', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $transaction_id));
             $order->add_order_note('Seller Protection Status: ' . goopter_ppcp_readable($seller_protection));
         } elseif ($this->paymentaction === 'authorize' && !empty($this->checkout_details->status) && $this->checkout_details->status == 'COMPLETED' && $order !== false) {
             $transaction_id = isset($this->checkout_details->purchase_units[0]->payments->authorizations[0]->id) ? $this->checkout_details->purchase_units['0']->payments->authorizations[0]->id : '';
@@ -2117,14 +2120,14 @@ class Goopter_PayPal_PPCP_Payment {
             $payment_status_reason = $this->checkout_details->purchase_units[0]->payments->authorizations[0]->status_details->reason ?? '';
             if (!empty($payment_status_reason)) {
                 // Translators: %1$s is the payment method title, %2$s is the PayPal pending reason.
-                $order->add_order_note(sprintf(__('Payment via %s Pending. PayPal reason: %s.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $payment_status_reason));
+                $order->add_order_note(sprintf(__('Payment via %1$s Pending. PayPal reason: %2$s.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $payment_status_reason));
             }
             $order->set_transaction_id($transaction_id);
             $order->update_meta_data('_payment_status', $payment_status);
             $order->update_meta_data('_auth_transaction_id', $transaction_id);
             $order->update_meta_data('_paymentaction', $this->paymentaction);
             // Translators: %1$s is the payment method title, %2$s is the authorization transaction ID.
-            $order->add_order_note(sprintf(__('%s Authorization Transaction ID: %s', 'paypal-advanced-for-woocommerce'), $this->title, $transaction_id));
+            $order->add_order_note(sprintf(__('%1$s Authorization Transaction ID: %2$s', 'paypal-advanced-for-woocommerce'), $this->title, $transaction_id));
             $order->add_order_note('Seller Protection Status: ' . goopter_ppcp_readable($seller_protection));
             if (class_exists('Goopter_PayPal_PPCP_Admin_Action')) {
                 Goopter_PayPal_PPCP_Admin_Action::instance()->removeAutoCaptureHooks();
@@ -2504,7 +2507,7 @@ class Goopter_PayPal_PPCP_Payment {
                 case 'COMPLETED' :
                     $order->payment_complete();
                     // Translators: %1$s is the payment method title, %2$s is the payment status.
-                    $order->add_order_note(sprintf(__('Payment via %s: %s.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, ucfirst(strtolower($payment_status))));
+                    $order->add_order_note(sprintf(__('Payment via %1$s: %2$s.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, ucfirst(strtolower($payment_status))));
                     break;
                 case 'DECLINED' :
                     // Translators: %s is the payment method title.
@@ -2552,26 +2555,26 @@ class Goopter_PayPal_PPCP_Payment {
                     }
                     if ($payment_status === 'PENDING') {
                         // Translators: %1$s is the payment method title, %2$s is the PayPal pending reason text.
-                        $order->update_status('on-hold', sprintf(__('Payment via %s Pending. PayPal Pending reason: %s.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $pending_reason_text));
+                        $order->update_status('on-hold', sprintf(__('Payment via %1$s Pending. PayPal Pending reason: %2$s.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $pending_reason_text));
                     }
                     if ($payment_status === 'DECLINED') {
                         // Translators: %1$s is the payment method title, %2$s is the PayPal declined reason text.
-                        $order->update_status('failed', sprintf(__('Payment via %s declined. PayPal declined reason: %s.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $pending_reason_text));
+                        $order->update_status('failed', sprintf(__('Payment via %1$s declined. PayPal declined reason: %2$s.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $pending_reason_text));
                     }
                     break;
                 case 'PARTIALLY_REFUNDED' :
                     $order->update_status('on-hold');
                     // Translators: %1$s is the payment method title, %2$s is the PayPal refund reason.
-                    $order->add_order_note(sprintf(__('Payment via %s partially refunded. PayPal reason: %s.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $pending_reason));
+                    $order->add_order_note(sprintf(__('Payment via %1$s partially refunded. PayPal reason: %2$s.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $pending_reason));
                     break;
                 case 'REFUNDED' :
                     $order->update_status('refunded');
                     // Translators: %1$s is the payment method title, %2$s is the PayPal refund reason.
-                    $order->add_order_note(sprintf(__('Payment via %s refunded. PayPal reason: %s.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $pending_reason));
+                    $order->add_order_note(sprintf(__('Payment via %1$s refunded. PayPal reason: %2$s.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $pending_reason));
                     break;
                 case 'FAILED' :
                     // Translators: %1$s is the payment method title, %2$s is the PayPal failure reason.
-                    $order->update_status('failed', sprintf(__('Payment via %s failed. PayPal reason: %s.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $pending_reason));
+                    $order->update_status('failed', sprintf(__('Payment via %1$s failed. PayPal reason: %2$s.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $pending_reason));
                     break;
                 case 'VOIDED' :
                     // Translators: %s is the payment method title.
@@ -2635,22 +2638,22 @@ class Goopter_PayPal_PPCP_Payment {
                     }
                     if ($payment_status === 'PENDING') {
                         // Translators: %1$s is the payment method title, %2$s is the PayPal pending reason.
-                        $order->add_order_note(sprintf(__('Payment via %s Pending. PayPal Pending reason: %s.', 'paypal-advanced-for-woocommerce'), $order->get_payment_method_title(), $pending_reason_text));
+                        $order->add_order_note(sprintf(__('Payment via %1$s Pending. PayPal Pending reason: %2$s.', 'paypal-advanced-for-woocommerce'), $order->get_payment_method_title(), $pending_reason_text));
                     }
                     if ($payment_status === 'DECLINED') {
                         // Translators: %1$s is the payment method title, %2$s is the PayPal declined reason.
-                        $order->add_order_note(sprintf(__('Payment via %s declined. PayPal declined reason: %s.', 'paypal-advanced-for-woocommerce'), $order->get_payment_method_title(), $pending_reason_text));
+                        $order->add_order_note(sprintf(__('Payment via %1$s declined. PayPal declined reason: %2$s.', 'paypal-advanced-for-woocommerce'), $order->get_payment_method_title(), $pending_reason_text));
                     }
                     break;
                 case 'PARTIALLY_REFUNDED' :
                     // Translators: %1$s is the payment method title, %2$s is the PayPal refund reason.
-                    $order->add_order_note(sprintf(__('Payment via %s partially refunded. PayPal reason: %s.', 'paypal-advanced-for-woocommerce'), $order->get_payment_method_title(), $pending_reason));
+                    $order->add_order_note(sprintf(__('Payment via %1$s partially refunded. PayPal reason: %2$s.', 'paypal-advanced-for-woocommerce'), $order->get_payment_method_title(), $pending_reason));
                 case 'REFUNDED' :
                     // Translators: %1$s is the payment method title, %2$s is the PayPal refund reason.
-                    $order->add_order_note(sprintf(__('Payment via %s refunded. PayPal reason: %s.', 'paypal-advanced-for-woocommerce'), $order->get_payment_method_title(), $pending_reason));
+                    $order->add_order_note(sprintf(__('Payment via %1$s refunded. PayPal reason: %2$s.', 'paypal-advanced-for-woocommerce'), $order->get_payment_method_title(), $pending_reason));
                 case 'FAILED' :
                     // Translators: %1$s is the payment method title, %2$s is the PayPal failure reason.
-                    $order->add_order_note(sprintf(__('Payment via %s failed. PayPal reason: %s.', 'paypal-advanced-for-woocommerce'), $order->get_payment_method_title(), $pending_reason));
+                    $order->add_order_note(sprintf(__('Payment via %1$s failed. PayPal reason: %2$s.', 'paypal-advanced-for-woocommerce'), $order->get_payment_method_title(), $pending_reason));
                     break;
                 default:
                     break;
@@ -2845,7 +2848,7 @@ class Goopter_PayPal_PPCP_Payment {
                 $order->update_meta_data('_payment_status', $payment_status);
                 $order->save();
                 // Translators: %1$s is the payment method title, %2$s is the capture transaction ID.
-                $order->add_order_note(sprintf(__('%s Capture Transaction ID: %s', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $transaction_id));
+                $order->add_order_note(sprintf(__('%1$s Capture Transaction ID: %2$s', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $transaction_id));
                 $order->add_order_note('Seller Protection Status: ' . goopter_ppcp_readable($seller_protection));
                 // PFW-1693 - We need to mark the order as completed if the order total is less than or equal to the captured amount
                 if ('PARTIALLY_CAPTURED' === $payment_status && $total_order_value <= $captured_amount) {
@@ -2858,7 +2861,7 @@ class Goopter_PayPal_PPCP_Payment {
                     }, 20, 2);
                     $order->payment_complete();
                     // Translators: %1$s is the payment method title, %2$s is the payment status.
-                    $order->add_order_note(sprintf(__('Payment via %s: %s.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, ucfirst(strtolower($payment_status))));
+                    $order->add_order_note(sprintf(__('Payment via %1$s: %2$s.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, ucfirst(strtolower($payment_status))));
                 } elseif ('PARTIALLY_CAPTURED' === $payment_status) {
                     $order->update_status('wc-partial-payment');
                 } elseif ($payment_status === 'DECLINED') {
@@ -3268,7 +3271,7 @@ class Goopter_PayPal_PPCP_Payment {
                             }, 20, 2);
                             $order->payment_complete($transaction_id);
                             // Translators: %1$s is the payment method title, %2$s is the payment status.
-                            $order->add_order_note(sprintf(__('Payment via %s: %s.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, ucfirst(strtolower($payment_status))));
+                            $order->add_order_note(sprintf(__('Payment via %1$s: %2$s.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, ucfirst(strtolower($payment_status))));
                         } elseif ($payment_status === 'DECLINED') {
                             // Translators: %s is the payment method title.
                             $order->update_status('failed', sprintf(__('Payment via %s declined.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title));
@@ -3283,7 +3286,7 @@ class Goopter_PayPal_PPCP_Payment {
                         $order->update_meta_data('_payment_status', $payment_status);
                         $order->save();
                         // Translators: %1$s is the payment method title, %2$s is the capture transaction ID.
-                        $order->add_order_note(sprintf(__('%s Capture Transaction ID: %s', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $transaction_id));
+                        $order->add_order_note(sprintf(__('%1$s Capture Transaction ID: %2$s', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $transaction_id));
                         $order->add_order_note('Seller Protection Status: ' . goopter_ppcp_readable($seller_protection));
                         return true;
                     } else {
@@ -3339,7 +3342,7 @@ class Goopter_PayPal_PPCP_Payment {
                             }, 20, 2);
                             $order->payment_complete($transaction_id);
                             // Translators: %1$s is the payment method title, %2$s is the formatted payment status.
-                            $order->add_order_note(sprintf(__('Payment via %s: %s.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, ucfirst(strtolower($payment_status))));
+                            $order->add_order_note(sprintf(__('Payment via %1$s: %2$s.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, ucfirst(strtolower($payment_status))));
                         } elseif ($payment_status === 'DECLINED') {
                             // Translators: %s is the payment method title.
                             $order->update_status('failed', sprintf(__('Payment via %s declined.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title));
@@ -3356,7 +3359,7 @@ class Goopter_PayPal_PPCP_Payment {
                         $order->update_meta_data('_auth_transaction_id', $transaction_id);
                         $order->update_meta_data('_paymentaction', 'authorize');
                         // Translators: %1$s is the payment method title, %2$s is the authorization transaction ID.
-                        $order->add_order_note(sprintf(__('%s Authorization Transaction ID: %s', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $transaction_id));
+                        $order->add_order_note(sprintf(__('%1$s Authorization Transaction ID: %2$s', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $transaction_id));
                         $order->add_order_note('Seller Protection Status: ' . goopter_ppcp_readable($seller_protection));
                         if (class_exists('Goopter_PayPal_PPCP_Admin_Action')) {
                             Goopter_PayPal_PPCP_Admin_Action::instance()->removeAutoCaptureHooks();

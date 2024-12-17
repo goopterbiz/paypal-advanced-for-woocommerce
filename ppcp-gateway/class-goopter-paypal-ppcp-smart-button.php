@@ -1833,12 +1833,14 @@ class Goopter_PayPal_PPCP_Smart_Button {
                 if (!empty($shipping_address['state'])) {
                     if (goopter_ppcp_validate_checkout($shipping_address['country'], $shipping_address['state'], 'shipping')) {
                         $_POST[$key] = goopter_ppcp_validate_checkout($shipping_address['country'], $shipping_address['state'], 'shipping');
-                        return sanitize_text_field(wp_unslash($_POST[$key]));
+                        // return sanitize_text_field(wp_unslash($_POST[$key]));
+                        return isset($_POST[$key]) ? sanitize_text_field(wp_unslash($_POST[$key])) : '';
                     } else {
                         if (isset($shipping_address['country']) && isset($states_list[$shipping_address['country']])) {
                             $state_key = array_search($shipping_address['state'], $states_list[$shipping_address['country']]);
                             $_POST[$key] = $state_key;
-                            return sanitize_text_field(wp_unslash($_POST[$key]));
+                            // return sanitize_text_field(wp_unslash($_POST[$key]));
+                            return isset($_POST[$key]) ? sanitize_text_field(wp_unslash($_POST[$key])) : '';
                         } else {
                             $_POST[$key] = '';
                         }
@@ -1846,7 +1848,8 @@ class Goopter_PayPal_PPCP_Smart_Button {
                 } else {
                     if (isset($shipping_address[$key]) && !empty($shipping_address)) {
                         $_POST[$key] = wc_clean(stripslashes($shipping_address[$key]));
-                        return sanitize_text_field(wp_unslash($_POST[$key]));
+                        // return sanitize_text_field(wp_unslash($_POST[$key]));
+                        return isset($_POST[$key]) ? sanitize_text_field(wp_unslash($_POST[$key])) : '';
                     }
                 }
             } elseif ($key === 'billing_state' || $key = 'billing_country') {
@@ -1855,12 +1858,14 @@ class Goopter_PayPal_PPCP_Smart_Button {
                     if (!empty($billing_address['country'])) {
                         if (goopter_ppcp_validate_checkout($billing_address['country'], $billing_address['state'], 'billing')) {
                             $_POST[$key] = goopter_ppcp_validate_checkout($billing_address['country'], $billing_address['state'], 'billing');
-                            return sanitize_text_field(wp_unslash($_POST[$key]));
+                            // return sanitize_text_field(wp_unslash($_POST[$key]));
+                            return isset($_POST[$key]) ? sanitize_text_field(wp_unslash($_POST[$key])) : '';
                         } else {
                             if (isset($billing_address['country']) && isset($states_list[$billing_address['country']])) {
                                 $state_key = array_search($billing_address['state'], $states_list[$billing_address['country']]);
                                 $_POST[$key] = $state_key;
-                                return sanitize_text_field(wp_unslash($_POST[$key]));
+                                // return sanitize_text_field(wp_unslash($_POST[$key]));
+                                return isset($_POST[$key]) ? sanitize_text_field(wp_unslash($_POST[$key])) : '';
                             } else {
                                 $_POST[$key] = '';
                             }
@@ -1869,7 +1874,8 @@ class Goopter_PayPal_PPCP_Smart_Button {
                 } else {
                     if (isset($billing_address[$key]) && !empty($billing_address)) {
                         $_POST[$key] = wc_clean(stripslashes($billing_address[$key]));
-                        return sanitize_text_field(wp_unslash($_POST[$key]));
+                        // return sanitize_text_field(wp_unslash($_POST[$key]));
+                        return isset($_POST[$key]) ? sanitize_text_field(wp_unslash($_POST[$key])) : '';
                     }
                 }
             }

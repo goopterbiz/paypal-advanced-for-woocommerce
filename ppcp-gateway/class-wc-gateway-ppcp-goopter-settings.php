@@ -524,7 +524,8 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'label' => __('Enable PayPal Smart Button on the Product Pages.', 'paypal-advanced-for-woocommerce'),
                     'default' => 'yes',
                     'desc_tip' => true,
-                    'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    // 'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    'description' => '',
                 ),
                 'product_disallowed_funding_methods' => array(
                     'title' => __('Hide Funding Method(s)', 'paypal-advanced-for-woocommerce'),
@@ -730,7 +731,8 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'label' => __('Enable PayPal Smart Button on the Cart page.', 'paypal-advanced-for-woocommerce'),
                     'default' => 'yes',
                     'desc_tip' => true,
-                    'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    // 'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    'description' => '',
                 ),
                 'cart_button_position' => array(
                     'title' => __('Cart Button Position', 'paypal-advanced-for-woocommerce'),
@@ -972,7 +974,8 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'label' => __('Disable smart buttons in the regular list of payment gateways.', 'paypal-advanced-for-woocommerce'),
                     'default' => 'no',
                     'desc_tip' => true,
-                    'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    // 'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    'description' => '',
                 ),
                 'checkout_disallowed_funding_methods' => array(
                     'title' => __('Hide Funding Method(s)', 'paypal-advanced-for-woocommerce'),
@@ -1178,7 +1181,8 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'label' => __('Enable PayPal Smart Button on the Mini Cart page.', 'paypal-advanced-for-woocommerce'),
                     'default' => 'yes',
                     'desc_tip' => true,
-                    'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    // 'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    'description' => '',
                 ),
                 'mini_cart_disallowed_funding_methods' => array(
                     'title' => __('Hide Funding Method(s)', 'paypal-advanced-for-woocommerce'),
@@ -1323,7 +1327,8 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'title' => __('Layout Type', 'paypal-advanced-for-woocommerce'),
                     'type' => 'select',
                     'class' => 'wc-enhanced-select pay_later_messaging_field pay_later_messaging_home_field',
-                    'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    // 'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    'description' => '',
                     'default' => 'flex',
                     'desc_tip' => true,
                     'options' => array('text' => __('Text Layout', 'paypal-advanced-for-woocommerce'), 'flex' => __('Flex Layout', 'paypal-advanced-for-woocommerce'))
@@ -1332,7 +1337,8 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'title' => __('Logo Type', 'paypal-advanced-for-woocommerce'),
                     'type' => 'select',
                     'class' => 'wc-enhanced-select pay_later_messaging_field pay_later_messaging_home_field pay_later_messaging_home_text_layout_field',
-                    'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    // 'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    'description' => '',
                     'default' => 'primary',
                     'desc_tip' => true,
                     'options' => array('primary' => __('Primary', 'paypal-advanced-for-woocommerce'), 'alternative' => __('Alternative', 'paypal-advanced-for-woocommerce'), 'inline' => __('Inline', 'paypal-advanced-for-woocommerce'), 'none' => __('None', 'paypal-advanced-for-woocommerce'))
@@ -1341,7 +1347,8 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'title' => __('Logo Position', 'paypal-advanced-for-woocommerce'),
                     'type' => 'select',
                     'class' => 'wc-enhanced-select pay_later_messaging_field pay_later_messaging_home_field pay_later_messaging_home_text_layout_field',
-                    'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    // 'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    'description' => '',
                     'default' => 'left',
                     'desc_tip' => true,
                     'options' => array('left' => __('Left', 'paypal-advanced-for-woocommerce'), 'right' => __('Right', 'paypal-advanced-for-woocommerce'), 'top' => __('Top', 'paypal-advanced-for-woocommerce'))
@@ -1350,7 +1357,8 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'title' => __('Text Size', 'paypal-advanced-for-woocommerce'),
                     'type' => 'select',
                     'class' => 'wc-enhanced-select pay_later_messaging_field pay_later_messaging_home_field pay_later_messaging_home_text_layout_field',
-                    'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    // 'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    'description' => '',
                     'default' => '12',
                     'desc_tip' => true,
                     'options' => array('10' => __('10 px', 'paypal-advanced-for-woocommerce'), '11' => __('11 px', 'paypal-advanced-for-woocommerce'), '12' => __('12 px', 'paypal-advanced-for-woocommerce'), '13' => __('13 px', 'paypal-advanced-for-woocommerce'), '14' => __('14 px', 'paypal-advanced-for-woocommerce'), '15' => __('15 px', 'paypal-advanced-for-woocommerce'), '16' => __('16 px', 'paypal-advanced-for-woocommerce'))
@@ -1359,7 +1367,8 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'title' => __('Text Color', 'paypal-advanced-for-woocommerce'),
                     'type' => 'select',
                     'class' => 'wc-enhanced-select pay_later_messaging_field pay_later_messaging_home_field pay_later_messaging_home_text_layout_field',
-                    'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    // 'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    'description' => '',
                     'default' => 'black',
                     'desc_tip' => true,
                     'options' => array('black' => __('Black', 'paypal-advanced-for-woocommerce'), 'white' => __('White', 'paypal-advanced-for-woocommerce'), 'monochrome' => __('Monochrome', 'paypal-advanced-for-woocommerce'), 'grayscale' => __('Grayscale', 'paypal-advanced-for-woocommerce'))
@@ -1368,7 +1377,8 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'title' => __('Color', 'paypal-advanced-for-woocommerce'),
                     'type' => 'select',
                     'class' => 'wc-enhanced-select pay_later_messaging_field pay_later_messaging_home_field pay_later_messaging_home_flex_layout_field',
-                    'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    // 'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    'description' => '',
                     'default' => 'blue',
                     'desc_tip' => true,
                     'options' => array('blue' => __('Blue', 'paypal-advanced-for-woocommerce'), 'black' => __('Black', 'paypal-advanced-for-woocommerce'), 'white' => __('White', 'paypal-advanced-for-woocommerce'), 'white-no-border' => __('White (No Border)', 'paypal-advanced-for-woocommerce'), 'gray' => __('Gray', 'paypal-advanced-for-woocommerce'), 'monochrome' => __('Monochrome', 'paypal-advanced-for-woocommerce'), 'grayscale' => __('Grayscale', 'paypal-advanced-for-woocommerce'))
@@ -1377,7 +1387,8 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'title' => __('Ratio', 'paypal-advanced-for-woocommerce'),
                     'type' => 'select',
                     'class' => 'wc-enhanced-select pay_later_messaging_field pay_later_messaging_home_field pay_later_messaging_home_flex_layout_field',
-                    'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    // 'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    'description' => '',
                     'default' => '8x1',
                     'desc_tip' => true,
                     'options' => array('1x1' => __('Flexes between 120px and 300px wide', 'paypal-advanced-for-woocommerce'), '1x4' => __('160px wide', 'paypal-advanced-for-woocommerce'), '8x1' => __('Flexes between 250px and 768px wide', 'paypal-advanced-for-woocommerce'), '20x1' => __('Flexes between 250px and 1169px wide', 'paypal-advanced-for-woocommerce'))
@@ -1409,7 +1420,8 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'title' => __('Layout Type', 'paypal-advanced-for-woocommerce'),
                     'type' => 'select',
                     'class' => 'wc-enhanced-select pay_later_messaging_field pay_later_messaging_category_field',
-                    'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    // 'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    'description' => '',
                     'default' => 'flex',
                     'desc_tip' => true,
                     'options' => array('text' => __('Text Layout', 'paypal-advanced-for-woocommerce'), 'flex' => __('Flex Layout', 'paypal-advanced-for-woocommerce'))
@@ -1418,7 +1430,8 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'title' => __('Logo Type', 'paypal-advanced-for-woocommerce'),
                     'type' => 'select',
                     'class' => 'wc-enhanced-select pay_later_messaging_field pay_later_messaging_category_field pay_later_messaging_category_text_layout_field',
-                    'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    // 'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    'description' => '',
                     'default' => 'primary',
                     'desc_tip' => true,
                     'options' => array('primary' => __('Primary', 'paypal-advanced-for-woocommerce'), 'alternative' => __('Alternative', 'paypal-advanced-for-woocommerce'), 'inline' => __('Inline', 'paypal-advanced-for-woocommerce'), 'none' => __('None', 'paypal-advanced-for-woocommerce'))
@@ -1427,7 +1440,8 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'title' => __('Logo Position', 'paypal-advanced-for-woocommerce'),
                     'type' => 'select',
                     'class' => 'wc-enhanced-select pay_later_messaging_field pay_later_messaging_category_field pay_later_messaging_category_text_layout_field',
-                    'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    // 'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    'description' => '',
                     'default' => 'left',
                     'desc_tip' => true,
                     'options' => array('left' => __('Left', 'paypal-advanced-for-woocommerce'), 'right' => __('Right', 'paypal-advanced-for-woocommerce'), 'top' => __('Top', 'paypal-advanced-for-woocommerce'))
@@ -1436,7 +1450,8 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'title' => __('Text Size', 'paypal-advanced-for-woocommerce'),
                     'type' => 'select',
                     'class' => 'wc-enhanced-select pay_later_messaging_field pay_later_messaging_category_field pay_later_messaging_category_text_layout_field',
-                    'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    // 'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    'description' => '',
                     'default' => '12',
                     'desc_tip' => true,
                     'options' => array('10' => __('10 px', 'paypal-advanced-for-woocommerce'), '11' => __('11 px', 'paypal-advanced-for-woocommerce'), '12' => __('12 px', 'paypal-advanced-for-woocommerce'), '13' => __('13 px', 'paypal-advanced-for-woocommerce'), '14' => __('14 px', 'paypal-advanced-for-woocommerce'), '15' => __('15 px', 'paypal-advanced-for-woocommerce'), '16' => __('16 px', 'paypal-advanced-for-woocommerce'))
@@ -1445,7 +1460,8 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'title' => __('Text Color', 'paypal-advanced-for-woocommerce'),
                     'type' => 'select',
                     'class' => 'wc-enhanced-select pay_later_messaging_field pay_later_messaging_category_field pay_later_messaging_category_text_layout_field',
-                    'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    // 'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    'description' => '',
                     'default' => 'black',
                     'desc_tip' => true,
                     'options' => array('black' => __('Black', 'paypal-advanced-for-woocommerce'), 'white' => __('White', 'paypal-advanced-for-woocommerce'), 'monochrome' => __('Monochrome', 'paypal-advanced-for-woocommerce'), 'grayscale' => __('Grayscale', 'paypal-advanced-for-woocommerce'))
@@ -1454,7 +1470,8 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'title' => __('Color', 'paypal-advanced-for-woocommerce'),
                     'type' => 'select',
                     'class' => 'wc-enhanced-select pay_later_messaging_field pay_later_messaging_category_field pay_later_messaging_category_flex_layout_field',
-                    'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    // 'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    'description' => '',
                     'default' => 'blue',
                     'desc_tip' => true,
                     'options' => array('blue' => __('Blue', 'paypal-advanced-for-woocommerce'), 'black' => __('Black', 'paypal-advanced-for-woocommerce'), 'white' => __('White', 'paypal-advanced-for-woocommerce'), 'white-no-border' => __('White (No Border)', 'paypal-advanced-for-woocommerce'), 'gray' => __('Gray', 'paypal-advanced-for-woocommerce'), 'monochrome' => __('Monochrome', 'paypal-advanced-for-woocommerce'), 'grayscale' => __('Grayscale', 'paypal-advanced-for-woocommerce'))
@@ -1463,7 +1480,8 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'title' => __('Ratio', 'paypal-advanced-for-woocommerce'),
                     'type' => 'select',
                     'class' => 'wc-enhanced-select pay_later_messaging_field pay_later_messaging_category_field pay_later_messaging_category_flex_layout_field',
-                    'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    // 'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    'description' => '',
                     'default' => '8x1',
                     'desc_tip' => true,
                     'options' => array('1x1' => __('Flexes between 120px and 300px wide', 'paypal-advanced-for-woocommerce'), '1x4' => __('160px wide', 'paypal-advanced-for-woocommerce'), '8x1' => __('Flexes between 250px and 768px wide', 'paypal-advanced-for-woocommerce'), '20x1' => __('Flexes between 250px and 1169px wide', 'paypal-advanced-for-woocommerce'))
@@ -1495,7 +1513,8 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'title' => __('Layout Type', 'paypal-advanced-for-woocommerce'),
                     'type' => 'select',
                     'class' => 'wc-enhanced-select pay_later_messaging_field pay_later_messaging_product_field',
-                    'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    // 'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    'description' => '',
                     'default' => 'text',
                     'desc_tip' => true,
                     'options' => array('text' => __('Text Layout', 'paypal-advanced-for-woocommerce'), 'flex' => __('Flex Layout', 'paypal-advanced-for-woocommerce'))
@@ -1504,7 +1523,8 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'title' => __('Logo Type', 'paypal-advanced-for-woocommerce'),
                     'type' => 'select',
                     'class' => 'wc-enhanced-select pay_later_messaging_field pay_later_messaging_product_field pay_later_messaging_product_text_layout_field',
-                    'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    // 'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    'description' => '',
                     'default' => 'primary',
                     'desc_tip' => true,
                     'options' => array('primary' => __('Primary', 'paypal-advanced-for-woocommerce'), 'alternative' => __('Alternative', 'paypal-advanced-for-woocommerce'), 'inline' => __('Inline', 'paypal-advanced-for-woocommerce'), 'none' => __('None', 'paypal-advanced-for-woocommerce'))
@@ -1513,7 +1533,8 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'title' => __('Logo Position', 'paypal-advanced-for-woocommerce'),
                     'type' => 'select',
                     'class' => 'wc-enhanced-select pay_later_messaging_field pay_later_messaging_product_field pay_later_messaging_product_text_layout_field',
-                    'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    // 'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    'description' => '',
                     'default' => 'left',
                     'desc_tip' => true,
                     'options' => array('left' => __('Left', 'paypal-advanced-for-woocommerce'), 'right' => __('Right', 'paypal-advanced-for-woocommerce'), 'top' => __('Top', 'paypal-advanced-for-woocommerce'))
@@ -1522,7 +1543,8 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'title' => __('Text Size', 'paypal-advanced-for-woocommerce'),
                     'type' => 'select',
                     'class' => 'wc-enhanced-select pay_later_messaging_field pay_later_messaging_product_field pay_later_messaging_product_text_layout_field',
-                    'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    // 'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    'description' => '',
                     'default' => '12',
                     'desc_tip' => true,
                     'options' => array('10' => __('10 px', 'paypal-advanced-for-woocommerce'), '11' => __('11 px', 'paypal-advanced-for-woocommerce'), '12' => __('12 px', 'paypal-advanced-for-woocommerce'), '13' => __('13 px', 'paypal-advanced-for-woocommerce'), '14' => __('14 px', 'paypal-advanced-for-woocommerce'), '15' => __('15 px', 'paypal-advanced-for-woocommerce'), '16' => __('16 px', 'paypal-advanced-for-woocommerce'))
@@ -1531,7 +1553,8 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'title' => __('Text Color', 'paypal-advanced-for-woocommerce'),
                     'type' => 'select',
                     'class' => 'wc-enhanced-select pay_later_messaging_field pay_later_messaging_product_field pay_later_messaging_product_text_layout_field',
-                    'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    // 'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    'description' => '',
                     'default' => 'black',
                     'desc_tip' => true,
                     'options' => array('black' => __('Black', 'paypal-advanced-for-woocommerce'), 'white' => __('White', 'paypal-advanced-for-woocommerce'), 'monochrome' => __('Monochrome', 'paypal-advanced-for-woocommerce'), 'grayscale' => __('Grayscale', 'paypal-advanced-for-woocommerce'))
@@ -1540,7 +1563,8 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'title' => __('Color', 'paypal-advanced-for-woocommerce'),
                     'type' => 'select',
                     'class' => 'wc-enhanced-select pay_later_messaging_field pay_later_messaging_product_field pay_later_messaging_product_flex_layout_field',
-                    'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    // 'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    'description' => '',
                     'default' => 'blue',
                     'desc_tip' => true,
                     'options' => array('blue' => __('Blue', 'paypal-advanced-for-woocommerce'), 'black' => __('Black', 'paypal-advanced-for-woocommerce'), 'white' => __('White', 'paypal-advanced-for-woocommerce'), 'white-no-border' => __('White (No Border)', 'paypal-advanced-for-woocommerce'), 'gray' => __('Gray', 'paypal-advanced-for-woocommerce'), 'monochrome' => __('Monochrome', 'paypal-advanced-for-woocommerce'), 'grayscale' => __('Grayscale', 'paypal-advanced-for-woocommerce'))
@@ -1549,7 +1573,8 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'title' => __('Ratio', 'paypal-advanced-for-woocommerce'),
                     'type' => 'select',
                     'class' => 'wc-enhanced-select pay_later_messaging_field pay_later_messaging_product_field pay_later_messaging_product_flex_layout_field',
-                    'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    // 'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    'description' => '',
                     'default' => '8x1',
                     'desc_tip' => true,
                     'options' => array('1x1' => __('Flexes between 120px and 300px wide', 'paypal-advanced-for-woocommerce'), '1x4' => __('160px wide', 'paypal-advanced-for-woocommerce'), '8x1' => __('Flexes between 250px and 768px wide', 'paypal-advanced-for-woocommerce'), '20x1' => __('Flexes between 250px and 1169px wide', 'paypal-advanced-for-woocommerce'))
@@ -1581,7 +1606,8 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'title' => __('Layout Type', 'paypal-advanced-for-woocommerce'),
                     'type' => 'select',
                     'class' => 'wc-enhanced-select pay_later_messaging_field pay_later_messaging_cart_field',
-                    'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    // 'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    'description' => '',
                     'default' => 'text',
                     'desc_tip' => true,
                     'options' => array('text' => __('Text Layout', 'paypal-advanced-for-woocommerce'), 'flex' => __('Flex Layout', 'paypal-advanced-for-woocommerce'))
@@ -1590,7 +1616,8 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'title' => __('Logo Type', 'paypal-advanced-for-woocommerce'),
                     'type' => 'select',
                     'class' => 'wc-enhanced-select pay_later_messaging_field pay_later_messaging_cart_field pay_later_messaging_cart_text_layout_field',
-                    'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    // 'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    'description' => '',
                     'default' => 'primary',
                     'desc_tip' => true,
                     'options' => array('primary' => __('Primary', 'paypal-advanced-for-woocommerce'), 'alternative' => __('Alternative', 'paypal-advanced-for-woocommerce'), 'inline' => __('Inline', 'paypal-advanced-for-woocommerce'), 'none' => __('None', 'paypal-advanced-for-woocommerce'))
@@ -1599,7 +1626,8 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'title' => __('Logo Position', 'paypal-advanced-for-woocommerce'),
                     'type' => 'select',
                     'class' => 'wc-enhanced-select pay_later_messaging_field pay_later_messaging_cart_field pay_later_messaging_cart_text_layout_field',
-                    'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    // 'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    'description' => '',
                     'default' => 'left',
                     'desc_tip' => true,
                     'options' => array('left' => __('Left', 'paypal-advanced-for-woocommerce'), 'right' => __('Right', 'paypal-advanced-for-woocommerce'), 'top' => __('Top', 'paypal-advanced-for-woocommerce'))
@@ -1608,7 +1636,8 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'title' => __('Text Size', 'paypal-advanced-for-woocommerce'),
                     'type' => 'select',
                     'class' => 'wc-enhanced-select pay_later_messaging_field pay_later_messaging_cart_field pay_later_messaging_cart_text_layout_field',
-                    'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    // 'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    'description' => '',
                     'default' => '12',
                     'desc_tip' => true,
                     'options' => array('10' => __('10 px', 'paypal-advanced-for-woocommerce'), '11' => __('11 px', 'paypal-advanced-for-woocommerce'), '12' => __('12 px', 'paypal-advanced-for-woocommerce'), '13' => __('13 px', 'paypal-advanced-for-woocommerce'), '14' => __('14 px', 'paypal-advanced-for-woocommerce'), '15' => __('15 px', 'paypal-advanced-for-woocommerce'), '16' => __('16 px', 'paypal-advanced-for-woocommerce'))
@@ -1617,7 +1646,8 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'title' => __('Text Color', 'paypal-advanced-for-woocommerce'),
                     'type' => 'select',
                     'class' => 'wc-enhanced-select pay_later_messaging_field pay_later_messaging_cart_field pay_later_messaging_cart_text_layout_field',
-                    'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    // 'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    'description' => '',
                     'default' => 'black',
                     'desc_tip' => true,
                     'options' => array('black' => __('Black', 'paypal-advanced-for-woocommerce'), 'white' => __('White', 'paypal-advanced-for-woocommerce'), 'monochrome' => __('Monochrome', 'paypal-advanced-for-woocommerce'), 'grayscale' => __('Grayscale', 'paypal-advanced-for-woocommerce'))
@@ -1626,7 +1656,8 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'title' => __('Color', 'paypal-advanced-for-woocommerce'),
                     'type' => 'select',
                     'class' => 'wc-enhanced-select pay_later_messaging_field pay_later_messaging_cart_field pay_later_messaging_cart_flex_layout_field',
-                    'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    // 'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    'description' => '',
                     'default' => 'blue',
                     'desc_tip' => true,
                     'options' => array('blue' => __('Blue', 'paypal-advanced-for-woocommerce'), 'black' => __('Black', 'paypal-advanced-for-woocommerce'), 'white' => __('White', 'paypal-advanced-for-woocommerce'), 'white-no-border' => __('White (No Border)', 'paypal-advanced-for-woocommerce'), 'gray' => __('Gray', 'paypal-advanced-for-woocommerce'), 'monochrome' => __('Monochrome', 'paypal-advanced-for-woocommerce'), 'grayscale' => __('Grayscale', 'paypal-advanced-for-woocommerce'))
@@ -1635,7 +1666,8 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'title' => __('Ratio', 'paypal-advanced-for-woocommerce'),
                     'type' => 'select',
                     'class' => 'wc-enhanced-select pay_later_messaging_field pay_later_messaging_cart_field pay_later_messaging_cart_flex_layout_field',
-                    'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    // 'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    'description' => '',
                     'default' => '8x1',
                     'desc_tip' => true,
                     'options' => array('1x1' => __('Flexes between 120px and 300px wide', 'paypal-advanced-for-woocommerce'), '1x4' => __('160px wide', 'paypal-advanced-for-woocommerce'), '8x1' => __('Flexes between 250px and 768px wide', 'paypal-advanced-for-woocommerce'), '20x1' => __('Flexes between 250px and 1169px wide', 'paypal-advanced-for-woocommerce'))
@@ -1667,7 +1699,8 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'title' => __('Layout Type', 'paypal-advanced-for-woocommerce'),
                     'type' => 'select',
                     'class' => 'wc-enhanced-select pay_later_messaging_field pay_later_messaging_payment_field',
-                    'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    // 'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    'description' => '',
                     'default' => 'text',
                     'desc_tip' => true,
                     'options' => array('text' => __('Text Layout', 'paypal-advanced-for-woocommerce'), 'flex' => __('Flex Layout', 'paypal-advanced-for-woocommerce'))
@@ -1676,7 +1709,8 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'title' => __('Logo Type', 'paypal-advanced-for-woocommerce'),
                     'type' => 'select',
                     'class' => 'wc-enhanced-select pay_later_messaging_field pay_later_messaging_payment_field pay_later_messaging_payment_text_layout_field',
-                    'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    // 'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    'description' => '',
                     'default' => 'primary',
                     'desc_tip' => true,
                     'options' => array('primary' => __('Primary', 'paypal-advanced-for-woocommerce'), 'alternative' => __('Alternative', 'paypal-advanced-for-woocommerce'), 'inline' => __('Inline', 'paypal-advanced-for-woocommerce'), 'none' => __('None', 'paypal-advanced-for-woocommerce'))
@@ -1685,7 +1719,8 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'title' => __('Logo Position', 'paypal-advanced-for-woocommerce'),
                     'type' => 'select',
                     'class' => 'wc-enhanced-select pay_later_messaging_field pay_later_messaging_payment_field pay_later_messaging_payment_text_layout_field',
-                    'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    // 'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    'description' => '',
                     'default' => 'left',
                     'desc_tip' => true,
                     'options' => array('left' => __('Left', 'paypal-advanced-for-woocommerce'), 'right' => __('Right', 'paypal-advanced-for-woocommerce'), 'top' => __('Top', 'paypal-advanced-for-woocommerce'))
@@ -1694,7 +1729,8 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'title' => __('Text Size', 'paypal-advanced-for-woocommerce'),
                     'type' => 'select',
                     'class' => 'wc-enhanced-select pay_later_messaging_field pay_later_messaging_payment_field pay_later_messaging_payment_text_layout_field',
-                    'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    // 'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    'description' => '',
                     'default' => '12',
                     'desc_tip' => true,
                     'options' => array('10' => __('10 px', 'paypal-advanced-for-woocommerce'), '11' => __('11 px', 'paypal-advanced-for-woocommerce'), '12' => __('12 px', 'paypal-advanced-for-woocommerce'), '13' => __('13 px', 'paypal-advanced-for-woocommerce'), '14' => __('14 px', 'paypal-advanced-for-woocommerce'), '15' => __('15 px', 'paypal-advanced-for-woocommerce'), '16' => __('16 px', 'paypal-advanced-for-woocommerce'))
@@ -1703,7 +1739,8 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'title' => __('Text Color', 'paypal-advanced-for-woocommerce'),
                     'type' => 'select',
                     'class' => 'wc-enhanced-select pay_later_messaging_field pay_later_messaging_payment_field pay_later_messaging_payment_text_layout_field',
-                    'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    // 'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    'description' => '',
                     'default' => 'black',
                     'desc_tip' => true,
                     'options' => array('black' => __('Black', 'paypal-advanced-for-woocommerce'), 'white' => __('White', 'paypal-advanced-for-woocommerce'), 'monochrome' => __('Monochrome', 'paypal-advanced-for-woocommerce'), 'grayscale' => __('Grayscale', 'paypal-advanced-for-woocommerce'))
@@ -1712,7 +1749,8 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'title' => __('Color', 'paypal-advanced-for-woocommerce'),
                     'type' => 'select',
                     'class' => 'wc-enhanced-select pay_later_messaging_field pay_later_messaging_payment_field pay_later_messaging_payment_flex_layout_field',
-                    'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    // 'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    'description' => '',
                     'default' => 'blue',
                     'desc_tip' => true,
                     'options' => array('blue' => __('Blue', 'paypal-advanced-for-woocommerce'), 'black' => __('Black', 'paypal-advanced-for-woocommerce'), 'white' => __('White', 'paypal-advanced-for-woocommerce'), 'white-no-border' => __('White (No Border)', 'paypal-advanced-for-woocommerce'), 'gray' => __('Gray', 'paypal-advanced-for-woocommerce'), 'monochrome' => __('Monochrome', 'paypal-advanced-for-woocommerce'), 'grayscale' => __('Grayscale', 'paypal-advanced-for-woocommerce'))
@@ -1721,7 +1759,8 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'title' => __('Ratio', 'paypal-advanced-for-woocommerce'),
                     'type' => 'select',
                     'class' => 'wc-enhanced-select pay_later_messaging_field pay_later_messaging_payment_field pay_later_messaging_payment_flex_layout_field',
-                    'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    // 'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    'description' => '',
                     'default' => '8x1',
                     'desc_tip' => true,
                     'options' => array('1x1' => __('Flexes between 120px and 300px wide', 'paypal-advanced-for-woocommerce'), '1x4' => __('160px wide', 'paypal-advanced-for-woocommerce'), '8x1' => __('Flexes between 250px and 768px wide', 'paypal-advanced-for-woocommerce'), '20x1' => __('Flexes between 250px and 1169px wide', 'paypal-advanced-for-woocommerce'))
@@ -1877,7 +1916,8 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'type' => 'checkbox',
                     'label' => __('Automatically capture a pending authorization when the order status is updated to Processing or Completed.', 'paypal-advanced-for-woocommerce'),
                     'default' => 'yes',
-                    'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    // 'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    'description' => '',
                     'desc_tip' => true
                 ),
                 'paymentstatus' => array(
@@ -2028,7 +2068,8 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'class' => 'advanced_cc_fields_group',
                     'default' => '#000000',
                     'desc_tip' => true,
-                    'description' => __('', 'paypal-advanced-for-woocommerce')
+                    // 'description' => __('', 'paypal-advanced-for-woocommerce')
+                    'description' => '',
                 ),
                 'cards_input_style' => array(
                     'title' => __('Card Text Style', 'paypal-advanced-for-woocommerce'),
@@ -2036,7 +2077,8 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'class' => 'wc-enhanced-select advanced_cc_fields_group',
                     'default' => 'normal',
                     'desc_tip' => true,
-                    'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    // 'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    'description' => '',
                     'options' => array('normal' => __('Normal', 'paypal-advanced-for-woocommerce'), 'italic' => __('Italic', 'paypal-advanced-for-woocommerce'), 'inherit' => __('Inherit', 'paypal-advanced-for-woocommerce'), 'revert' => __('Revert', 'paypal-advanced-for-woocommerce'))
                 ),
                 'cards_input_weight' => array(
@@ -2045,7 +2087,8 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'class' => 'wc-enhanced-select advanced_cc_fields_group',
                     'default' => '',
                     'desc_tip' => true,
-                    'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    // 'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    'description' => '',
                     'options' => array('' => __('Default', 'paypal-advanced-for-woocommerce'), '100' => __('100', 'paypal-advanced-for-woocommerce'), '200' => __('200', 'paypal-advanced-for-woocommerce'), '300' => __('300', 'paypal-advanced-for-woocommerce'), '400' => __('400', 'paypal-advanced-for-woocommerce'), '500' => __('500', 'paypal-advanced-for-woocommerce'), '600' => __('600', 'paypal-advanced-for-woocommerce'), 'bold' => __('Bold', 'paypal-advanced-for-woocommerce'))
                 ),
                 'cards_input_padding' => array(
@@ -2054,7 +2097,8 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'class' => 'wc-enhanced-select advanced_cc_fields_group',
                     'default' => '',
                     'desc_tip' => true,
-                    'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    // 'description' => __('', 'paypal-advanced-for-woocommerce'),
+                    'description' => '',
                     'options' => $this->get_size_listing(1, 20, 1, 'px')
                 ),
                 'soft_descriptor' => array(

@@ -354,7 +354,7 @@ class Goopter_PayPal_PPCP_Admin_Action {
                             $line_item['amount'] = isset($refunds['amount']['value']) ? wc_price($refunds['amount']['value'], array('currency' => $refunds['amount']['currency_code'])) : 'N/A';
                             $line_item['payment_status'] = isset($refunds['status']) ? ucwords(str_replace('_', ' ', strtolower($refunds['status']))) : 'N/A';
                             $line_item['expired_date'] = isset($refunds['expiration_time']) ? $refunds['expiration_time'] : 'N/A';
-                            $line_item['payment_action'] = __('Refund', '');
+                            $line_item['payment_action'] = __('Refund', 'paypal-advanced-for-woocommerce');
                             $this->ae_refund_amount = $this->ae_refund_amount + $refunds['amount']['value'];
                         }
                     }
@@ -366,7 +366,7 @@ class Goopter_PayPal_PPCP_Admin_Action {
                             $line_item['amount'] = isset($captures['amount']['value']) ? wc_price($captures['amount']['value'], array('currency' => $captures['amount']['currency_code'])) : 'N/A';
                             $line_item['payment_status'] = isset($captures['status']) ? ucwords(str_replace('_', ' ', strtolower($captures['status']))) : 'N/A';
                             $line_item['expired_date'] = isset($captures['expiration_time']) ? $captures['expiration_time'] : 'N/A';
-                            $line_item['payment_action'] = __('Capture', '');
+                            $line_item['payment_action'] = __('Capture', 'paypal-advanced-for-woocommerce');
                             if ('COMPLETED' === $captures['status'] || 'PARTIALLY_REFUNDED' === $captures['status']) {
                                 $this->goopter_ppcp_order_status_data['refund'][$line_item['transaction_id']] = $line_item['amount'];
                             }
@@ -389,22 +389,22 @@ class Goopter_PayPal_PPCP_Admin_Action {
                         }
                     }
                     if (isset($this->payment_response['purchase_units']['0']['payments']['authorizations']['0']['status']) && 'CREATED' === $this->payment_response['purchase_units']['0']['payments']['authorizations']['0']['status']) {
-                        $this->goopter_ppcp_order_actions['void'] = __('Void Authorization', '');
-                        $this->goopter_ppcp_order_actions['capture'] = __('Capture Funds', '');
+                        $this->goopter_ppcp_order_actions['void'] = __('Void Authorization', 'paypal-advanced-for-woocommerce');
+                        $this->goopter_ppcp_order_actions['capture'] = __('Capture Funds', 'paypal-advanced-for-woocommerce');
                     }
                     if (isset($this->payment_response['purchase_units']['0']['payments']['authorizations']['0']['status']) && 'PARTIALLY_CAPTURED' === $this->payment_response['purchase_units']['0']['payments']['authorizations']['0']['status']) {
                         if ($this->ae_refund_amount < $this->ae_capture_amount) {
-                            $this->goopter_ppcp_order_actions['refund'] = __('Refund', '');
-                            $this->goopter_ppcp_order_actions['void'] = __('Void Authorization', '');
-                            $this->goopter_ppcp_order_actions['capture'] = __('Capture Funds', '');
+                            $this->goopter_ppcp_order_actions['refund'] = __('Refund', 'paypal-advanced-for-woocommerce');
+                            $this->goopter_ppcp_order_actions['void'] = __('Void Authorization', 'paypal-advanced-for-woocommerce');
+                            $this->goopter_ppcp_order_actions['capture'] = __('Capture Funds', 'paypal-advanced-for-woocommerce');
                         }
                         if ($order_total_amount > $this->ae_capture_amount) {
-                            $this->goopter_ppcp_order_actions['capture'] = __('Capture Funds', '');
+                            $this->goopter_ppcp_order_actions['capture'] = __('Capture Funds', 'paypal-advanced-for-woocommerce');
                         }
                     }
                     if (isset($this->payment_response['purchase_units']['0']['payments']['authorizations']['0']['status']) && 'CAPTURED' === $this->payment_response['purchase_units']['0']['payments']['authorizations']['0']['status']) {
                         if ($this->ae_refund_amount < $this->ae_capture_amount) {
-                            $this->goopter_ppcp_order_actions['refund'] = __('Refund', '');
+                            $this->goopter_ppcp_order_actions['refund'] = __('Refund', 'paypal-advanced-for-woocommerce');
                         }
                     }
                     if (isset($this->payment_response['purchase_units']['0']['payments']['authorizations']['0']['status']) && 'VOIDED' === $this->payment_response['purchase_units']['0']['payments']['authorizations']['0']['status']) {
@@ -498,7 +498,7 @@ class Goopter_PayPal_PPCP_Admin_Action {
         <?php } ?>
         <?php if (isset($this->goopter_ppcp_order_status_data['refund']) && isset($this->goopter_ppcp_order_actions['refund'])) { ?>
             <tr class="goopter_ppcp_refund_box" style="display: none;">
-                <td class="label"><?php echo __('Transaction Id', ''); ?></td>
+                <td class="label"><?php echo __('Transaction Id', 'paypal-advanced-for-woocommerce'); ?></td>
                 <td width="1%"></td>
                 <td class="total">
                     <select name="goopter_ppcp_refund_data" id="goopter_ppcp_refund_data" style="width: 250px;">
@@ -506,7 +506,7 @@ class Goopter_PayPal_PPCP_Admin_Action {
                         $i = 0;
                         foreach ($this->goopter_ppcp_order_status_data['refund'] as $k => $v) :
                             if ($i == 0) {
-                                echo "<option value=''>" . __('Select Transaction Id', '') . "</option>";
+                                echo "<option value=''>" . __('Select Transaction Id', 'paypal-advanced-for-woocommerce') . "</option>";
                             }
                             ?>
                             <option value="<?php echo esc_attr($k); ?>" ><?php echo esc_html($k) . ' - ' . $v; ?></option>
@@ -580,7 +580,7 @@ class Goopter_PayPal_PPCP_Admin_Action {
                     <td>
                         <?php
                         $ppcp_Capture_key_replace = array('_ppcp_transaction_id' => 'Transaction ID', '_ppcp_transaction_date' => 'Date', '_ppcp_transaction_amount' => 'Amount', 'total_refund_amount' => 'Total Refund Amount');
-                        echo '<b>' . __('Capture Details', '') . '</b>: ';
+                        echo '<b>' . __('Capture Details', 'paypal-advanced-for-woocommerce') . '</b>: ';
                         $capture_details_html = '';
                         if (is_array($meta_array) && !empty($meta_array)) {
                             if (isset($meta_array['refund'])) {

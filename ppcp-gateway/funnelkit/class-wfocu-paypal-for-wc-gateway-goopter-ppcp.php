@@ -744,7 +744,10 @@ class WFOCU_Paypal_For_WC_Gateway_Goopter_PPCP extends WFOCU_Gateway {
                     $addr = php_uname('n');
                 }
             }
-            return $addr . $pid . sanitize_text_field(wp_unslash($_SERVER['REQUEST_TIME'])) . wp_rand(0, 0xffff);
+            // return $addr . $pid . sanitize_text_field(wp_unslash($_SERVER['REQUEST_TIME'])) . wp_rand(0, 0xffff);
+            return $addr . $pid . (isset($_SERVER['REQUEST_TIME']) 
+                ? sanitize_text_field(wp_unslash($_SERVER['REQUEST_TIME'])) 
+                : time()) . wp_rand(0, 0xffff);
         } catch (Exception $ex) {
             
         }

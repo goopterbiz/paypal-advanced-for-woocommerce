@@ -635,8 +635,13 @@ class WC_Gateway_PPCP_Goopter extends WC_Payment_Gateway {
         if (($this->is_live_first_party_used === 'yes' || $this->is_live_third_party_used === 'yes') || ($this->is_sandbox_first_party_used === 'yes' || $this->is_sandbox_third_party_used === 'yes')) {
             return false;
         }
-        // Translators: %1$s is the URL to connect the account, %2$s is the PayPal service name.
-        $message = sprintf(__('%s is almost ready. To get started, <a href="%1$s">connect your account</a>.','paypal-advanced-for-woocommerce'),AE_PPCP_NAME,admin_url('options-general.php?page=paypal-advanced-for-woocommerce&tab=general_settings&gateway=paypal_payment_gateway_products'));
+        $message = sprintf(
+            // Translators: %1$s is the PayPal service name, %2$s is the URL to connect the account.
+            __('%1$s is almost ready. To get started, <a href="%2$s">connect your account</a>.', 'paypal-advanced-for-woocommerce'),
+            esc_html(AE_PPCP_NAME),
+            esc_url(admin_url('options-general.php?page=paypal-advanced-for-woocommerce&tab=general_settings&gateway=paypal_payment_gateway_products'))
+        );
+        // $message = sprintf(__('%s is almost ready. To get started, <a href="%1$s">connect your account</a>.','paypal-advanced-for-woocommerce'),AE_PPCP_NAME,admin_url('options-general.php?page=paypal-advanced-for-woocommerce&tab=general_settings&gateway=paypal_payment_gateway_products'));
         ?>
         <div class="notice notice-warning is-dismissible">
             <p><?php echo $message; ?></p>
@@ -1090,7 +1095,8 @@ class WC_Gateway_PPCP_Goopter extends WC_Payment_Gateway {
     }
 
     public function validate_color_picker_field($key, $value) {
-        return sanitize_text_field(wp_unslash($_POST[$key])) ?? $value;
+        // return sanitize_text_field(wp_unslash($_POST[$key])) ?? $value;
+        return isset($_POST[$key]) ? sanitize_text_field(wp_unslash($_POST[$key])) : $value;
     }
 
     public function validate_checkbox_enable_paypal_google_pay_field($key, $value) {

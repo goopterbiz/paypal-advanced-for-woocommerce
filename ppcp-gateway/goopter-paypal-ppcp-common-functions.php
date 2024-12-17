@@ -67,7 +67,16 @@ if (!function_exists('goopter_ppcp_is_local_server')) {
         if (!isset($_SERVER['HTTP_HOST'])) {
             return;
         }
-        if ($_SERVER['HTTP_HOST'] === 'localhost' || substr(sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR'])), 0, 3) === '10.' || substr(sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR'])), 0, 7) === '192.168') {
+        // if ($_SERVER['HTTP_HOST'] === 'localhost' || substr(sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR'])), 0, 3) === '10.' || substr(sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR'])), 0, 7) === '192.168') {
+        //     return true;
+        // }
+        if (
+            (isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] === 'localhost') ||
+            (isset($_SERVER['REMOTE_ADDR']) && (
+                substr(sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR'])), 0, 3) === '10.' ||
+                substr(sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR'])), 0, 7) === '192.168'
+            ))
+        ) {
             return true;
         }
         $live_sites = [
@@ -82,7 +91,10 @@ if (!function_exists('goopter_ppcp_is_local_server')) {
                 return false;
             }
         }
-        if (in_array($_SERVER['REMOTE_ADDR'], array('127.0.0.1', '::1'))) {
+        // if (in_array($_SERVER['REMOTE_ADDR'], array('127.0.0.1', '::1'))) {
+        //     return true;
+        // }
+        if (isset($_SERVER['REMOTE_ADDR']) && in_array($_SERVER['REMOTE_ADDR'], array('127.0.0.1', '::1'))) {
             return true;
         }
     }
