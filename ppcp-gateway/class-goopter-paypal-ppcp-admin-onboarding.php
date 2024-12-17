@@ -238,7 +238,8 @@ class Goopter_PayPal_PPCP_Admin_Onboarding {
                             <span class="ppcp_onbard_icon"><img width="200px" class="image" src="<?php echo PAYPAL_FOR_WOOCOMMERCE_ASSET_URL . 'ppcp-gateway/images/admin/ppcp_admin_onbard_icon.png'; ?>"></span>
                             <br><br>
                             <div class="paypal_woocommerce_product_onboard_content">
-                                <p><?php echo sprintf(__('Welcome to the %s solution for WooCommerce. <br> Built by Goopter Commerce Solutions.', 'paypal-advanced-for-woocommerce'), AE_PPCP_NAME); ?></p>
+                                <p><?php // Translators: %s is the name of the PayPal solution (e.g., PayPal Advanced).
+                                echo sprintf(__('Welcome to the %s solution for WooCommerce. <br> Built by Goopter Commerce Solutions.', 'paypal-advanced-for-woocommerce'), AE_PPCP_NAME); ?></p>
                                 <?php
                                 if (isset($_GET['testmode'])) {
                                     $testmode = ($_GET['testmode'] === 'yes') ? 'yes' : 'no';
@@ -270,12 +271,15 @@ class Goopter_PayPal_PPCP_Admin_Onboarding {
                                     echo __('We could not properly connect to PayPal', 'paypal-advanced-for-woocommerce');
                                 }
                                 ?>
-                                <p class="ppcp_paypal_fee"><?php echo sprintf(__('Increase average order totals and conversion rates with <br>PayPal Checkout, PayPal Credit, Buy Now Pay Later, Venmo, and more! <br>All for a total PayPal + Goopter fee of only %s.', 'paypal-advanced-for-woocommerce'), $this->goopter_ppcp_get_paypal_fee_structure($this->ppcp_paypal_country, 'paypal')); ?>
+                                <p class="ppcp_paypal_fee"><?php // Translators: %s is the PayPal and Goopter fee structure.
+                                echo sprintf(__('Increase average order totals and conversion rates with <br>PayPal Checkout, PayPal Credit, Buy Now Pay Later, Venmo, and more! <br>All for a total PayPal + Goopter fee of only %s.', 'paypal-advanced-for-woocommerce'), $this->goopter_ppcp_get_paypal_fee_structure($this->ppcp_paypal_country, 'paypal')); ?>
                                     <br><br>
                                     <?php if ($this->ppcp_paypal_country === 'DE') { ?>
-                                        <?php echo sprintf(__('Fees on Visa/MasterCard/Discover transactions <br>transactions are a total PayPal + Goopter fee of only %s.', 'paypal-advanced-for-woocommerce'), $this->goopter_ppcp_get_paypal_fee_structure($this->ppcp_paypal_country, 'acc')); ?>
+                                        <?php // Translators: %s is the PayPal and Goopter fee structure for Visa/MasterCard/Discover transactions.
+                                        echo sprintf(__('Fees on Visa/MasterCard/Discover transactions <br>transactions are a total PayPal + Goopter fee of only %s.', 'paypal-advanced-for-woocommerce'), $this->goopter_ppcp_get_paypal_fee_structure($this->ppcp_paypal_country, 'acc')); ?>
                                     <?php } else { ?>
-                                        <?php echo sprintf(__('Save money on Visa/MasterCard/Discover transactions <br>with a total PayPal + Goopter fee of only %s.', 'paypal-advanced-for-woocommerce'), $this->goopter_ppcp_get_paypal_fee_structure($this->ppcp_paypal_country, 'acc')); ?>
+                                        <?php // Translators: %s is the PayPal and Goopter fee structure for Visa/MasterCard/Discover transactions.
+                                        echo sprintf(__('Save money on Visa/MasterCard/Discover transactions <br>with a total PayPal + Goopter fee of only %s.', 'paypal-advanced-for-woocommerce'), $this->goopter_ppcp_get_paypal_fee_structure($this->ppcp_paypal_country, 'acc')); ?>
                                     <?php } ?>
                             </div>
                         </div>
@@ -295,8 +299,10 @@ class Goopter_PayPal_PPCP_Admin_Onboarding {
                             <div class="paypal_woocommerce_product_onboard_content">
                                 <br>
                                 <span><img class="green_checkmark" src="<?php echo PAYPAL_FOR_WOOCOMMERCE_ASSET_URL . 'ppcp-gateway/images/admin/green_checkmark.png'; ?>"></span>
-                                <p><?php echo sprintf(__('You’re currently set up and enjoying the benefits of %s. <br> Built by Goopter.', 'paypal-advanced-for-woocommerce'), AE_PPCP_NAME); ?></p>
-                                <p><?php echo sprintf(__('However, we need additional verification to approve you for the reduced <br>rate of %s on debit/credit cards.', 'paypal-advanced-for-woocommerce'), $this->goopter_ppcp_get_paypal_fee_structure($this->ppcp_paypal_country, 'acc')); ?></p>
+                                <p><?php // Translators: %s is the name of the PayPal solution (e.g., PayPal Advanced).
+                                echo sprintf(__('You’re currently set up and enjoying the benefits of %s. <br> Built by Goopter.', 'paypal-advanced-for-woocommerce'), AE_PPCP_NAME); ?></p>
+                                <p><?php // Translators: %s is the reduced PayPal and Goopter fee rate for debit/credit card transactions.
+                                echo sprintf(__('However, we need additional verification to approve you for the reduced <br>rate of %s on debit/credit cards.', 'paypal-advanced-for-woocommerce'), $this->goopter_ppcp_get_paypal_fee_structure($this->ppcp_paypal_country, 'acc')); ?></p>
                                 <p><?php echo __('To apply for a reduced rate, modify your setup, <br>or learn more about additional options, please use the buttons below.', 'paypal-advanced-for-woocommerce'); ?></p>
                                 <?php if ($this->is_paypal_vault_approved === false &&  in_array($this->ppcp_paypal_country, $paypal_vault_supported_country)) { ?>
                                     <p><?php echo __('Your PayPal account is not approved for the Vault functionality<br>which is required for Subscriptions (token payments). <br>Please Reconnect your PayPal account to apply for this feature.', 'paypal-advanced-for-woocommerce'); ?></p>
@@ -357,7 +363,8 @@ class Goopter_PayPal_PPCP_Admin_Onboarding {
                             <div class="paypal_woocommerce_product_onboard_content">
                                 <br>
                                 <span><img class="green_checkmark" src="<?php echo PAYPAL_FOR_WOOCOMMERCE_ASSET_URL . 'ppcp-gateway/images/admin/green_checkmark.png'; ?>"></span>
-                                <p><?php echo sprintf(__('You’re currently set up and enjoying the benefits of %s. <br> Built by Goopter.', 'paypal-advanced-for-woocommerce'), AE_PPCP_NAME); ?></p>
+                                <p><?php // Translators: %s is the name of the PayPal solution (e.g., PayPal Advanced).
+                                echo sprintf(__('You’re currently set up and enjoying the benefits of %s. <br> Built by Goopter.', 'paypal-advanced-for-woocommerce'), AE_PPCP_NAME); ?></p>
                                 <p><?php echo __('To modify your setup or learn more about additional options, <br> please use the buttons below.', 'paypal-advanced-for-woocommerce'); ?></p>
                                 <?php if ($this->is_paypal_vault_approved === false && in_array($this->ppcp_paypal_country, $paypal_vault_supported_country)) { ?>
                                     <p><?php echo __('Your PayPal account is not approved for the Vault functionality<br>which is required for Subscriptions (token payments). <br>Please Reconnect your PayPal account to apply for this feature.', 'paypal-advanced-for-woocommerce'); ?></p>

@@ -523,7 +523,13 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
                                             $processed_product_id[$target_product_id] = $target_product_id;
                                         }
                                         if ($_POST['payment_action'] == 'Authorization') {
-                                            if (update_post_meta($target_product_id, 'woo_product_payment_action_authorization', wc_clean(sanitize_text_field(wp_unslash($_POST['authorization_type']))))) {
+                                            // if (update_post_meta($target_product_id, 'woo_product_payment_action_authorization', wc_clean(sanitize_text_field(wp_unslash($_POST['authorization_type']))))) {
+                                            //     $processed_product_id[$target_product_id] = $target_product_id;
+                                            // }
+                                            $authorization_type = isset($_POST['authorization_type']) && !empty($_POST['authorization_type'])
+                                                ? sanitize_text_field(wp_unslash($_POST['authorization_type']))
+                                                : '';
+                                            if (update_post_meta($target_product_id, 'woo_product_payment_action_authorization', wc_clean($authorization_type))) {
                                                 $processed_product_id[$target_product_id] = $target_product_id;
                                             }
                                         } else {
@@ -538,7 +544,13 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
                                             $processed_product_id[$target_product_id] = $target_product_id;
                                         }
                                         if ($_POST['payment_action'] == 'Authorization') {
-                                            if (update_post_meta($target_product_id, 'woo_product_payment_action_authorization', wc_clean(sanitize_text_field(wp_unslash($_POST['authorization_type']))))) {
+                                            // if (update_post_meta($target_product_id, 'woo_product_payment_action_authorization', wc_clean(sanitize_text_field(wp_unslash($_POST['authorization_type']))))) {
+                                            //     $processed_product_id[$target_product_id] = $target_product_id;
+                                            // }
+                                            $authorization_type = isset($_POST['authorization_type']) && !empty($_POST['authorization_type']) 
+                                                ? wc_clean(sanitize_text_field(wp_unslash($_POST['authorization_type']))) 
+                                                : '';
+                                            if (update_post_meta($target_product_id, 'woo_product_payment_action_authorization', $authorization_type)) {
                                                 $processed_product_id[$target_product_id] = $target_product_id;
                                             }
                                         } else {
@@ -726,6 +738,7 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
                 'exclude_from_search' => false,
                 'show_in_admin_all_list' => true,
                 'show_in_admin_status_list' => true,
+                // Translators: %s is the count of partially paid items.
                 'label_count' => _n_noop('Partially Paid <span class="count">(%s)</span>', 'Partially Paid <span class="count">(%s)</span>', 'paypal-advanced-for-woocommerce'),
             ));
         }

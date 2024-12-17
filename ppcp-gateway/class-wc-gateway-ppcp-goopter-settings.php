@@ -333,6 +333,7 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
             if ($available_endpoints === false) {
                 
             } elseif (!isset($available_endpoints['advanced_cc'])) {
+                // Translators: %s is the URL to the PayPal Connect screen in the WordPress admin.
                 $advanced_cc_text = sprintf(__('The Advanced Credit Cards feature is not yet active on your PayPal account. Please <a href="%s">return to the PayPal Connect screen</a> to apply for this feature and get cheaper rates.', 'paypal-advanced-for-woocommerce'), admin_url('options-general.php?page=paypal-advanced-for-woocommerce'));
                 $advanced_cc_custom_attributes = array('disabled' => 'disabled');
             }
@@ -734,7 +735,7 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                 'cart_button_position' => array(
                     'title' => __('Cart Button Position', 'paypal-advanced-for-woocommerce'),
                     'label' => __('Where to display PayPal Smart button(s).', 'paypal-advanced-for-woocommerce'),
-                    'description' => __('Set where to display the PayPal Smart button(s).'),
+                    'description' => __('Set where to display the PayPal Smart button(s).', 'paypal-advanced-for-woocommerce'),
                     'type' => 'select',
                     'class' => 'wc-enhanced-select goopter_ppcp_cart_button_settings',
                     'options' => array(
@@ -957,10 +958,10 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'options' => array(
                         'top' => __('Display at the top of the checkout page.', 'paypal-advanced-for-woocommerce'),
                         'regular' => __('Display in general list of enabled gateways on checkout page.', 'paypal-advanced-for-woocommerce'),
-                        'both' => __('Display both at the top and in the general list of gateways on the checkout page.')),
+                        'both' => __('Display both at the top and in the general list of gateways on the checkout page.', 'paypal-advanced-for-woocommerce'),),
                     'default' => 'regular',
                     'class' => 'wc-enhanced-select',
-                    'description' => __('Displaying the checkout button at the top of the checkout page will allow users to skip filling out the forms and can potentially increase conversion rates.'),
+                    'description' => __('Displaying the checkout button at the top of the checkout page will allow users to skip filling out the forms and can potentially increase conversion rates.', 'paypal-advanced-for-woocommerce'),
                     'desc_tip' => true,
                     'css' => 'min-width: 440px;',
                 ),
@@ -1898,7 +1899,7 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                 'skip_final_review' => array(
                     'title' => __('Skip Final Review', 'paypal-advanced-for-woocommerce'),
                     'label' => __('Enables the option to skip the final review page.', 'paypal-advanced-for-woocommerce'),
-                    'description' => __('By default, users will be returned from PayPal and presented with a final review page which includes shipping and tax in the order details. Enable this option to eliminate this page in the checkout process.  This only applies when the WooCommerce checkout page is skipped.  If the WooCommerce checkout page is used, the final review page will always be skipped.') . '<br /><b class="final_review_notice"><span class="guest_checkout_notice">' . $skip_final_review_option_not_allowed_guest_checkout . '</span></b>' . '<b class="final_review_notice"><span class="terms_notice">' . $skip_final_review_option_not_allowed_terms . '</span></b>',
+                    'description' => __('By default, users will be returned from PayPal and presented with a final review page which includes shipping and tax in the order details. Enable this option to eliminate this page in the checkout process.  This only applies when the WooCommerce checkout page is skipped.  If the WooCommerce checkout page is used, the final review page will always be skipped.', 'paypal-advanced-for-woocommerce') . '<br /><b class="final_review_notice"><span class="guest_checkout_notice">' . $skip_final_review_option_not_allowed_guest_checkout . '</span></b>' . '<b class="final_review_notice"><span class="terms_notice">' . $skip_final_review_option_not_allowed_terms . '</span></b>',
                     'type' => 'checkbox',
                     'default' => 'no'
                 ),
@@ -1912,7 +1913,7 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                 'disable_term' => array(
                     'title' => __('Disable Terms and Conditions', 'paypal-advanced-for-woocommerce'),
                     'label' => __('Disable Terms and Conditions for Express Checkout orders.', 'paypal-advanced-for-woocommerce'),
-                    'description' => __('By default, if a Terms and Conditions page is set in WooCommerce, this would require the review page and would override the Skip Final Review option.  Check this option to disable Terms and Conditions for Express Checkout orders only so that you can use the Skip Final Review option.'),
+                    'description' => __('By default, if a Terms and Conditions page is set in WooCommerce, this would require the review page and would override the Skip Final Review option.  Check this option to disable Terms and Conditions for Express Checkout orders only so that you can use the Skip Final Review option.', 'paypal-advanced-for-woocommerce'),
                     'type' => 'checkbox',
                     'default' => 'no',
                     'class' => 'disable_term',
@@ -2076,6 +2077,7 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'title' => __('Debug log', 'paypal-advanced-for-woocommerce'),
                     'type' => 'select',
                     'class' => 'wc-enhanced-select',
+                    // Translators: %s is the file path where PayPal events are logged, wrapped in <code> tags.
                     'description' => sprintf(__('Log PayPal events, such as Payment, Refund inside %s Note: this may log personal information. We recommend using this for debugging purposes only and deleting the logs when finished.', 'paypal-advanced-for-woocommerce'), '<code>' . WC_Log_Handler_File::get_log_file_path('goopter_ppcp') . '</code>'),
                     'options' => array(
                         'everything' => __('Everything', 'paypal-advanced-for-woocommerce'),

@@ -29,6 +29,7 @@ $has_methods = (bool) $saved_methods;
 $types = wc_get_account_payment_methods_types();
 
 $ccEndingText = function ($method) {
+    // Translators: %1$s is the credit card brand, %2$s is the last four digits of the credit card number.
     return sprintf(esc_html__('%1$s ending in %2$s', 'woocommerce'), esc_html(wc_get_credit_card_type_label($method['method']['brand'])), esc_html($method['method']['last4']));
 };
 do_action('woocommerce_before_account_payment_methods', $has_methods);

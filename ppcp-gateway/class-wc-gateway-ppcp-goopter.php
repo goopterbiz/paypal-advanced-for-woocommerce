@@ -290,7 +290,8 @@ class WC_Gateway_PPCP_Goopter extends WC_Payment_Gateway {
                     </div>
                     <div class="ppcp_paypal_connection">
                         <div class="ppcp_paypal_connection_status">
-                            <h3><?php echo sprintf(__('Congratulations, %s is Connected!', 'paypal-advanced-for-woocommerce'), AE_PPCP_NAME); ?></h3>
+                            <h3><?php // Translators: %s is the name of the PayPal service (e.g., PayPal Advanced).
+                            echo sprintf(__('Congratulations, %s is Connected!', 'paypal-advanced-for-woocommerce'), AE_PPCP_NAME); ?></h3>
                         </div>
                     </div>
                     <button type="button" class="button goopter-ppcp-disconnect"><?php echo __('Disconnect', 'paypal-advanced-for-woocommerce'); ?></button>
@@ -634,6 +635,7 @@ class WC_Gateway_PPCP_Goopter extends WC_Payment_Gateway {
         if (($this->is_live_first_party_used === 'yes' || $this->is_live_third_party_used === 'yes') || ($this->is_sandbox_first_party_used === 'yes' || $this->is_sandbox_third_party_used === 'yes')) {
             return false;
         }
+        // Translators: %1$s is the URL to connect the account, %2$s is the PayPal service name.
         $message = sprintf(__('%s is almost ready. To get started, <a href="%1$s">connect your account</a>.','paypal-advanced-for-woocommerce'),AE_PPCP_NAME,admin_url('options-general.php?page=paypal-advanced-for-woocommerce&tab=general_settings&gateway=paypal_payment_gateway_products'));
         ?>
         <div class="notice notice-warning is-dismissible">

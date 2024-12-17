@@ -158,6 +158,7 @@ class Goopter_PayPal_PPCP_Product extends WC_Form_Handler {
                     } elseif ('' === $valid_value && in_array($value, $attribute->get_slugs(), true)) {
                         $variations[$attribute_key] = $value;
                     } else {
+                        // Translators: %s is the attribute label.
                         throw new Exception(sprintf(__('Invalid value posted for %s', 'paypal-advanced-for-woocommerce'), wc_attribute_label($attribute['name'])));
                     }
                 } elseif ('' === $valid_value) {
@@ -165,6 +166,7 @@ class Goopter_PayPal_PPCP_Product extends WC_Form_Handler {
                 }
             }
             if (!empty($missing_attributes)) {
+                // Translators: %s is the list of missing required fields.
                 throw new Exception(sprintf(_n('%s is a required field', '%s are required fields', count($missing_attributes), 'paypal-advanced-for-woocommerce'), wc_format_list_of_items($missing_attributes)));
             }
         } catch (Exception $e) {

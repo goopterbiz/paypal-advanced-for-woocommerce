@@ -19,6 +19,7 @@ if (class_exists('WC_Checkout')) {
                 wc_set_time_limit(0);
                 do_action('woocommerce_before_checkout_process');
                 if (WC()->cart->is_empty()) {
+                    // Translators: %s is the URL to the shop page.
                     throw new Exception(sprintf(__('Sorry, your session has expired. <a href="%s" class="wc-backward">Return to shop</a>', 'paypal-advanced-for-woocommerce'), esc_url(wc_get_page_permalink('shop'))));
                 }
                 do_action('woocommerce_checkout_process');
@@ -83,6 +84,7 @@ if (class_exists('WC_Checkout')) {
             wc_set_time_limit(0);
             do_action('woocommerce_before_checkout_process');
             if (WC()->cart->is_empty()) {
+                // Translators: %s is the URL to the shop page.
                 throw new Exception(sprintf(__('Sorry, your session has expired. <a href="%s" class="wc-backward">Return to shop</a>', 'paypal-advanced-for-woocommerce'), esc_url(wc_get_page_permalink('shop'))));
             }
 
@@ -118,7 +120,7 @@ if (class_exists('WC_Checkout')) {
                 do_action('woocommerce_checkout_order_processed', $order_id, $posted_data, $order);
                 return $order_id;
             } else {
-                throw new Exception(__('Unable to create order due to following errors.'));
+                throw new Exception(__('Unable to create order due to following errors.', 'paypal-advanced-for-woocommerce'));
             }
         }
     }

@@ -266,7 +266,10 @@ class Goopter_PayPal_PPCP_Apple_Pay_Configurations
 
     public function registerApplePayDomain()
     {
-        $domainNameToRegister = sanitize_text_field(wp_unslash($_POST['apple_pay_domain'])) ?? wp_parse_url( get_site_url(), PHP_URL_HOST );
+        // $domainNameToRegister = sanitize_text_field(wp_unslash($_POST['apple_pay_domain'])) ?? wp_parse_url( get_site_url(), PHP_URL_HOST );
+        $domainNameToRegister = isset($_POST['apple_pay_domain']) && !empty($_POST['apple_pay_domain']) 
+            ? sanitize_text_field(wp_unslash($_POST['apple_pay_domain'])) 
+            : wp_parse_url(get_site_url(), PHP_URL_HOST);
 
         try {
             $result = $this->registerDomain($domainNameToRegister);
@@ -279,7 +282,10 @@ class Goopter_PayPal_PPCP_Apple_Pay_Configurations
 
     public function removeApplePayDomain()
     {
-        $domainNameToRemove = sanitize_text_field(wp_unslash($_REQUEST['domain'])) ?? wp_parse_url( get_site_url(), PHP_URL_HOST );
+        // $domainNameToRemove = sanitize_text_field(wp_unslash($_REQUEST['domain'])) ?? wp_parse_url( get_site_url(), PHP_URL_HOST );
+        $domainNameToRemove = isset($_REQUEST['domain']) && !empty($_REQUEST['domain']) 
+            ? sanitize_text_field(wp_unslash($_REQUEST['domain'])) 
+            : wp_parse_url(get_site_url(), PHP_URL_HOST);
         $result = $this->removeDomain($domainNameToRemove);
         wp_send_json($result);
         die;
