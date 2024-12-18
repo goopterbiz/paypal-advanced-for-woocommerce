@@ -370,11 +370,7 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
         }
 
         function goopter_woocommerce_process_product_meta_own($post_id) {
-            if (!isset($_POST['woocommerce_meta_nonce']) || !wp_verify_nonce($_POST['woocommerce_meta_nonce'], 'woocommerce_save_data') ) {
-                $logger = wc_get_logger();  // Get the logger instance
-                $logger->error('goopter woocommerce process product meta Nonce verification failed. Nonce not valid.', array('source' => 'paypal-advanced-for-woocommerce.php'));
-            }
-
+            // phpcs:disable WordPress.Security.NonceVerification.Missing -- checked by woocommerce hook: woocommerce_process_product_meta
             $no_shipping_required = isset($_POST['_no_shipping_required']) ? 'yes' : 'no';
             update_post_meta($post_id, '_no_shipping_required', $no_shipping_required);
             $_paypal_billing_agreement = isset($_POST['_paypal_billing_agreement']) ? 'yes' : 'no';
@@ -383,6 +379,7 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
             update_post_meta($post_id, '_enable_sandbox_mode', $_enable_sandbox_mode);
             $_enable_ec_button = isset($_POST['_enable_ec_button']) ? 'yes' : 'no';
             update_post_meta($post_id, '_enable_ec_button', $_enable_ec_button);
+            // phpcs:enable WordPress.Security.NonceVerification.Missing -- checked by woocommerce hook: woocommerce_process_product_meta
         }
 
         public function goopter_woocommerce_admin_enqueue_scripts($hook) {
@@ -478,11 +475,7 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
         }
 
         public function goopter_paypal_for_woo_product_process_product_meta($post_id) {
-            if (!isset($_POST['woocommerce_meta_nonce']) || !wp_verify_nonce($_POST['woocommerce_meta_nonce'], 'woocommerce_save_data') ) {
-                $logger = wc_get_logger();  // Get the logger instance
-                $logger->error('goopter paypal for woo product process product meta Nonce verification failed. Nonce not valid.', array('source' => 'paypal-advanced-for-woocommerce.php'));
-            }
-
+            // phpcs:disable WordPress.Security.NonceVerification.Recommended, WordPress.Security.NonceVerification.Missing -- checked by woocommerce hook: woocommerce_process_product_meta
             if (isset($_REQUEST['enable_payment_action']) && ('yes' === $_REQUEST['enable_payment_action'])) {
                 update_post_meta($post_id, 'enable_payment_action', 'yes');
             } else {
@@ -496,6 +489,7 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
             } else {
                 update_post_meta($post_id, 'woo_product_payment_action_authorization', '');
             }
+            // phpcs:disable WordPress.Security.NonceVerification.Recommended, WordPress.Security.NonceVerification.Missing -- checked by woocommerce hook: woocommerce_process_product_meta
         }
 
         public function goopter_paypal_for_woo_product_level_payment_action($gateways, $request = null, $order_id = null) {

@@ -1567,12 +1567,7 @@ class Goopter_PayPal_PPCP_Smart_Button {
         $order_data['ship_to_different_address'] = 0;
         $order_data['shipping_method'] = '';
 
-        if (!isset($_POST['woocommerce-process-checkout-nonce']) || !wp_verify_nonce(sanitize_key(wp_unslash($_POST['woocommerce-process-checkout-nonce'])), 'woocommerce-process_checkout')) {
-            // Nonce is invalid
-            $logger = wc_get_logger();  // Get the logger instance
-            $logger->error('goopter ppcp prepare order data nonce verification failed. Nonce not valid.', array('source' => 'ppcp-gateway/class-goopter-paypal-ppcp-smart-button.php'));
-        }
-
+        // phpcs:disable WordPress.Security.NonceVerification.Missing -- no security issue
         // merge post data with the transaction details data during the cc_capture api call
         if (isset($_POST)) {
             $look_for_keys_post = ['createaccount', 'terms',
@@ -1653,6 +1648,7 @@ class Goopter_PayPal_PPCP_Smart_Button {
         if (!isset($order_data['shipping_method'])) {
             $order_data['shipping_method'] = '';
         }
+        // phpcs:disable WordPress.Security.NonceVerification.Missing -- no security issue
         return array_merge($defaultData, $order_data);
     }
 
@@ -1701,18 +1697,14 @@ class Goopter_PayPal_PPCP_Smart_Button {
     }
 
     public function goopter_ppcp_prevent_add_to_cart_woo_action() {
-        if (!isset($_POST['woocommerce-process-checkout-nonce']) || !wp_verify_nonce(sanitize_key(wp_unslash($_POST['woocommerce-process-checkout-nonce'])), 'woocommerce-process_checkout')) {
-            // Nonce is invalid
-            $logger = wc_get_logger();  // Get the logger instance
-            $logger->error('goopter ppcp prevent add to cart woo action nonce verification failed. Nonce not valid.', array('source' => 'ppcp-gateway/class-goopter-paypal-ppcp-smart-button.php'));
-        }
-
+        // phpcs:disable WordPress.Security.NonceVerification.Recommended -- no security issue
         if (isset($_REQUEST['goopter_ppcp-add-to-cart'])) {
             if (isset($_REQUEST['add-to-cart'])) {
                 unset($_REQUEST['add-to-cart']);
                 unset($_POST['add-to-cart']);
             }
         }
+        // phpcs:enable WordPress.Security.NonceVerification.Recommended -- no security issue
     }
 
     public function goopter_ppcp_woocommerce_before_checkout_process() {
@@ -1816,12 +1808,7 @@ class Goopter_PayPal_PPCP_Smart_Button {
     }
 
     public function goopter_ppcp_woocommerce_get_checkout_url($checkout_url) {
-        if (!isset($_POST['woocommerce-process-checkout-nonce']) || !wp_verify_nonce(sanitize_key(wp_unslash($_POST['woocommerce-process-checkout-nonce'])), 'woocommerce-process_checkout')) {
-            // Nonce is invalid
-            $logger = wc_get_logger();  // Get the logger instance
-            $logger->error('goopter ppcp woocommerce get checkout url nonce verification failed. Nonce not valid.', array('source' => 'ppcp-gateway/class-goopter-paypal-ppcp-smart-button.php'));
-        }
-
+        // phpcs:disable WordPress.Security.NonceVerification.Recommended -- no security issue
         try {
             if (is_checkout() && goopter_ppcp_has_active_session()) {
                 $checkout_url_parameter = array();
@@ -1836,6 +1823,7 @@ class Goopter_PayPal_PPCP_Smart_Button {
                 }
                 $checkout_url = add_query_arg($checkout_url_parameter, untrailingslashit($checkout_url));
             }
+        // phpcs:enable WordPress.Security.NonceVerification.Recommended -- no security issue
         } catch (Exception $ex) {
             return $checkout_url;
         }
@@ -1843,12 +1831,7 @@ class Goopter_PayPal_PPCP_Smart_Button {
     }
 
     public function goopter_ppcp_woocommerce_checkout_get_value($default, $key) {
-        if (!isset($_POST['woocommerce-process-checkout-nonce']) || !wp_verify_nonce(sanitize_key(wp_unslash($_POST['woocommerce-process-checkout-nonce'])), 'woocommerce-process_checkout')) {
-            // Nonce is invalid
-            $logger = wc_get_logger();  // Get the logger instance
-            $logger->error('goopter ppcp woocommerce checkout get value nonce verification failed. Nonce not valid.', array('source' => 'ppcp-gateway/class-goopter-paypal-ppcp-smart-button.php'));
-        }
-
+        // phpcs:disable WordPress.Security.NonceVerification.Missing -- no security issue
         if (strpos($key, '_state') !== false || strpos($key, '_country') !== false) {
             if (empty($this->checkout_details)) {
                 $this->checkout_details = Goopter_Session_Manager::get('paypal_transaction_details');
@@ -1916,6 +1899,7 @@ class Goopter_PayPal_PPCP_Smart_Button {
                 }
             }
         }
+        // phpcs:enable WordPress.Security.NonceVerification.Missing -- no security issue
         return $default;
     }
 
@@ -2140,9 +2124,10 @@ class Goopter_PayPal_PPCP_Smart_Button {
     }
 
     public function goopter_ppcp_remove_unfinished_order() {
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- no security issue
+        // phpcs:disable WordPress.Security.NonceVerification.Recommended -- no security issue
         if (is_checkout() && !goopter_ppcp_has_active_session() && !isset($_GET['paypal_order_id']) && Goopter_Session_Manager::get('used_payment_method')) {
             Goopter_Session_Manager::clear();
         }   
+        // phpcs:enable WordPress.Security.NonceVerification.Recommended -- no security issue
     }
 }

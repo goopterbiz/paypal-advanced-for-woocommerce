@@ -116,12 +116,7 @@ trait WC_Gateway_PPCP_Goopter_Subscriptions_Base {
     }
 
     public function free_signup_with_token_payment_tokenization($order_id) {
-        if (!isset($_POST['woocommerce-process-checkout-nonce']) || !wp_verify_nonce(sanitize_key(wp_unslash($_POST['woocommerce-process-checkout-nonce'])), 'woocommerce-process_checkout')) {
-            // Nonce is invalid
-            $logger = wc_get_logger();  // Get the logger instance
-            $logger->error('free signup with token payment tokenization nonce verification failed. Nonce not valid.', array('source' => 'ppcp-gateway/subscriptions/wc-gateway-ppcp-goopter-subscriptions-base.php'));
-        }
-
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing -- no security issue
         if (!empty($_POST['wc-goopter_ppcp-payment-token']) && $_POST['wc-goopter_ppcp-payment-token'] != 'new') {
             $order = wc_get_order($order_id);
             if ($order->get_total() == 0) {
