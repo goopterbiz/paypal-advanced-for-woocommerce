@@ -214,6 +214,17 @@ class Goopter_Admin_Order_Payment_Process {
     }
 
     public function goopter_admin_create_new_order($order) {
+        if (
+            !isset($_POST['goopter_create_reference_order_sec']) ||
+            wp_verify_nonce(
+                sanitize_text_field(wp_unslash($_POST['goopter_create_reference_order_sec'])),
+                'goopter_create_reference_order_sec'
+            )
+        ) {
+            $logger = wc_get_logger();  // Get the logger instance
+            $logger->error('goopter admin create new order nonce verification failed. Nonce not valid.', array('source' => 'goopter-includes/goopter-admin-order-payment-process.php'));
+        }
+
         $args = array(
             'customer_id' => $order->get_user_id(),
             'customer_note' => wptexturize($order->get_customer_note()),

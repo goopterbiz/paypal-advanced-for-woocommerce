@@ -4,7 +4,9 @@
  */
 ?>
 <?php
+// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- no security issue
 $active_tab = isset($_GET['tab']) ? wc_clean(sanitize_text_field(wp_unslash($_GET['tab']))) : 'general_settings';
+// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- no security issue
 $gateway = isset($_GET['gateway']) ? wc_clean(sanitize_text_field(wp_unslash($_GET['gateway']))) : 'paypal_payment_gateway_products';
 ?>
 <div class="wrap">

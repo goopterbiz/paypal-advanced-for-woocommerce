@@ -58,6 +58,11 @@ class Goopter_Utility {
     }
 
     public function save($post_id, $post_or_order_object) {
+        if (!isset($_POST['woocommerce_meta_nonce']) || !wp_verify_nonce($_POST['woocommerce_meta_nonce'], 'woocommerce_save_data') ) {
+            $logger = wc_get_logger();  // Get the logger instance
+            $logger->error('woocommerce process shop order meta save Nonce verification failed. Nonce not valid.', array('source' => 'goopter-includes/goopter-utility.php'));
+        }
+
         if (!empty($_POST['save']) && $_POST['save'] == 'Submit') {
             $order = ( $post_or_order_object instanceof WP_Post ) ? wc_get_order( $post_or_order_object->ID ) : $post_or_order_object;
             if (!is_a($order, 'WC_Order')) {

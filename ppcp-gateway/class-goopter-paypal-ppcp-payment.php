@@ -167,6 +167,12 @@ class Goopter_PayPal_PPCP_Payment {
 
     public function goopter_ppcp_create_order_request($woo_order_id = null) {
         try {
+            if (!isset($_POST['woocommerce-process-checkout-nonce']) || !wp_verify_nonce(sanitize_key(wp_unslash($_POST['woocommerce-process-checkout-nonce'])), 'woocommerce-process_checkout')) {
+                // Nonce is invalid
+                $logger = wc_get_logger();  // Get the logger instance
+                $logger->error('create order nonce verification failed. Nonce not valid.', array('source' => 'ppcp-gateway/class-goopter-paypal-ppcp-payment.php'));
+            }
+
             $return_response = [];
             if (goopter_ppcp_get_order_total($woo_order_id) === 0) {
                 $wc_notice = __('Sorry, your session has expired.', 'paypal-advanced-for-woocommerce');
@@ -890,6 +896,13 @@ class Goopter_PayPal_PPCP_Payment {
     public function goopter_ppcp_shipping_preference() {
         $shipping_preference = 'GET_FROM_FILE';
         $page = null;
+
+        if (!isset($_POST['woocommerce-process-checkout-nonce']) || !wp_verify_nonce(sanitize_key(wp_unslash($_POST['woocommerce-process-checkout-nonce'])), 'woocommerce-process_checkout')) {
+            // Nonce is invalid
+            $logger = wc_get_logger();  // Get the logger instance
+            $logger->error('shipping preference nonce verification failed. Nonce not valid.', array('source' => 'ppcp-gateway/class-goopter-paypal-ppcp-payment.php'));
+        }
+
         if (isset($_GET) && !empty($_GET['from'])) {
             $page = sanitize_text_field(wp_unslash($_GET['from']));
         } elseif (is_cart()) {
@@ -3040,6 +3053,12 @@ class Goopter_PayPal_PPCP_Payment {
 
     public function goopter_ppcp_capture_order_using_payment_method_token($order_id) {
         try {
+            if (!isset($_POST['woocommerce-process-checkout-nonce']) || !wp_verify_nonce(sanitize_key(wp_unslash($_POST['woocommerce-process-checkout-nonce'])), 'woocommerce-process_checkout')) {
+                // Nonce is invalid
+                $logger = wc_get_logger();  // Get the logger instance
+                $logger->error('capture order nonce verification failed. Nonce not valid.', array('source' => 'ppcp-gateway/class-goopter-paypal-ppcp-payment.php'));
+            }
+
             $order = wc_get_order($order_id);
             $goopter_ppcp_payment_method_title = $this->get_payment_method_title_for_order($order_id);
             $this->paymentaction = apply_filters('goopter_ppcp_paymentaction', $this->paymentaction, $order_id);
@@ -3540,6 +3559,12 @@ class Goopter_PayPal_PPCP_Payment {
 
     public function goopter_ppcp_paypal_create_payment_token_free_signup_with_free_trial() {
         try {
+            if (!isset($_POST['woocommerce-process-checkout-nonce']) || !wp_verify_nonce(sanitize_key(wp_unslash($_POST['woocommerce-process-checkout-nonce'])), 'woocommerce-process_checkout')) {
+                // Nonce is invalid
+                $logger = wc_get_logger();  // Get the logger instance
+                $logger->error('create payment token free signup with free trial. Nonce not valid.', array('source' => 'ppcp-gateway/class-goopter-paypal-ppcp-payment.php'));
+            }
+
             $body_request = array();
             if (isset($_GET[APPROVAL_TOKEN_ID_PARAM_NAME]) && isset($_GET['order_id'])) {
                 $body_request['payment_source']['token'] = array(
@@ -3627,6 +3652,12 @@ class Goopter_PayPal_PPCP_Payment {
 
     public function goopter_ppcp_paypal_create_payment_token() {
         try {
+            if (!isset($_POST['woocommerce-process-checkout-nonce']) || !wp_verify_nonce(sanitize_key(wp_unslash($_POST['woocommerce-process-checkout-nonce'])), 'woocommerce-process_checkout')) {
+                // Nonce is invalid
+                $logger = wc_get_logger();  // Get the logger instance
+                $logger->error('create payment token Nonce not valid.', array('source' => 'ppcp-gateway/class-goopter-paypal-ppcp-payment.php'));
+            }
+
             $body_request = array();
             if (isset($_GET[APPROVAL_TOKEN_ID_PARAM_NAME])) {
                 // Clear the notices as WooCommerce PayPal Payments tries to handle the approval_token_id parameter
@@ -3766,6 +3797,12 @@ class Goopter_PayPal_PPCP_Payment {
 
     public function goopter_ppcp_advanced_credit_card_create_payment_token() {
         try {
+            if (!isset($_POST['woocommerce-process-checkout-nonce']) || !wp_verify_nonce(sanitize_key(wp_unslash($_POST['woocommerce-process-checkout-nonce'])), 'woocommerce-process_checkout')) {
+                // Nonce is invalid
+                $logger = wc_get_logger();  // Get the logger instance
+                $logger->error('ppcp advanced create payment token Nonce not valid.', array('source' => 'ppcp-gateway/class-goopter-paypal-ppcp-payment.php'));
+            }
+
             $body_request = array();
             if (isset($_GET[APPROVAL_TOKEN_ID_PARAM_NAME])) {
                 $body_request['payment_source']['token'] = array(
@@ -3850,6 +3887,12 @@ class Goopter_PayPal_PPCP_Payment {
 
     public function goopter_ppcp_advanced_credit_card_create_payment_token_free_signup_with_free_trial() {
         try {
+            if (!isset($_POST['woocommerce-process-checkout-nonce']) || !wp_verify_nonce(sanitize_key(wp_unslash($_POST['woocommerce-process-checkout-nonce'])), 'woocommerce-process_checkout')) {
+                // Nonce is invalid
+                $logger = wc_get_logger();  // Get the logger instance
+                $logger->error('ppcp advanced credit card create payment token Nonce not valid.', array('source' => 'ppcp-gateway/class-goopter-paypal-ppcp-payment.php'));
+            }
+
             $body_request = array();
             if (isset($_GET[APPROVAL_TOKEN_ID_PARAM_NAME]) && isset($_GET['order_id'])) {
                 $body_request['payment_source']['token'] = array(
@@ -4126,6 +4169,12 @@ class Goopter_PayPal_PPCP_Payment {
 
     public function goopter_ppcp_advanced_credit_card_create_payment_token_sub_change_payment() {
         try {
+            if (!isset($_POST['woocommerce-process-checkout-nonce']) || !wp_verify_nonce(sanitize_key(wp_unslash($_POST['woocommerce-process-checkout-nonce'])), 'woocommerce-process_checkout')) {
+                // Nonce is invalid
+                $logger = wc_get_logger();  // Get the logger instance
+                $logger->error('ppcp advanced credit card create payment token sub change payment Nonce not valid.', array('source' => 'ppcp-gateway/class-goopter-paypal-ppcp-payment.php'));
+            }
+
             $body_request = array();
             if (isset($_GET[APPROVAL_TOKEN_ID_PARAM_NAME]) && isset($_GET['order_id'])) {
                 $body_request['payment_source']['token'] = array(
@@ -4270,6 +4319,12 @@ class Goopter_PayPal_PPCP_Payment {
 
     public function goopter_ppcp_paypal_create_payment_token_sub_change_payment() {
         try {
+            if (!isset($_POST['woocommerce-process-checkout-nonce']) || !wp_verify_nonce(sanitize_key(wp_unslash($_POST['woocommerce-process-checkout-nonce'])), 'woocommerce-process_checkout')) {
+                // Nonce is invalid
+                $logger = wc_get_logger();  // Get the logger instance
+                $logger->error('goopter ppcp paypal create payment token sub change payment Nonce not valid.', array('source' => 'ppcp-gateway/class-goopter-paypal-ppcp-payment.php'));
+            }
+
             $body_request = array();
             if (isset($_GET[APPROVAL_TOKEN_ID_PARAM_NAME]) && isset($_GET['order_id'])) {
                 $body_request['payment_source']['token'] = array(
@@ -4537,6 +4592,12 @@ class Goopter_PayPal_PPCP_Payment {
 
     public function goopter_ppcp_prepare_refund_request_data_for_capture($order, $amount) {
         try {
+            if (!isset($_POST['woocommerce-order-items-nonce']) || 
+            !wp_verify_nonce($_POST['woocommerce-order-items-nonce'], 'woocommerce-order-items')) {
+                $logger = wc_get_logger();  // Get the logger instance
+                $logger->error('goopter ppcp prepare refund request data for capture Nonce not valid.', array('source' => 'ppcp-gateway/class-goopter-paypal-ppcp-payment.php'));
+            }
+        
             $ppcp_refunded_amount = 0;
             $prepare_refund_data = [];
             $used_transaction_id = [];

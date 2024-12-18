@@ -239,55 +239,6 @@ jQuery(document).ready(function ($) {
         }
     });
 
-
-
-    // AJAX - Bulk enable/disable tool
-    $('#woocommerce_paypal-advanced-for-woocommerce_options_form_bulk_tool_shipping').submit(function ()
-    {
-        // show processing status
-        $('#bulk-enable-tool-submit').attr('disabled', 'disabled');
-        $('#bulk-enable-tool-submit').removeClass('button-primary');
-        $('#bulk-enable-tool-submit').html('<i class="ofwc-spinner"></i> Processing, please wait...');
-        $('#bulk-enable-tool-submit i.spinner').show();
-        var actionType = $('#pfw-bulk-action-type').val();
-        var actionTargetType = $('#pfw-bulk-action-target-type').val();
-        var actionTargetWhereType = $('#pfw-bulk-action-target-where-type').val();
-        var actionTargetWhereCategory = $('#pfw-bulk-action-target-where-category').val();
-        var actionTargetWhereProductType = $('#pfw-bulk-action-target-where-product-type').val();
-        var actionTargetWherePriceValue = $('#pfw-bulk-action-target-where-price-value').val();
-        var actionTargetWhereStockValue = $('#pfw-bulk-action-target-where-stock-value').val();
-        var payment_action = $('#pfw-bulk-action-payment-action-type').val();
-        var authorization_type = $('#pfw-bulk-action-payment-authorization-type').val();
-        var data = {
-            'action': 'pfw_ed_shipping_bulk_tool',
-            'actionType': actionType,
-            'actionTargetType': actionTargetType,
-            'actionTargetWhereType': actionTargetWhereType,
-            'actionTargetWhereCategory': actionTargetWhereCategory,
-            'actionTargetWhereProductType': actionTargetWhereProductType,
-            'actionTargetWherePriceValue': actionTargetWherePriceValue,
-            'actionTargetWhereStockValue': actionTargetWhereStockValue,
-            'payment_action': payment_action,
-            'authorization_type': authorization_type
-        };
-
-        // post it
-        $.post(ajaxurl, data, function (response) {
-            if ('failed' !== response)
-            {
-                var redirectUrl = response;
-                top.location.replace(redirectUrl);
-                return true;
-            } else
-            {
-                alert('Error updating records.');
-                return false;
-            }
-        });
-        /*End Post*/
-        return false;
-    });
-
     jQuery('.goopter_enable_notifyurl').change(function () {
         var express_notifyurl = jQuery('.goopter_notifyurl').closest('tr');
         if (jQuery(this).is(':checked')) {

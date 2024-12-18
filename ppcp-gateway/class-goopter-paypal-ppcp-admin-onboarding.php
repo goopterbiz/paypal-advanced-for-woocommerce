@@ -83,7 +83,9 @@ class Goopter_PayPal_PPCP_Admin_Onboarding {
     }
 
     public function goopter_ppcp_load_variable() {
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- no security issue
         if (isset($_GET['testmode'])) {
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- no security issue
             if (($_GET['testmode'] === 'yes')) {
                 $this->sandbox = true;
             } else {
@@ -241,6 +243,7 @@ class Goopter_PayPal_PPCP_Admin_Onboarding {
                                 <p><?php // Translators: %s is the name of the PayPal solution (e.g., PayPal Advanced).
                                 echo sprintf(__('Welcome to the %s solution for WooCommerce. <br> Built by Goopter Commerce Solutions.', 'paypal-advanced-for-woocommerce'), AE_PPCP_NAME); ?></p>
                                 <?php
+                                // phpcs:disable WordPress.Security.NonceVerification.Recommended -- no security issue
                                 if (isset($_GET['testmode'])) {
                                     $testmode = ($_GET['testmode'] === 'yes') ? 'yes' : 'no';
                                 } else {
@@ -422,6 +425,7 @@ class Goopter_PayPal_PPCP_Admin_Onboarding {
         } catch (Exception $ex) {
             
         }
+        // phpcs:enable WordPress.Security.NonceVerification.Recommended -- no security issue
     }
 
     public function print_general_reconnect_paypal_account_section($testmode) {

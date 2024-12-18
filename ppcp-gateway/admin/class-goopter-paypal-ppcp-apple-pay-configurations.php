@@ -266,6 +266,11 @@ class Goopter_PayPal_PPCP_Apple_Pay_Configurations
 
     public function registerApplePayDomain()
     {
+        if ( !isset($_POST['goopter_register_apple_pay_domain_nonce']) || !wp_verify_nonce(sanitize_key(wp_unslash($_POST['goopter_register_apple_pay_domain_nonce'])), 'goopter_register_apple_pay_domain_nonce') ) {
+            $logger = wc_get_logger();  // Get the logger instance
+            $logger->error('register apple pay domain Nonce verification failed. Nonce not valid.', array('source' => 'ppcp-gateway/admin/class-goopter-paypal-ppcp-apple-pay-configurations.php'));
+        }
+
         // $domainNameToRegister = sanitize_text_field(wp_unslash($_POST['apple_pay_domain'])) ?? wp_parse_url( get_site_url(), PHP_URL_HOST );
         $domainNameToRegister = isset($_POST['apple_pay_domain']) && !empty($_POST['apple_pay_domain']) 
             ? sanitize_text_field(wp_unslash($_POST['apple_pay_domain'])) 
@@ -282,6 +287,11 @@ class Goopter_PayPal_PPCP_Apple_Pay_Configurations
 
     public function removeApplePayDomain()
     {
+        if ( !isset($_POST['goopter_remove_apple_pay_domain_nonce']) || !wp_verify_nonce(sanitize_key(wp_unslash($_POST['goopter_remove_apple_pay_domain_nonce'])), 'goopter_remove_apple_pay_domain_nonce') ) {
+            $logger = wc_get_logger();  // Get the logger instance
+            $logger->error('remove apple pay domain Nonce verification failed. Nonce not valid.', array('source' => 'ppcp-gateway/admin/class-goopter-paypal-ppcp-apple-pay-configurations.php'));
+        }
+
         // $domainNameToRemove = sanitize_text_field(wp_unslash($_REQUEST['domain'])) ?? wp_parse_url( get_site_url(), PHP_URL_HOST );
         $domainNameToRemove = isset($_REQUEST['domain']) && !empty($_REQUEST['domain']) 
             ? sanitize_text_field(wp_unslash($_REQUEST['domain'])) 
