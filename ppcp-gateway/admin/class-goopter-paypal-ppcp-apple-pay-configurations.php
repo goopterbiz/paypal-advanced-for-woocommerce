@@ -94,7 +94,7 @@ class Goopter_PayPal_PPCP_Apple_Pay_Configurations
         try {
             $this->addDomainValidationFiles();
         } catch (Exception $exception) {
-            echo '<div class="error">' . $exception->getMessage() . '</div>';
+            echo '<div class="error">' . esc_html( $exception->getMessage() ) . '</div>';
         }
         try {
             $checkIsDomainAdded = self::isApplePayDomainAdded($jsonResponse);
@@ -190,7 +190,7 @@ class Goopter_PayPal_PPCP_Apple_Pay_Configurations
     public function registerDomain($domainNameToRegister)
     {
         if (!filter_var($domainNameToRegister, FILTER_VALIDATE_DOMAIN)) {
-            throw new Exception(__('Please enter valid domain name to register.', 'paypal-advanced-for-woocommerce'));
+            throw new Exception(esc_html__('Please enter a valid domain name to register.', 'paypal-advanced-for-woocommerce'));
         }
         $domainParams = [
             "provider_type" => "APPLE_PAY",
@@ -293,10 +293,23 @@ class Goopter_PayPal_PPCP_Apple_Pay_Configurations
 
     private function addDomainValidationFiles()
     {
-        $fileDir = ABSPATH.'.well-known';
-        if (!is_dir($fileDir)) {
-            mkdir($fileDir);
+        // $fileDir = ABSPATH.'.well-known';
+        // if (!is_dir($fileDir)) {
+        //     mkdir($fileDir);
+        // }
+        global $wp_filesystem;
+        // Include the WP_Filesystem functionality if it’s not already loaded.
+        if ( ! function_exists( 'WP_Filesystem' ) ) {
+            require_once ABSPATH . 'wp-admin/includes/file.php';
         }
+        // Initialize WP_Filesystem.
+        WP_Filesystem();
+        $fileDir = ABSPATH . '.well-known';
+        // Check if the directory exists, and create it if it doesn't.
+        if ( ! $wp_filesystem->is_dir( $fileDir ) ) {
+            $wp_filesystem->mkdir( $fileDir );
+        }
+
         $localFileLoc = $this->apple_pay_domain_validation->getDomainAssociationLibFilePath();
         $domainValidationFile = $this->apple_pay_domain_validation->getDomainAssociationFilePath();
 
@@ -308,14 +321,18 @@ class Goopter_PayPal_PPCP_Apple_Pay_Configurations
                 $this->updateDomainVerificationFileContent($localFileLoc);
             }
         } catch (Exception $exception) {
-            throw new Exception("Unable to update the verification file content. Error: " . $exception->getMessage());
+            throw new Exception(esc_html__("Unable to update the verification file content. Error: ", 'paypal-advanced-for-woocommerce') . esc_html($exception->getMessage()));
         }
         if (file_exists($targetLocation)) {
             wp_delete_file($targetLocation);
             wp_delete_file($targetLocation . '.txt');
         }
         if (!copy($localFileLoc, $targetLocation)) {
-            throw new Exception(sprintf('Unable to copy the files from %s to location %s', $localFileLoc, $targetLocation));
+            throw new Exception(esc_html(sprintf(
+                'Unable to copy the files from %s to location %s',
+                esc_html($localFileLoc),
+                esc_html($targetLocation)
+            )));
         }
         // Add the .txt version to make sure it works.
         copy($localFileLoc, $targetLocation . '.txt');
@@ -359,21 +376,43 @@ class Goopter_PayPal_PPCP_Apple_Pay_Configurations
         // Get the HTTP status code
         $resultStatus = wp_remote_retrieve_response_code($response);
     
-        // Check if the response status is 200 or 304
-        if (in_array($resultStatus, [200, 304])) {
-            // Retrieve the response body
-            $body = wp_remote_retrieve_body($response);
+        // // Check if the response status is 200 or 304
+        // if (in_array($resultStatus, [200, 304])) {
+        //     // Retrieve the response body
+        //     $body = wp_remote_retrieve_body($response);
     
+        //     // Write the response body to the specified file location
+        //     if ($fp = fopen($localFileLocation, "w")) {
+        //         fwrite($fp, $body);
+        //         fclose($fp);
+        //     } else {
+        //         $logger->error("Unable to write to file: $localFileLocation", $context);
+        //     }
+        // } else {
+        //     $logger->warning("Unexpected HTTP status code: $resultStatus", $context);
+        // }
+
+        global $wp_filesystem;
+        // Load the WP_Filesystem if it’s not already loaded
+        if ( ! function_exists( 'WP_Filesystem' ) ) {
+            require_once ABSPATH . 'wp-admin/includes/file.php';
+        }
+        // Initialize WP_Filesystem
+        WP_Filesystem();
+        // Check if the response status is 200 or 304
+        if ( in_array( $resultStatus, [200, 304] ) ) {
+            // Retrieve the response body
+            $body = wp_remote_retrieve_body( $response );
             // Write the response body to the specified file location
-            if ($fp = fopen($localFileLocation, "w")) {
-                fwrite($fp, $body);
-                fclose($fp);
+            if ( $wp_filesystem->put_contents( $localFileLocation, $body, FS_CHMOD_FILE ) ) {
+                // File successfully written
             } else {
-                $logger->error("Unable to write to file: $localFileLocation", $context);
+                $logger->error( "Unable to write to file: $localFileLocation", $context );
             }
         } else {
-            $logger->warning("Unexpected HTTP status code: $resultStatus", $context);
+            $logger->warning( "Unexpected HTTP status code: $resultStatus", $context );
         }
+
     }
     
 }

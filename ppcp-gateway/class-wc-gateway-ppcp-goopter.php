@@ -888,7 +888,14 @@ class WC_Gateway_PPCP_Goopter extends WC_Payment_Gateway {
                             if ($is_apple_pay_enabled && $is_apple_pay_approved) {
                                 ?>
                                 <img src="<?php echo PAYPAL_FOR_WOOCOMMERCE_ASSET_URL . 'assets/images/' . ($is_domain_added ? 'ppcp_check_mark_status.png' : 'ppcp_info_icon.png'); ?>" width="25" height="25" style="display: inline-block;margin: 0 5px -10px 10px;">
-                                <b><?php echo __(($is_domain_added ? 'Apple Pay is connected!' : 'Register your domain to activate Apple Pay.'), 'paypal-advanced-for-woocommerce'); ?></b>
+                                
+                                <?php 
+                                    $message = $is_domain_added 
+                                        ? __('Apple Pay is connected!', 'paypal-advanced-for-woocommerce') 
+                                        : __('Register your domain to activate Apple Pay.', 'paypal-advanced-for-woocommerce');
+                                    echo '<b>' . esc_html($message) . '</b>';
+                                ?>
+                                
                             <?php } else if ($is_ppcp_connected && !$is_apple_pay_approved && !$need_to_display_apple_pay_button) {
                                 ?>
                                 <br><br><b style="color:red"><?php echo __('Apple Pay is currently available in the following countries: AU, AT, BE, BG, CA, CY, CZ, DK, EE, FI, FR, DE, GR, HU, IE, IT, LV, LI, LT, LU, MT, NL, NO, PL, PT, RO, SK, SI, ES, SE, US, GB. PayPal is working to expand this availability to additional countries as quickly as possible.', 'paypal-advanced-for-woocommerce'); ?></b>

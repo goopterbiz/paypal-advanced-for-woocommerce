@@ -301,10 +301,14 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                 '' => __('Default Width (Recommended)', 'paypal-advanced-for-woocommerce')
             );
             for ($i = 25; $i < 100; $i++) {
-                $button_height[$i] = __($i . ' px', 'paypal-advanced-for-woocommerce');
+                // $button_height[$i] = __($i . ' px', 'paypal-advanced-for-woocommerce');
+                // translators: %s is replaced with the button height in pixels.
+                $button_height[$i] = sprintf(__('%s px', 'paypal-advanced-for-woocommerce'), $i);
             }
             for ($i = 160; $i < 300; $i++) {
-                $button_width[$i] = __($i . ' px', 'paypal-advanced-for-woocommerce');
+                // $button_width[$i] = __($i . ' px', 'paypal-advanced-for-woocommerce');
+                // translators: %s is replaced with the button width in pixels.
+                $button_width[$i] = sprintf(__('%s px', 'paypal-advanced-for-woocommerce'), $i);
             }
             if (isset($_GET['section']) && 'goopter_ppcp' === $_GET['section']) {
                 if (!empty($this->merchant_id)) {
@@ -406,7 +410,9 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                 'enabled' => array(
                     'title' => __('Enable/Disable', 'paypal-advanced-for-woocommerce'),
                     'type' => 'checkbox',
-                    'label' => __(sprintf('%s', AE_PPCP_NAME), 'paypal-advanced-for-woocommerce'),
+                    // 'label' => __(sprintf('%s', AE_PPCP_NAME), 'paypal-advanced-for-woocommerce'),
+                    // translators: %s is replaced with the AE_PPCP_NAME constant.
+                    'label' => sprintf(__('-%s-', 'paypal-advanced-for-woocommerce'), AE_PPCP_NAME),
                     'default' => 'no',
                 ),
                 'title' => array(
@@ -1962,7 +1968,9 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'title' => __('Brand Name', 'paypal-advanced-for-woocommerce'),
                     'type' => 'text',
                     'description' => __('This controls what users see as the brand / company name on PayPal review pages.', 'paypal-advanced-for-woocommerce'),
-                    'default' => __(get_bloginfo('name'), 'paypal-advanced-for-woocommerce'),
+                    // 'default' => __(get_bloginfo('name'), 'paypal-advanced-for-woocommerce'),
+                    // translators: %s is replaced with the site's name retrieved using get_bloginfo('name').
+                    'default' => sprintf(__('-%s-', 'paypal-advanced-for-woocommerce'), get_bloginfo('name')),
                     'desc_tip' => true,
                 ),
                 'landing_page' => array(

@@ -112,7 +112,10 @@ class WC_Gateway_Apple_Pay_Goopter extends WC_Gateway_PPCP_Goopter {
     public function form() {
         try {
             ?>
-            <p><?php echo __($this->apple_pay_payments_description, 'paypal-advanced-for-woocommerce'); ?></p>
+            <?php 
+                $description = $this->apple_pay_payments_description ?: __('Default Apple Pay description', 'paypal-advanced-for-woocommerce');
+                echo '<p>' . esc_html($description) . '</p>';
+            ?>
             <fieldset id="wc-<?php echo esc_attr($this->id); ?>-form" class='wc-apple-pay-form wc-payment-form'>
                 <?php do_action('woocommerce_apple_pay_form_start', $this->id); ?>
                 <?php do_action('woocommerce_apple_pay_form_start', $this->id); ?>

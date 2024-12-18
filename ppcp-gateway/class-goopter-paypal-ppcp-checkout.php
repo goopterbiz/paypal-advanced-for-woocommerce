@@ -84,8 +84,11 @@ if (class_exists('WC_Checkout')) {
             wc_set_time_limit(0);
             do_action('woocommerce_before_checkout_process');
             if (WC()->cart->is_empty()) {
-                // Translators: %s is the URL to the shop page.
-                throw new Exception(sprintf(__('Sorry, your session has expired. <a href="%s" class="wc-backward">Return to shop</a>', 'paypal-advanced-for-woocommerce'), esc_url(wc_get_page_permalink('shop'))));
+                throw new Exception(wp_kses_post(sprintf(
+                    // Translators: %s is the URL to the shop page.
+                    __('Sorry, your session has expired. <a href="%s" class="wc-backward">Return to shop</a>', 'paypal-advanced-for-woocommerce'),
+                    esc_url(wc_get_page_permalink('shop'))
+                )));
             }
 
             $errors = new WP_Error();
@@ -108,10 +111,10 @@ if (class_exists('WC_Checkout')) {
                 $order_id = $this->create_order($posted_data);
                 $order = wc_get_order($order_id);
                 if (is_wp_error($order_id)) {
-                    throw new Exception($order_id->get_error_message());
+                    throw new Exception(esc_html($order_id->get_error_message()));
                 }
                 if (!$order) {
-                    throw new Exception(__('Unable to create order.', 'paypal-advanced-for-woocommerce'));
+                    throw new Exception(esc_html__('Unable to create order.', 'paypal-advanced-for-woocommerce'));
                 }
                 /**
                  * Store the order id in session so that in case of transaction failure user can start with same order
@@ -120,7 +123,7 @@ if (class_exists('WC_Checkout')) {
                 do_action('woocommerce_checkout_order_processed', $order_id, $posted_data, $order);
                 return $order_id;
             } else {
-                throw new Exception(__('Unable to create order due to following errors.', 'paypal-advanced-for-woocommerce'));
+                throw new Exception(esc_html__('Unable to create order due to following errors.', 'paypal-advanced-for-woocommerce'));
             }
         }
     }

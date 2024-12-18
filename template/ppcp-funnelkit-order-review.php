@@ -124,7 +124,12 @@ $permalink = get_the_permalink();
     </style>
     <form name="checkout" method="post" class="checkout woocommerce-checkout wfacp_paypal_express" action="<?php echo esc_url(get_the_permalink()); ?>" enctype="multipart/form-data" id="wfacp_checkout_form">
         <input type="hidden" name="_wfacp_post_id" class="_wfacp_post_id" value="<?php echo WFACP_Common::get_id(); ?>">
-        <input type="hidden" name="wfacp_cart_hash" value="<?php esc_html_e(WC()->session->get('wfacp_cart_hash', ''), 'paypal-advanced-for-woocommerce'); ?>">
+        
+        <?php 
+            $cart_hash = WC()->session->get('wfacp_cart_hash', '');
+        ?>
+        <input type="hidden" name="wfacp_cart_hash" value="<?php echo esc_attr($cart_hash); ?>">
+
         <input type="hidden" name="wfacp_has_active_multi_checkout" id="wfacp_has_active_multi_checkout" value="">
         <input type="hidden" id="product_switcher_need_refresh" name="product_switcher_need_refresh" value="0">
         <input type="hidden" id="wfacp_exchange_keys" name="wfacp_exchange_keys" class="wfacp_exchange_keys" value="">
@@ -146,12 +151,16 @@ $permalink = get_the_permalink();
             </div>
             <div class="wfacp_express_formatted_address clearfix">
                 <div class="wfacp_express_formatted_billing_address">
-                    <h3><?php _e('Billing details', 'paypal-advanced-for-woocommerce'); ?></h3>
+                <h3>
+                    <?php esc_html_e( 'Billing details', 'paypal-advanced-for-woocommerce' ); ?>
+                </h3>
                     <?php
                     if (WFACP_Core()->public->paypal_billing_address) {
                         ?>
                         <div>
-                            <strong><?php _e('Address', 'paypal-advanced-for-woocommerce'); ?></strong>
+                            <strong>
+                                <?php esc_html_e( 'Address', 'paypal-advanced-for-woocommerce' ); ?>
+                            </strong>
                             <address>
                                 <?php
                                 $formatted_address = WC()->countries->get_formatted_address(WFACP_Core()->public->billing_details);
@@ -173,15 +182,21 @@ $permalink = get_the_permalink();
                     <?php
                     if ($instance->have_billing_address()) {
                         ?>
-                        <a href="#" class="wfacp_edit_address" data-type="billing"><?php _e('Edit', 'paypal-advanced-for-woocommerce'); ?></a>
+                        <a href="#" class="wfacp_edit_address" data-type="billing">
+                            <?php esc_html_e( 'Edit', 'paypal-advanced-for-woocommerce' ); ?>
+                        </a>
                         <?php
                     }
                     ?>
                 </div>
                 <div class="wfacp_express_formatted_shipping_address">
-                    <h3><?php _e('Shipping details', 'paypal-advanced-for-woocommerce'); ?></h3>
+                    <h3>
+                        <?php esc_html_e( 'Shipping details', 'paypal-advanced-for-woocommerce' ); ?>
+                    </h3>
                     <div>
-                        <strong><?php _e('Address', 'paypal-advanced-for-woocommerce'); ?></strong>
+                        <strong>
+                            <?php esc_html_e( 'Address', 'paypal-advanced-for-woocommerce' ); ?>
+                        </strong>
                         <address>
                             <?php
                             $formatted_address = WC()->countries->get_formatted_address(WFACP_Core()->public->shipping_details);
@@ -195,7 +210,9 @@ $permalink = get_the_permalink();
                         echo!empty(WFACP_Core()->public->shipping_details['phone']) ? '<p class="goopter-woocommerce-customer-details-phone">' . WFACP_Core()->public->shipping_details['phone'] . '</p>' : '';
                         if ($instance->have_shipping_address()) {
                             ?>
-                            <a href="#" class="wfacp_edit_address" data-type="shipping"><?php _e('Edit', 'paypal-advanced-for-woocommerce'); ?></a>
+                            <a href="#" class="wfacp_edit_address" data-type="shipping">
+                                <?php esc_html_e( 'Edit', 'paypal-advanced-for-woocommerce' ); ?>
+                            </a>
                             <?php
                         }
                         ?>
@@ -208,7 +225,9 @@ $permalink = get_the_permalink();
                     if ($instance->have_billing_address()) {
                         ?>
                         <div class="wfacp_express_billing_address clearfix">
-                            <h3><?php _e('Billing Address', 'paypal-advanced-for-woocommerce'); ?></h3>
+                            <h3>
+                                <?php esc_html_e( 'Billing Address', 'paypal-advanced-for-woocommerce' ); ?>
+                            </h3>
                             <?php
                             $fields = $checkout->get_checkout_fields('billing');
                             foreach ($fields as $key => $field) {
@@ -238,7 +257,9 @@ $permalink = get_the_permalink();
                     if ($instance->have_shipping_address()) {
                         ?>
                         <div class="wfacp_express_shipping_address clearfix">
-                            <h3><?php _e('Shipping Address', 'paypal-advanced-for-woocommerce'); ?></h3>
+                            <h3>
+                                <?php esc_html_e( 'Shipping Address', 'paypal-advanced-for-woocommerce' ); ?>
+                            </h3>
                             <?php
                             $fields = $checkout->get_checkout_fields('shipping');
                             foreach ($fields as $key => $field) {

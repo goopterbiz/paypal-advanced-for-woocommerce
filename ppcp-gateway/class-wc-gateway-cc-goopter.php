@@ -33,7 +33,12 @@ class WC_Gateway_CC_Goopter extends WC_Payment_Gateway_CC {
             $this->has_fields = true;
             $this->goopter_ppcp_load_class();
             $this->setGatewaySupports();
-            $this->title = __($this->setting_obj->get('advanced_card_payments_title', 'Credit Card'), 'paypal-advanced-for-woocommerce');
+
+            // $this->title = __($this->setting_obj->get('advanced_card_payments_title', 'Credit Card'), 'paypal-advanced-for-woocommerce');
+            $default_title = __('Credit Card', 'paypal-advanced-for-woocommerce');
+            $payment_title = $this->setting_obj->get('advanced_card_payments_title', $default_title);
+            $this->title = esc_html($payment_title);
+
             $this->method_title = apply_filters('goopter_ppcp_gateway_method_title', $this->title);
             $this->enable_paypal_checkout_page = 'yes' === $this->setting_obj->get('enable_paypal_checkout_page', 'yes');
             $this->checkout_page_display_option = $this->setting_obj->get('checkout_page_display_option', 'regular');
@@ -417,7 +422,7 @@ class WC_Gateway_CC_Goopter extends WC_Payment_Gateway_CC {
             <?php do_action('woocommerce_credit_card_form_start', $this->id); ?>
             <?php
             foreach ($fields as $field) {
-                echo $field; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+                echo esc_html($field); // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
             }
             ?>
         <?php do_action('woocommerce_credit_card_form_end', $this->id); ?>

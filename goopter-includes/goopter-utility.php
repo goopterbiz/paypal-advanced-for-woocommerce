@@ -90,9 +90,9 @@ class Goopter_Utility {
             }
             ?>
         <h3>
-        <?php _e('Billing Agreement Details', 'paypal-advanced-for-woocommerce'); ?>
+            <?php esc_html_e( 'Billing Agreement Details', 'paypal-advanced-for-woocommerce' ); ?>
         </h3>
-        <p> <?php echo $billing_agreement_id; ?></p> <?php
+        <p><?php echo esc_html( $billing_agreement_id ); ?></p> <?php
     }
 
     public static function goopter_set_address($new_order, $address, $type = 'billing') {

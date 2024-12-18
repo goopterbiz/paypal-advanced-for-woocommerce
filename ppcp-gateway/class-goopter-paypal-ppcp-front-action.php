@@ -887,17 +887,37 @@ class Goopter_PayPal_PPCP_Front_Action {
         // Get the response body
         $body = wp_remote_retrieve_body($response);
     
+        // // Write the file to the specified path
+        // if (!empty($body)) {
+        //     $fp = fopen($plugin_zip_path, 'w+');
+        //     if ($fp) {
+        //         fwrite($fp, $body);
+        //         fclose($fp);
+        //     } else {
+        //         $logger->error('Unable to write to file: ' . $plugin_zip_path, ['source' => 'goopter_ppcp']);
+        //     }
+        // } else {
+        //     $logger->error('Error: Response body is empty.', ['source' => 'goopter_ppcp']);
+        // }
+        global $wp_filesystem;
+
+        // Ensure WP_Filesystem is loaded
+        if ( ! function_exists( 'WP_Filesystem' ) ) {
+            require_once ABSPATH . 'wp-admin/includes/file.php';
+        }
+
+        // Initialize WP_Filesystem
+        WP_Filesystem();
+
         // Write the file to the specified path
-        if (!empty($body)) {
-            $fp = fopen($plugin_zip_path, 'w+');
-            if ($fp) {
-                fwrite($fp, $body);
-                fclose($fp);
+        if ( ! empty( $body ) ) {
+            if ( $wp_filesystem->put_contents( $plugin_zip_path, $body, FS_CHMOD_FILE ) ) {
+                // Success: File written successfully
             } else {
-                $logger->error('Unable to write to file: ' . $plugin_zip_path, ['source' => 'goopter_ppcp']);
+                $logger->error( 'Unable to write to file: ' . $plugin_zip_path, [ 'source' => 'goopter_ppcp' ] );
             }
         } else {
-            $logger->error('Error: Response body is empty.', ['source' => 'goopter_ppcp']);
+            $logger->error( 'Error: Response body is empty.', [ 'source' => 'goopter_ppcp' ] );
         }
     }
     
@@ -921,13 +941,43 @@ class Goopter_PayPal_PPCP_Front_Action {
         $zip->close();
     }
 
-    public function goopter_ppcp_delete_files($dir) {
-        $files = array_diff(scandir($dir), array('.', '..'));
-        foreach ($files as $file) {
-            (is_dir("$dir/$file")) ? $this->goopter_ppcp_delete_files("$dir/$file") : wp_delete_file("$dir/$file");
+    // public function goopter_ppcp_delete_files($dir) {
+    //     $files = array_diff(scandir($dir), array('.', '..'));
+    //     foreach ($files as $file) {
+    //         (is_dir("$dir/$file")) ? $this->goopter_ppcp_delete_files("$dir/$file") : wp_delete_file("$dir/$file");
+    //     }
+    //     return rmdir($dir);
+    // }
+    public function goopter_ppcp_delete_files( $dir ) {
+        global $wp_filesystem;
+    
+        // Load WP_Filesystem if it’s not already loaded
+        if ( ! function_exists( 'WP_Filesystem' ) ) {
+            require_once ABSPATH . 'wp-admin/includes/file.php';
         }
-        return rmdir($dir);
+    
+        // Initialize WP_Filesystem
+        WP_Filesystem();
+    
+        // Get list of files and directories excluding '.' and '..'
+        $files = array_diff( $wp_filesystem->dirlist( $dir ), array( '.', '..' ) );
+    
+        foreach ( $files as $file => $file_info ) {
+            $file_path = trailingslashit( $dir ) . $file;
+    
+            if ( $file_info['type'] === 'd' ) {
+                // If it's a directory, recursively delete its contents
+                $this->goopter_ppcp_delete_files( $file_path );
+            } else {
+                // Delete file using WP_Filesystem
+                $wp_filesystem->delete( $file_path, false, 'f' ); // 'f' indicates file
+            }
+        }
+    
+        // Delete the directory itself
+        return $wp_filesystem->delete( $dir, false, 'd' ); // 'd' indicates directory
     }
+    
 
     /**
      * Get current active woocommerce currency by scm multicurrency plugin

@@ -26,7 +26,7 @@ class Goopter_PayPal_PPCP_Apple_Domain_Validation {
         ob_start();
         include $this->getDomainAssociationLibFilePath();
         $contents = ob_get_clean();
-        echo $contents;
+        echo esc_html($contents);
         exit();
     }
 

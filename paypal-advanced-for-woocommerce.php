@@ -142,7 +142,7 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
                 echo sprintf(
                         '<!-- This site has installed %1$s %2$s - %3$s -->',
                         esc_html('PayPal for WooCommerce'),
-                        ('v' . VERSION_PFW),
+                        esc_html('v' . VERSION_PFW),
                         esc_url('https://www.goopter.com')
                 );
                 echo "\n\r";
@@ -175,7 +175,11 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
             if (!in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_option('active_plugins'))) && !is_plugin_active_for_network('woocommerce/woocommerce.php')) {
                 if (!empty($_GET['action']) && !in_array($_GET['action'], array('activate-plugin', 'upgrade-plugin', 'activate', 'do-plugin-upgrade')) && is_plugin_active($plugin)) {
                     deactivate_plugins($plugin);
-                    wp_die("<strong>" . $plugin_data['Name'] . "</strong> requires <strong>WooCommerce</strong> plugin to work normally. Please activate it or install it from <a href=\"http://wordpress.org/plugins/woocommerce/\" target=\"_blank\">here</a>.<br /><br />Back to the WordPress <a href='" . get_admin_url(null, 'plugins.php') . "'>Plugins page</a>.");
+                    wp_die(
+                        wp_kses_post(
+                            '<strong>' . esc_html($plugin_data['Name']) . '</strong> requires <strong>WooCommerce</strong> plugin to work normally. Please activate it or install it from <a href="' . esc_url('http://wordpress.org/plugins/woocommerce/') . '" target="_blank">here</a>.<br /><br />Back to the WordPress <a href="' . esc_url(get_admin_url(null, 'plugins.php')) . '">Plugins page</a>.'
+                        )
+                    );                    
                 }
             }
 
@@ -512,7 +516,7 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
                         $errors = TRUE;
                         $update_count = 'zero';
                         $redirect_url = admin_url('options-general.php?page=' . $this->plugin_slug . '&tab=general_settings&gateway=tool&processed=' . $update_count);
-                        echo $redirect_url;
+                        echo esc_url($redirect_url);
                     } else {
                         foreach ($products->posts as $target) {
                             $target_product_id = ($target->post_parent != '0') ? $target->post_parent : $target->ID;
@@ -572,7 +576,7 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
                         $update_count = 'zero';
                     }
                     $redirect_url = admin_url('options-general.php?page=paypal-advanced-for-woocommerce&tab=general_settings&gateway=tool&processed=' . $update_count);
-                    echo $redirect_url;
+                    echo esc_url($redirect_url);
                 }
                 die();
             }

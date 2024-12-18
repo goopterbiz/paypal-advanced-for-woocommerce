@@ -13,9 +13,9 @@ $gateway = isset($_GET['gateway']) ? wc_clean(sanitize_text_field(wp_unslash($_G
     <br>
     <?php if ($active_tab == 'general_settings') { ?>
         <h2 class="nav-tab-wrapper">
-            <a href="?page=<?php echo $this->plugin_slug; ?>" class="nav-tab <?php echo $gateway == 'paypal_payment_gateway_products' ? 'nav-tab-active' : ''; ?>">
+            <a href="?page=<?php echo esc_attr($this->plugin_slug); ?>" class="nav-tab <?php echo $gateway == 'paypal_payment_gateway_products' ? 'nav-tab-active' : ''; ?>">
                 <?php // Translators: %s is the name of the PayPal solution (e.g., PayPal Advanced).
-                echo sprintf(__('- %s', 'paypal-advanced-for-woocommerce'), AE_PPCP_NAME); 
+                echo sprintf(esc_html__('-%s-', 'paypal-advanced-for-woocommerce'), esc_html(AE_PPCP_NAME)); 
                 ?></a>
             <?php do_action('goopter_paypal_for_woocommerce_general_settings_tab'); ?>
         </h2>

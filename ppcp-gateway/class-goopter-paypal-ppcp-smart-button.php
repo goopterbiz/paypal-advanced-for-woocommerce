@@ -1062,7 +1062,12 @@ class Goopter_PayPal_PPCP_Smart_Button {
             }
             ?>
         <div class="goopter_ppcp_shipping_details">
-            <h3><?php _e('Shipping details', 'paypal-advanced-for-woocommerce'); ?>&nbsp;&nbsp;&nbsp;<a class="goopter_ppcp_edit_shipping_address"><?php _e('Edit', 'paypal-advanced-for-woocommerce'); ?></a></h3>
+            <h3>
+                <?php esc_html_e( 'Shipping details', 'paypal-advanced-for-woocommerce' ); ?>&nbsp;&nbsp;&nbsp;
+                    <a class="goopter_ppcp_edit_shipping_address">
+                        <?php esc_html_e( 'Edit', 'paypal-advanced-for-woocommerce' ); ?>
+                    </a>
+            </h3>
         <?php echo WC()->countries->get_formatted_address(goopter_ppcp_get_mapped_shipping_address($this->checkout_details)); ?>
         </div>
             <?php
@@ -1074,14 +1079,19 @@ class Goopter_PayPal_PPCP_Smart_Button {
                 if ($checkout->enable_guest_checkout) {
                     ?>
                 <p class="form-row form-row-wide create-account">
-                    <input class="input-checkbox" id="createaccount" <?php checked(( true === $checkout->get_value('createaccount') || ( true === apply_filters('woocommerce_create_account_default_checked', false) )), true) ?> type="checkbox" name="createaccount" value="1" /> <label for="createaccount" class="checkbox"><?php _e('Create an account?', 'paypal-advanced-for-woocommerce'); ?></label>
+                    <input class="input-checkbox" id="createaccount" <?php checked(( true === $checkout->get_value('createaccount') || ( true === apply_filters('woocommerce_create_account_default_checked', false) )), true) ?> type="checkbox" name="createaccount" value="1" /> 
+                    <label for="createaccount" class="checkbox">
+                        <?php esc_html_e( 'Create an account?', 'paypal-advanced-for-woocommerce' ); ?>
+                    </label>
                 </p>
                 <?php
             }
             if (!empty($checkout->checkout_fields['account'])) {
                 ?>
                 <div class="create-account">
-                    <p><?php _e('Create an account by entering the information below. If you are a returning customer please login at the top of the page.', 'paypal-advanced-for-woocommerce'); ?></p>
+                    <p>
+                        <?php esc_html_e( 'Create an account by entering the information below. If you are a returning customer please login at the top of the page.', 'paypal-advanced-for-woocommerce' ); ?>
+                    </p>
                 <?php foreach ($checkout->checkout_fields['account'] as $key => $field) : ?>
                         <?php woocommerce_form_field($key, $field, $checkout->get_value($key)); ?>
                     <?php endforeach; ?>
