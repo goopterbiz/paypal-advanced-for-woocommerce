@@ -117,6 +117,12 @@ class Goopter_PayPal_PPCP_Front_Action {
                     // PayPal returned shipping address for other payment methods except google_pay
                     Goopter_Session_Manager::unset('shipping_address_updated_from_callback');
 
+                    if (!isset($_POST['woocommerce-process-checkout-nonce']) || !wp_verify_nonce(sanitize_key(wp_unslash($_POST['woocommerce-process-checkout-nonce'])), 'woocommerce-process_checkout')) {
+                        // Nonce is invalid
+                        $logger = wc_get_logger();  // Get the logger instance
+                        $logger->error('create order nonce verification failed. Nonce not valid.', array('source' => 'ppcp-gateway/class-goopter-paypal-ppcp-front-action.php'));
+                    }
+
                     // check if billing and shipping details posted from frontend then update cart
                     if (isset($_REQUEST['billing_address_source'])) {
                         $billing_address = json_decode(stripslashes(sanitize_text_field(wp_unslash($_REQUEST['billing_address_source']))), true);
