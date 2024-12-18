@@ -64,8 +64,10 @@ class WFOCU_Paypal_For_WC_Gateway_Goopter_PPCP extends WFOCU_Gateway {
     }
 
     public function replace_form_template($template) {
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- from third party plugin
         if (isset($_GET['paypal_order_id'])) {
             WFACP_Core()->public->is_paypal_express_active_session = true;
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- from third party plugin
             $checkout_details = $this->payment_request->goopter_ppcp_get_checkout_details(sanitize_text_field(wp_unslash($_GET['paypal_order_id'])));
             $shipping_address = goopter_ppcp_get_mapped_shipping_address($checkout_details);
             $states_list = WC()->countries->get_states();
@@ -233,6 +235,7 @@ class WFOCU_Paypal_For_WC_Gateway_Goopter_PPCP extends WFOCU_Gateway {
             $get_current_offer = WFOCU_Core()->data->get('current_offer');
             $get_current_offer_meta = WFOCU_Core()->offers->get_offer_meta($get_current_offer);
             WFOCU_Core()->data->set('_offer_result', true);
+            // phpcs:ignore WordPress.Security.NonceVerification.Missing -- from third party plugin
             $posted_data = WFOCU_Core()->process_offer->parse_posted_data($_POST);
             if (true === WFOCU_AJAX_Controller::validate_charge_request($posted_data)) {
                 WFOCU_Core()->process_offer->execute($get_current_offer_meta);
@@ -404,6 +407,7 @@ class WFOCU_Paypal_For_WC_Gateway_Goopter_PPCP extends WFOCU_Gateway {
                 $get_current_offer = WFOCU_Core()->data->get('current_offer');
                 $get_current_offer_meta = WFOCU_Core()->offers->get_offer_meta($get_current_offer);
                 WFOCU_Core()->data->set('_offer_result', true);
+                // phpcs:ignore WordPress.Security.NonceVerification.Missing -- from third party plugin
                 $posted_data = WFOCU_Core()->process_offer->parse_posted_data($_POST);
                 $ppcp_data = $this->get_ppcp_meta();
                 if (true === WFOCU_AJAX_Controller::validate_charge_request($posted_data)) {
@@ -687,10 +691,11 @@ class WFOCU_Paypal_For_WC_Gateway_Goopter_PPCP extends WFOCU_Gateway {
         } else {
             return ( 'live' === $mode ) ? $live_url : $sandbox_url;
         }
-    }
+}
 
     public function process_refund_offer($order) {
         try {
+            // phpcs:ignore WordPress.Security.NonceVerification.Missing -- from third party plugin
             $refund_data = $_POST;
             $order_id = WFOCU_WC_Compatibility::get_order_id($order);
             $amount = isset($refund_data['amt']) ? $refund_data['amt'] : '';

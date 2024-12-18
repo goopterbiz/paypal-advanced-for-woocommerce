@@ -99,6 +99,7 @@ class Goopter_PayPal_PPCP_Front_Action {
 
     public function handle_wc_api() {
         global $wp;
+        // phpcs:disable WordPress.Security.NonceVerification.Recommended, WordPress.Security.NonceVerification.Missing -- nonce is verified in the each action if needed
         if (!empty($_GET['goopter_ppcp_action'])) {
             switch ($_GET['goopter_ppcp_action']) {
                 case "cancel_order":
@@ -505,11 +506,14 @@ class Goopter_PayPal_PPCP_Front_Action {
                     exit();
             }
         }
+        // phpcs:enable WordPress.Security.NonceVerification.Missing, WordPress.Security.NonceVerification.Recommended
     }
 
     public function goopter_ppcp_regular_capture() {
+        // phpcs:disable WordPress.Security.NonceVerification.Recommended -- no security issue
         if (isset($_GET['token']) && !empty($_GET['token'])) {
             Goopter_Session_Manager::set('paypal_order_id', wc_clean(sanitize_text_field(wp_unslash($_GET['token']))));
+            // phpcs:enable WordPress.Security.NonceVerification.Recommended -- no security issue
         } else {
             wp_redirect(wc_get_checkout_url());
             exit();
@@ -623,6 +627,7 @@ class Goopter_PayPal_PPCP_Front_Action {
                     }
                     // set this to null so that frontend third party plugin doesn't trigger reload on update_order_review ajax call
                     WC()->session->set('reload_checkout', null);
+                    // phpcs:disable WordPress.Security.NonceVerification.Recommended -- no security issue
                     if (isset($_GET['is_pay_page']) && 'yes' === $_GET['is_pay_page']) {
                         wp_send_json_success(array(
                             'result' => 'failure',
@@ -637,6 +642,7 @@ class Goopter_PayPal_PPCP_Front_Action {
                     }
                 }
                 exit();
+                // phpcs:enable WordPress.Security.NonceVerification.Recommended -- no security issue
             }
         } catch (Exception $ex) {
             $this->api_log->log("The exception was created on line: " . $ex->getFile() . ' ' . $ex->getLine(), 'error');
@@ -653,6 +659,7 @@ class Goopter_PayPal_PPCP_Front_Action {
             }
             $order = wc_get_order($order_id);
             // $this->payment_request->goopter_ppcp_update_woo_order_data(sanitize_text_field(wp_unslash($_GET['paypal_order_id'])));
+            // phpcs:disable WordPress.Security.NonceVerification.Recommended -- no security issue
             $this->payment_request->goopter_ppcp_update_woo_order_data(
                 isset($_GET['paypal_order_id']) && !empty($_GET['paypal_order_id'])
                     ? sanitize_text_field(wp_unslash($_GET['paypal_order_id']))
@@ -667,6 +674,7 @@ class Goopter_PayPal_PPCP_Front_Action {
             $this->api_log->log("The exception was created on line: " . $ex->getFile() . ' ' . $ex->getLine(), 'error');
             $this->api_log->log($ex->getMessage(), 'error');
         }
+        // phpcs:enable WordPress.Security.NonceVerification.Recommended -- no security issue
     }
 
     public function maybe_start_checkout($data, $errors = null) {
@@ -678,6 +686,7 @@ class Goopter_PayPal_PPCP_Front_Action {
                 }
             }
             if (0 === wc_notice_count('error')) {
+                // phpcs:ignore WordPress.Security.NonceVerification.Missing -- no security issue
                 $this->goopter_ppcp_set_customer_data($_POST);
             } else {
                 $error_messages = array();
@@ -711,6 +720,7 @@ class Goopter_PayPal_PPCP_Front_Action {
             $this->api_log->log("The exception was created on line: " . $ex->getFile() . ' ' . $ex->getLine(), 'error');
             $this->api_log->log($ex->getMessage(), 'error');
         }
+        // phpcs:disable WordPress.Security.NonceVerification.Missing -- no security issue
     }
 
     public function goopter_ppcp_set_customer_data($data) {

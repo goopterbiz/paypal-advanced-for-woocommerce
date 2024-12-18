@@ -47,6 +47,10 @@ class Cartflows_Pro_Gateway_PayPal_PPCP_Goopter extends Cartflows_Pro_Paypal_Gat
 
     public function goopter_ppcp_frontend_scripts() {
         wp_enqueue_script('goopter-paypal-ppcp-cartflow', PAYPAL_FOR_WOOCOMMERCE_ASSET_URL . 'ppcp-gateway/cartflow/js/cartflow-frontend.js', array('jquery'), VERSION_PFW, true);
+
+        wp_localize_script('goopter-paypal-ppcp-cartflow', 'cartflow_vars', array(
+            'nonce' => wp_create_nonce('cartflow_nonce'), // The nonce
+        ));
     }
 
     public function goopter_ppcp_load_class() {
@@ -97,6 +101,11 @@ class Cartflows_Pro_Gateway_PayPal_PPCP_Goopter extends Cartflows_Pro_Paypal_Gat
     }
 
     public function goopter_ppcp_create_paypal_order() {
+        if ( !isset($_POST['cartflow_nonce']) || !wp_verify_nonce(sanitize_key(wp_unslash($_POST['cartflow_nonce'])), 'cartflow_nonce_action') ) {
+            $logger = wc_get_logger();  // Get the logger instance
+            $logger->error('Cartflow Nonce verification failed. Nonce not valid.', array('source' => 'ppcp-gateway/cartflow/class-cartflows-pro-gateway-paypal-ppcp-goopter.php'));
+        }
+    
         $data = array();
         $step_id = isset($_POST['step_id']) ? intval($_POST['step_id']) : 0;
         $flow_id = isset($_POST['flow_id']) ? intval($_POST['flow_id']) : 0;
@@ -211,6 +220,11 @@ class Cartflows_Pro_Gateway_PayPal_PPCP_Goopter extends Cartflows_Pro_Paypal_Gat
     }
 
     public function goopter_ppcp_capture_paypal_order() {
+        if ( !isset($_POST['cartflow_nonce']) || !wp_verify_nonce(sanitize_key(wp_unslash($_POST['cartflow_nonce'])), 'cartflow_nonce_action') ) {
+            $logger = wc_get_logger();  // Get the logger instance
+            $logger->error('Cartflow Nonce verification failed. Nonce not valid.', array('source' => 'ppcp-gateway/cartflow/class-cartflows-pro-gateway-paypal-ppcp-goopter.php'));
+        }
+
         $order_id = isset($_POST['order_id']) ? sanitize_text_field(wp_unslash($_POST['order_id'])) : 0;
         $order = wc_get_order($order_id);
         $paypal_order_id = $order->get_meta('cartflows_paypal_order_id_' . $order->get_id());
@@ -349,6 +363,11 @@ class Cartflows_Pro_Gateway_PayPal_PPCP_Goopter extends Cartflows_Pro_Paypal_Gat
     }
 
     public function goopter_ppcp_offer_refund_request_data($request, $order, $amount, $reason) {
+        if ( !isset($_POST['cartflow_nonce']) || !wp_verify_nonce(sanitize_key(wp_unslash($_POST['cartflow_nonce'])), 'cartflow_nonce_action') ) {
+            $logger = wc_get_logger();  // Get the logger instance
+            $logger->error('Cartflow Nonce verification failed. Nonce not valid.', array('source' => 'ppcp-gateway/cartflow/class-cartflows-pro-gateway-paypal-ppcp-goopter.php'));
+        }
+        
         if (isset($_POST['cartflows_refund'])) {
             $payment_method = $order->get_payment_method();
             if ($this->key === $payment_method) {

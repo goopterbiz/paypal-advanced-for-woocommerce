@@ -18,7 +18,7 @@ if ($jsonResponse['status']) {
             <a target="_blank" href="<?php echo esc_url( $domain_validation_file ); ?>"><?php echo esc_html( $domain_validation_file ); ?></a>
         </p>
         <div class="apple-pay-domain-add-form">
-            <form method="post" action="<?php echo esc_url( add_query_arg( [ 'action' => 'goopter_register_apple_pay_domain' ], admin_url( 'admin-ajax.php' ) ) ); ?>" class="goopter_apple_pay_ajax_form_submit">
+            <form method="post" action="<?php echo esc_url( add_query_arg( [ 'action' => 'goopter_register_apple_pay_domain' , 'goopter_register_apple_pay_domain_nonce' => wp_create_nonce('goopter_register_apple_pay_domain_nonce')], admin_url( 'admin-ajax.php' ) ) ); ?>" class="goopter_apple_pay_ajax_form_submit">
                 <label>Domain Name: </label>
                     <input type="text" name="apple_pay_domain" 
                         value="<?php 
@@ -40,7 +40,7 @@ if ($jsonResponse['status']) {
                     <td><?php echo esc_html( $domain['domain'] ); ?></td>
                     <td>
                         <a class="goopter_apple_pay_remove_api_call"
-                            href="<?php echo esc_url( add_query_arg( [ 'domain' => $domain['domain'], 'action' => 'goopter_remove_apple_pay_domain' ], admin_url( 'admin-ajax.php' ) ) ); ?>">
+                            href="<?php echo esc_url( add_query_arg( [ 'domain' => $domain['domain'], 'action' => 'goopter_remove_apple_pay_domain', 'goopter_remove_apple_pay_domain_nonce' => wp_create_nonce('goopter_remove_apple_pay_domain_nonce') ], admin_url( 'admin-ajax.php' ) ) ); ?>">
                             <?php esc_html_e( 'Delete', 'paypal-advanced-for-woocommerce' ); ?>
                         </a>
                     </td>

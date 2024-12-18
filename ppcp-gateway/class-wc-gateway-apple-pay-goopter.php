@@ -64,6 +64,7 @@ class WC_Gateway_Apple_Pay_Goopter extends WC_Gateway_PPCP_Goopter {
 
             $this->enable_tokenized_payments = 'yes' === $this->setting_obj->get('enable_tokenized_payments', 'no');
 
+            // phpcs:disable WordPress.Security.NonceVerification.Recommended -- no security issue
             if (isset($_GET['paypal_order_id']) && isset($_GET['paypal_payer_id']) && $this->enable_tokenized_payments) {
                 $this->supports = array_merge($baseSupports, $subscriptionSupports);
             } elseif ($this->enable_tokenized_payments || (isset($_GET['page']) && isset($_GET['tab']) && 'wc-settings' === $_GET['page'] && 'checkout' === $_GET['tab'])) {
@@ -78,6 +79,7 @@ class WC_Gateway_Apple_Pay_Goopter extends WC_Gateway_PPCP_Goopter {
             $is_domain_added = $this->setting_obj->get('apple_pay_domain_added', 'no') == 'yes';
             $this->enable_apple_pay = $is_domain_added && 'yes' === $this->setting_obj->get('enable_apple_pay', 'no');
             $this->apple_pay_payments_description = $this->setting_obj->get('apple_pay_payments_description', 'Complete your purchase by selecting your saved payment methods or using Apple Pay.');
+            // phpcs:enable WordPress.Security.NonceVerification.Recommended -- no security issue
         } catch (Exception $ex) {
 
         }

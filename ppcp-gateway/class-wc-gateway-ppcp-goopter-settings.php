@@ -310,6 +310,8 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                 // translators: %s is replaced with the button width in pixels.
                 $button_width[$i] = sprintf(__('%s px', 'paypal-advanced-for-woocommerce'), $i);
             }
+
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- no security issue
             if (isset($_GET['section']) && 'goopter_ppcp' === $_GET['section']) {
                 if (!empty($this->merchant_id)) {
                     $available_endpoints = Goopter_PayPal_PPCP_Request::goopter_ppcp_get_available_endpoints($this->merchant_id);

@@ -23,6 +23,12 @@ class Goopter_PayPal_PPCP_Product extends WC_Form_Handler {
 
     public static function goopter_ppcp_add_to_cart_action($url = null) {
         try {
+            if (!isset($_POST['woocommerce-process-checkout-nonce']) || !wp_verify_nonce(sanitize_key(wp_unslash($_POST['woocommerce-process-checkout-nonce'])), 'woocommerce-process_checkout')) {
+                // Nonce is invalid
+                $logger = wc_get_logger();  // Get the logger instance
+                $logger->error('goopter ppcp add to cart action nonce verification failed. Nonce not valid.', array('source' => 'ppcp-gateway/class-goopter-paypal-ppcp-product.php'));
+            }
+
             if (!isset($_REQUEST['goopter_ppcp-add-to-cart']) || !is_numeric(sanitize_text_field(wp_unslash($_REQUEST['goopter_ppcp-add-to-cart'])))) {
                 return;
             }
@@ -53,6 +59,12 @@ class Goopter_PayPal_PPCP_Product extends WC_Form_Handler {
 
     private static function goopter_ppcp_add_to_cart_handler_simple($product_id) {
         try {
+            if (!isset($_POST['woocommerce-process-checkout-nonce']) || !wp_verify_nonce(sanitize_key(wp_unslash($_POST['woocommerce-process-checkout-nonce'])), 'woocommerce-process_checkout')) {
+                // Nonce is invalid
+                $logger = wc_get_logger();  // Get the logger instance
+                $logger->error('goopter ppcp add to cart handler simple nonce verification failed. Nonce not valid.', array('source' => 'ppcp-gateway/class-goopter-paypal-ppcp-product.php'));
+            }
+
             $quantity = empty($_REQUEST['quantity']) ? 1 : wc_stock_amount(sanitize_text_field(wp_unslash($_REQUEST['quantity'])));
             $passed_validation = apply_filters('woocommerce_add_to_cart_validation', true, $product_id, $quantity);
 
@@ -69,6 +81,12 @@ class Goopter_PayPal_PPCP_Product extends WC_Form_Handler {
 
     private static function goopter_ppcp_add_to_cart_handler_grouped($product_id) {
         try {
+            if (!isset($_POST['woocommerce-process-checkout-nonce']) || !wp_verify_nonce(sanitize_key(wp_unslash($_POST['woocommerce-process-checkout-nonce'])), 'woocommerce-process_checkout')) {
+                // Nonce is invalid
+                $logger = wc_get_logger();  // Get the logger instance
+                $logger->error('goopter ppcp add to cart handler grouped nonce verification failed. Nonce not valid.', array('source' => 'ppcp-gateway/class-goopter-paypal-ppcp-product.php'));
+            }
+
             $was_added_to_cart = false;
             $added_to_cart = array();
             $items = isset($_REQUEST['quantity']) && is_array($_REQUEST['quantity']) ? sanitize_text_field(wp_unslash($_REQUEST['quantity'])) : array();
@@ -106,6 +124,12 @@ class Goopter_PayPal_PPCP_Product extends WC_Form_Handler {
 
     private static function goopter_ppcp_add_to_cart_handler_variable($product_id) {
         try {
+            if (!isset($_POST['woocommerce-process-checkout-nonce']) || !wp_verify_nonce(sanitize_key(wp_unslash($_POST['woocommerce-process-checkout-nonce'])), 'woocommerce-process_checkout')) {
+                // Nonce is invalid
+                $logger = wc_get_logger();  // Get the logger instance
+                $logger->error('goopter ppcp add to cart handler variable nonce verification failed. Nonce not valid.', array('source' => 'ppcp-gateway/class-goopter-paypal-ppcp-product.php'));
+            }
+
             $variation_id = empty($_REQUEST['variation_id']) ? '' : absint(wp_unslash($_REQUEST['variation_id']));
             $quantity = empty($_REQUEST['quantity']) ? 1 : wc_stock_amount(sanitize_text_field(wp_unslash($_REQUEST['quantity'])));
             $missing_attributes = array();

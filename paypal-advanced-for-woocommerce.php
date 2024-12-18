@@ -107,7 +107,6 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
             add_action('product_type_options', array($this, 'goopter_product_type_options_own'), 10, 1);
             add_action('woocommerce_process_product_meta', array($this, 'goopter_woocommerce_process_product_meta_own'), 10, 1);
             add_action('admin_enqueue_scripts', array($this, 'goopter_woocommerce_admin_enqueue_scripts'));
-            add_action('wp_ajax_pfw_ed_shipping_bulk_tool', array($this, 'goopter_woocommerce_pfw_ed_shipping_bulk_tool'));
             add_action('http_api_curl', array($this, 'http_api_curl_ec_add_curl_parameter'), 10, 3);
             add_action('woocommerce_product_data_tabs', array($this, 'goopter_paypal_for_woo_woocommerce_product_data_tabs'), 99, 1);
             add_action('woocommerce_process_product_meta', array($this, 'goopter_paypal_for_woo_product_process_product_meta'));
@@ -173,6 +172,7 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
             $plugin = plugin_basename(__FILE__);
             $plugin_data = get_plugin_data(__FILE__, false);
             if (!in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_option('active_plugins'))) && !is_plugin_active_for_network('woocommerce/woocommerce.php')) {
+                // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- internal action no security issue
                 if (!empty($_GET['action']) && !in_array($_GET['action'], array('activate-plugin', 'upgrade-plugin', 'activate', 'do-plugin-upgrade')) && is_plugin_active($plugin)) {
                     deactivate_plugins($plugin);
                     wp_die(
@@ -190,6 +190,7 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
             $notices = array('ignore_pp_ssl', 'ignore_pp_sandbox', 'ignore_pp_woo', 'ignore_pp_check', 'ignore_pp_donate', 'ignore_paypal_plus_move_notice', 'ignore_billing_agreement_notice', 'payflow_sb_autopopulate_new_credentials', 'agree_disgree_opt_in_logging');
 
             foreach ($notices as $notice) {
+                // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- internal action no security issue
                 if (isset($_GET[$notice]) && '0' == $_GET[$notice]) {
                     add_user_meta($user_id, $notice, 'true', true);
                     $set_ignore_tag_url = remove_query_arg($notice);
@@ -266,6 +267,7 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
                 $this->subscription_support_enabled = true;
             }
             if (is_admin()) {
+                // phpcs:disable WordPress.Security.NonceVerification.Recommended -- internal action no security issue
                 if ($this->subscription_support_enabled) {
                     if ((isset($_GET['tab']) && 'checkout' === $_GET['tab']) && !isset($_GET['section'])) {
                         include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-wc-gateway-ppcp-goopter.php');
@@ -303,6 +305,7 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
                         }
                     }
                 }
+            // phpcs:enable WordPress.Security.NonceVerification.Recommended -- internal action no security issue
             } else {
                 if ($this->subscription_support_enabled) {
                     include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/subscriptions/wc-gateway-ppcp-goopter-subscriptions-base.php');
@@ -367,6 +370,11 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
         }
 
         function goopter_woocommerce_process_product_meta_own($post_id) {
+            if (!isset($_POST['woocommerce_meta_nonce']) || !wp_verify_nonce($_POST['woocommerce_meta_nonce'], 'woocommerce_save_data') ) {
+                $logger = wc_get_logger();  // Get the logger instance
+                $logger->error('goopter woocommerce process product meta Nonce verification failed. Nonce not valid.', array('source' => 'paypal-advanced-for-woocommerce.php'));
+            }
+
             $no_shipping_required = isset($_POST['_no_shipping_required']) ? 'yes' : 'no';
             update_post_meta($post_id, '_no_shipping_required', $no_shipping_required);
             $_paypal_billing_agreement = isset($_POST['_paypal_billing_agreement']) ? 'yes' : 'no';
@@ -379,207 +387,6 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
 
         public function goopter_woocommerce_admin_enqueue_scripts($hook) {
             wp_enqueue_style('ppe_cart', plugins_url('assets/css/admin.css', __FILE__), array(), VERSION_PFW);
-        }
-
-        public function goopter_woocommerce_pfw_ed_shipping_bulk_tool() {
-            if (is_admin() && (defined('DOING_AJAX') || DOING_AJAX)) {
-                global $wpdb;
-                $processed_product_id = array();
-                $errors = FALSE;
-                $products = FALSE;
-                $product_ids = FALSE;
-                $update_count = 0;
-                $where_args = array(
-                    'post_type' => array('product', 'product_variation'),
-                    'posts_per_page' => -1,
-                    'post_status' => 'publish',
-                    'fields' => 'id=>parent',
-                );
-                $where_args['meta_query'] = array();
-                $pfw_bulk_action_type = (isset($_POST["actionType"])) ? sanitize_text_field(wp_unslash($_POST['actionType'])) : FALSE;
-                $pfw_bulk_action_target_type = (isset($_POST["actionTargetType"])) ? sanitize_text_field(wp_unslash($_POST['actionTargetType'])) : FALSE;
-                $pfw_bulk_action_target_where_type = (isset($_POST["actionTargetWhereType"])) ? sanitize_text_field(wp_unslash($_POST['actionTargetWhereType'])) : FALSE;
-                $pfw_bulk_action_target_where_category = (isset($_POST["actionTargetWhereCategory"])) ? sanitize_text_field(wp_unslash($_POST['actionTargetWhereCategory'])) : FALSE;
-                $pfw_bulk_action_target_where_product_type = (isset($_POST["actionTargetWhereProductType"])) ? sanitize_text_field(wp_unslash($_POST['actionTargetWhereProductType'])) : FALSE;
-                $pfw_bulk_action_target_where_price_value = (isset($_POST["actionTargetWherePriceValue"])) ? sanitize_text_field(wp_unslash($_POST['actionTargetWherePriceValue'])) : FALSE;
-                $pfw_bulk_action_target_where_stock_value = (isset($_POST["actionTargetWhereStockValue"])) ? sanitize_text_field(wp_unslash($_POST['actionTargetWhereStockValue'])) : FALSE;
-
-                if (!$pfw_bulk_action_type || !$pfw_bulk_action_target_type) {
-                    $errors = TRUE;
-                }
-
-                $is_enable_value = explode("_", $pfw_bulk_action_type);
-                $is_enable = (isset($is_enable_value[0]) && $is_enable_value[0] == 'enable') ? 'yes' : 'no';
-
-                if ($pfw_bulk_action_type == 'enable_no_shipping' || $pfw_bulk_action_type == 'disable_no_shipping') {
-                    $action_key = "_no_shipping_required";
-                } elseif ($pfw_bulk_action_type == 'enable_paypal_billing_agreement' || $pfw_bulk_action_type == 'disable_paypal_billing_agreement') {
-                    $action_key = "_paypal_billing_agreement";
-                } elseif ($pfw_bulk_action_type == 'enable_sandbox_mode' || $pfw_bulk_action_type == 'disable_sandbox_mode') {
-                    $action_key = "_enable_sandbox_mode";
-                } elseif ($pfw_bulk_action_type == 'enable_payment_action' || $pfw_bulk_action_type == 'disable_payment_action') {
-                    $action_key = "enable_payment_action";
-                }
-
-                if ($pfw_bulk_action_target_type == 'all') {
-                    $products = new WP_Query($where_args);
-                } elseif ($pfw_bulk_action_target_type == 'featured') {
-                    array_push($where_args['meta_query'], array(
-                        'key' => '_featured',
-                        'value' => 'yes'
-                    ));
-                    $products = new WP_Query($where_args);
-                } elseif ($pfw_bulk_action_target_type == 'all_downloadable') {
-                    array_push($where_args['meta_query'], array(
-                        'key' => '_downloadable',
-                        'value' => 'yes'
-                    ));
-                    $products = new WP_Query($where_args);
-                } elseif ($pfw_bulk_action_target_type == 'all_virtual') {
-                    array_push($where_args['meta_query'], array(
-                        'key' => '_virtual',
-                        'value' => 'yes'
-                    ));
-                    $products = new WP_Query($where_args);
-                } elseif ($pfw_bulk_action_target_type == 'where' && $pfw_bulk_action_target_where_type) {
-                    if ($pfw_bulk_action_target_where_type == 'category' && $pfw_bulk_action_target_where_category) {
-                        $where_args['product_cat'] = $pfw_bulk_action_target_where_category;
-                        $products = new WP_Query($where_args);
-                    } elseif ($pfw_bulk_action_target_where_type == 'product_type' && $pfw_bulk_action_target_where_product_type) {
-                        $where_args['product_type'] = $pfw_bulk_action_target_where_product_type;
-                        $products = new WP_Query($where_args);
-                    } elseif ($pfw_bulk_action_target_where_type == 'price_greater') {
-                        array_push($where_args['meta_query'], array(
-                            'key' => '_price',
-                            'value' => str_replace(",", "", number_format($pfw_bulk_action_target_where_price_value, 2)),
-                            'compare' => '>',
-                            'type' => 'DECIMAL(10,2)'
-                        ));
-                        $products = new WP_Query($where_args);
-                    } elseif ($pfw_bulk_action_target_where_type == 'price_less') {
-                        array_push($where_args['meta_query'], array(
-                            'key' => '_price',
-                            'value' => str_replace(",", "", number_format($pfw_bulk_action_target_where_price_value, 2)),
-                            'compare' => '<',
-                            'type' => 'DECIMAL(10,2)'
-                        ));
-                        $products = new WP_Query($where_args);
-                    } elseif ($pfw_bulk_action_target_where_type == 'stock_greater') {
-                        array_push($where_args['meta_query'], array(
-                            'key' => '_manage_stock',
-                            'value' => 'yes'
-                        ));
-                        array_push($where_args['meta_query'], array(
-                            'key' => '_stock',
-                            'value' => str_replace(",", "", number_format($pfw_bulk_action_target_where_stock_value, 0)),
-                            'compare' => '>',
-                            'type' => 'NUMERIC'
-                        ));
-                        $products = new WP_Query($where_args);
-                    } elseif ($pfw_bulk_action_target_where_type == 'stock_less') {
-                        array_push($where_args['meta_query'], array(
-                            'key' => '_manage_stock',
-                            'value' => 'yes'
-                        ));
-                        array_push($where_args['meta_query'], array(
-                            'key' => '_stock',
-                            'value' => str_replace(",", "", number_format($pfw_bulk_action_target_where_stock_value, 0)),
-                            'compare' => '<',
-                            'type' => 'NUMERIC'
-                        ));
-                        $products = new WP_Query($where_args);
-                    } elseif ($pfw_bulk_action_target_where_type == 'instock') {
-                        array_push($where_args['meta_query'], array(
-                            'key' => '_stock_status',
-                            'value' => 'instock'
-                        ));
-                        $products = new WP_Query($where_args);
-                    } elseif ($pfw_bulk_action_target_where_type == 'outofstock') {
-                        array_push($where_args['meta_query'], array(
-                            'key' => '_stock_status',
-                            'value' => 'outofstock'
-                        ));
-                        $products = new WP_Query($where_args);
-                    } elseif ($pfw_bulk_action_target_where_type == 'sold_individually') {
-                        array_push($where_args['meta_query'], array(
-                            'key' => '_sold_individually',
-                            'value' => 'yes'
-                        ));
-                        $products = new WP_Query($where_args);
-                    }
-                } else {
-                    $errors = TRUE;
-                }
-
-                if (!$errors && $products) {
-                    if (count($products->posts) < 1) {
-                        $errors = TRUE;
-                        $update_count = 'zero';
-                        $redirect_url = admin_url('options-general.php?page=' . $this->plugin_slug . '&tab=general_settings&gateway=tool&processed=' . $update_count);
-                        echo esc_url($redirect_url);
-                    } else {
-                        foreach ($products->posts as $target) {
-                            $target_product_id = ($target->post_parent != '0') ? $target->post_parent : $target->ID;
-                            if (get_post_type($target_product_id) == 'product' && !in_array($target_product_id, $processed_product_id)) {
-                                if (!update_post_meta($target_product_id, $action_key, $is_enable)) {
-                                    if (!empty($_POST['payment_action'])) {
-                                        if (update_post_meta($target_product_id, 'woo_product_payment_action', wc_clean(sanitize_text_field(wp_unslash($_POST['payment_action']))))) {
-                                            $processed_product_id[$target_product_id] = $target_product_id;
-                                        }
-                                        if ($_POST['payment_action'] == 'Authorization') {
-                                            // if (update_post_meta($target_product_id, 'woo_product_payment_action_authorization', wc_clean(sanitize_text_field(wp_unslash($_POST['authorization_type']))))) {
-                                            //     $processed_product_id[$target_product_id] = $target_product_id;
-                                            // }
-                                            $authorization_type = isset($_POST['authorization_type']) && !empty($_POST['authorization_type'])
-                                                ? sanitize_text_field(wp_unslash($_POST['authorization_type']))
-                                                : '';
-                                            if (update_post_meta($target_product_id, 'woo_product_payment_action_authorization', wc_clean($authorization_type))) {
-                                                $processed_product_id[$target_product_id] = $target_product_id;
-                                            }
-                                        } else {
-                                            if (update_post_meta($target_product_id, 'woo_product_payment_action_authorization', '')) {
-                                                $processed_product_id[$target_product_id] = $target_product_id;
-                                            }
-                                        }
-                                    }
-                                } else {
-                                    if (!empty($_POST['payment_action'])) {
-                                        if (update_post_meta($target_product_id, 'woo_product_payment_action', wc_clean(sanitize_text_field(wp_unslash($_POST['payment_action']))))) {
-                                            $processed_product_id[$target_product_id] = $target_product_id;
-                                        }
-                                        if ($_POST['payment_action'] == 'Authorization') {
-                                            // if (update_post_meta($target_product_id, 'woo_product_payment_action_authorization', wc_clean(sanitize_text_field(wp_unslash($_POST['authorization_type']))))) {
-                                            //     $processed_product_id[$target_product_id] = $target_product_id;
-                                            // }
-                                            $authorization_type = isset($_POST['authorization_type']) && !empty($_POST['authorization_type']) 
-                                                ? wc_clean(sanitize_text_field(wp_unslash($_POST['authorization_type']))) 
-                                                : '';
-                                            if (update_post_meta($target_product_id, 'woo_product_payment_action_authorization', $authorization_type)) {
-                                                $processed_product_id[$target_product_id] = $target_product_id;
-                                            }
-                                        } else {
-                                            if (update_post_meta($target_product_id, 'woo_product_payment_action_authorization', '')) {
-                                                $processed_product_id[$target_product_id] = $target_product_id;
-                                            }
-                                        }
-                                    }
-                                    $processed_product_id[$target_product_id] = $target_product_id;
-                                }
-                            }
-                        }
-                        $update_count = count($processed_product_id);
-                    }
-                }
-
-                if (!$errors) {
-                    if ($update_count == 0) {
-                        $update_count = 'zero';
-                    }
-                    $redirect_url = admin_url('options-general.php?page=paypal-advanced-for-woocommerce&tab=general_settings&gateway=tool&processed=' . $update_count);
-                    echo esc_url($redirect_url);
-                }
-                die();
-            }
         }
 
         public static function currency_has_decimals($currency) {
@@ -641,6 +448,7 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
         public function goopter_dismiss_notice() {
             global $current_user;
             $user_id = $current_user->ID;
+            // phpcs:disable WordPress.Security.NonceVerification.Missing -- no security issue
             if (!empty($_POST['action']) && $_POST['action'] == 'goopter_dismiss_notice') {
                 $notices = array('ignore_pp_ssl', 'ignore_pp_sandbox', 'ignore_pp_woo', 'ignore_pp_check', 'ignore_pp_donate', 'ignore_paypal_plus_move_notice', 'ignore_billing_agreement_notice', 'ignore_token_multi_account', 'ignore_token_multi_account_payflow');
                 foreach ($notices as $notice) {
@@ -654,6 +462,7 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
                     wp_send_json_success();
                 }
             }
+            // phpcs:enable WordPress.Security.NonceVerification.Missing -- no security issue
         }
 
         public function goopter_paypal_for_woo_woocommerce_product_data_tabs($product_data_tabs) {
@@ -669,6 +478,11 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
         }
 
         public function goopter_paypal_for_woo_product_process_product_meta($post_id) {
+            if (!isset($_POST['woocommerce_meta_nonce']) || !wp_verify_nonce($_POST['woocommerce_meta_nonce'], 'woocommerce_save_data') ) {
+                $logger = wc_get_logger();  // Get the logger instance
+                $logger->error('goopter paypal for woo product process product meta Nonce verification failed. Nonce not valid.', array('source' => 'paypal-advanced-for-woocommerce.php'));
+            }
+
             if (isset($_REQUEST['enable_payment_action']) && ('yes' === $_REQUEST['enable_payment_action'])) {
                 update_post_meta($post_id, 'enable_payment_action', 'yes');
             } else {

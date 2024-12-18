@@ -27,17 +27,7 @@ class WC_Gateway_PPCP_Goopter_Subscriptions_Helper {
 
         }
     }
-
-    public function goopter_ppcp_is_save_payment_token($current, $order_id) {
-        if ((!empty($_POST['wc-goopter_ppcp_cc-new-payment-method']) && $_POST['wc-goopter_ppcp_cc-new-payment-method'] == true) || $this->is_subscription($order_id) || $this->goopter_paypal_for_woo_wc_autoship_cart_has_autoship_item()) {
-            return true;
-        }
-        if ((!empty($_POST['wc-goopter_ppcp-new-payment-method']) && $_POST['wc-goopter_ppcp-new-payment-method'] == true) || $this->is_subscription($order_id) || $this->goopter_paypal_for_woo_wc_autoship_cart_has_autoship_item()) {
-            return true;
-        }
-        return false;
-    }
-
+    
     public function save_payment_token($order, $payment_tokens_id) {
         $order_id = $order->get_id();
         $goopter_ppcp_used_payment_method = $order->get_meta('_goopter_ppcp_used_payment_method', true);

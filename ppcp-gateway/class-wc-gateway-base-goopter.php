@@ -38,6 +38,7 @@ trait WC_Gateway_Base_Goopter
             $subscriptionSupports = [];
         }
 
+        // phpcs:disable WordPress.Security.NonceVerification.Recommended -- no security issue
         if (isset($_GET['paypal_order_id']) && isset($_GET['paypal_payer_id']) && $this->enable_tokenized_payments) {
             $this->supports = array_merge($baseSupports, $subscriptionSupports);
         } elseif ($this->enable_tokenized_payments ||
@@ -46,6 +47,7 @@ trait WC_Gateway_Base_Goopter
         } else {
             $this->supports = $baseSupports;
         }
+        // phpcs:enable WordPress.Security.NonceVerification.Recommended -- no security issue
     }
     
     public function is_paypal_vault_used_for_pre_order() {

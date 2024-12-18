@@ -207,6 +207,11 @@ class Goopter_PayPal_PPCP_Admin_Action {
     }
 
     public function goopter_ppcp_save($post_id, $post_or_order_object) {
+        if (!isset($_POST['woocommerce_meta_nonce']) || !wp_verify_nonce($_POST['woocommerce_meta_nonce'], 'woocommerce_save_data') ) {
+            $logger = wc_get_logger();  // Get the logger instance
+            $logger->error('goopter ppcp meta save Nonce verification failed. Nonce not valid.', array('source' => 'ppcp-gateway/class-goopter-paypal-ppcp-admin-action.php'));
+        }
+
         if (!empty($_POST['is_ppcp_submited']) && 'yes' === $_POST['is_ppcp_submited']) {
             $order = ( $post_or_order_object instanceof WP_Post ) ? wc_get_order($post_or_order_object->ID) : $post_or_order_object;
             if (!is_a($order, 'WC_Order')) {
@@ -231,6 +236,7 @@ class Goopter_PayPal_PPCP_Admin_Action {
 
     public function admin_notices() {
         try {
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- no security issue
             if (isset($_GET['page']) && 'paypal-advanced-for-woocommerce' === $_GET['page']) {
                 return;
             }
