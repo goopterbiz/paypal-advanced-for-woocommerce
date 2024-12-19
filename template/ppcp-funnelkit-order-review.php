@@ -26,7 +26,7 @@ $permalink = get_the_permalink();
     <?php
     do_action('outside_header');
     if (!$checkout->is_registration_enabled() && $checkout->is_registration_required() && !is_user_logged_in()) {
-        echo apply_filters('woocommerce_checkout_must_be_logged_in_message', __('You must be logged in to checkout.', 'woocommerce'));
+        echo esc_html(apply_filters('woocommerce_checkout_must_be_logged_in_message', __('You must be logged in to checkout.', 'woocommerce')));
         return;
     }
     $payment_needed = false;
@@ -123,7 +123,7 @@ $permalink = get_the_permalink();
         }
     </style>
     <form name="checkout" method="post" class="checkout woocommerce-checkout wfacp_paypal_express" action="<?php echo esc_url(get_the_permalink()); ?>" enctype="multipart/form-data" id="wfacp_checkout_form">
-        <input type="hidden" name="_wfacp_post_id" class="_wfacp_post_id" value="<?php echo WFACP_Common::get_id(); ?>">
+        <input type="hidden" name="_wfacp_post_id" class="_wfacp_post_id" value="<?php echo esc_html(WFACP_Common::get_id()); ?>">
         
         <?php 
             $cart_hash = WC()->session->get('wfacp_cart_hash', '');
@@ -145,7 +145,7 @@ $permalink = get_the_permalink();
                 <h2 class="wfacp_section_heading wfacp_section_title">
                     <?php
                     $confirm_order_title = apply_filters('wfacp_comfirm_your_paypal_order_title', __('Confirm your PayPal order', 'woofunnels-aero-checkout'));
-                    echo apply_filters('wfacp_comfirm_your_paypal_order_title', $confirm_order_title);
+                    echo esc_html(apply_filters('wfacp_comfirm_your_paypal_order_title', $confirm_order_title));
                     ?>
                 </h2>
             </div>
@@ -165,13 +165,13 @@ $permalink = get_the_permalink();
                                 <?php
                                 $formatted_address = WC()->countries->get_formatted_address(WFACP_Core()->public->billing_details);
                                 $formatted_address = str_replace('<br/>-<br/>', '<br/>', $formatted_address);
-                                echo $formatted_address;
+                                echo esc_html($formatted_address);
                                 $formatted_address = '';
                                 ?>
                             </address>
                             <?php
-                            echo!empty(WFACP_Core()->public->billing_details['email']) ? '<p>' . WFACP_Core()->public->billing_details['email'] . '</p>' : '';
-                            echo!empty(WFACP_Core()->public->billing_details['phone']) ? '<p>' . WFACP_Core()->public->billing_details['phone'] . '</p>' : '';
+                            echo!empty(WFACP_Core()->public->billing_details['email']) ? '<p>' . esc_html(WFACP_Core()->public->billing_details['email']) . '</p>' : '';
+                            echo!empty(WFACP_Core()->public->billing_details['phone']) ? '<p>' . esc_html(WFACP_Core()->public->billing_details['phone']) . '</p>' : '';
                             ?>
                         </div>
                         <?php
@@ -201,13 +201,13 @@ $permalink = get_the_permalink();
                             <?php
                             $formatted_address = WC()->countries->get_formatted_address(WFACP_Core()->public->shipping_details);
                             $formatted_address = str_replace('<br/>-<br/>', '<br/>', $formatted_address);
-                            echo $formatted_address;
+                            echo esc_html($formatted_address);
                             $formatted_address = '';
                             ?>
                         </address>
                         <?php
-                        echo!empty(WFACP_Core()->public->shipping_details['email']) ? '<p class="goopter-woocommerce-customer-details-email">' . WFACP_Core()->public->shipping_details['email'] . '</p>' : '';
-                        echo!empty(WFACP_Core()->public->shipping_details['phone']) ? '<p class="goopter-woocommerce-customer-details-phone">' . WFACP_Core()->public->shipping_details['phone'] . '</p>' : '';
+                        echo!empty(WFACP_Core()->public->shipping_details['email']) ? '<p class="goopter-woocommerce-customer-details-email">' . esc_html(WFACP_Core()->public->shipping_details['email']) . '</p>' : '';
+                        echo!empty(WFACP_Core()->public->shipping_details['phone']) ? '<p class="goopter-woocommerce-customer-details-phone">' . esc_html(WFACP_Core()->public->shipping_details['phone']) . '</p>' : '';
                         if ($instance->have_shipping_address()) {
                             ?>
                             <a href="#" class="wfacp_edit_address" data-type="shipping">

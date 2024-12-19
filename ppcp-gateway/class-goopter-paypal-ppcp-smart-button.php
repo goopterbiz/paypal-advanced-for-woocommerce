@@ -864,9 +864,9 @@ class Goopter_PayPal_PPCP_Smart_Button {
                 wp_add_inline_style('goopter_ppcp', $custom_css);
             }
             if ($is_shortcode === 'yes') {
-                echo '<div class="goopter_ppcp_smart_button_shortcode goopter_ppcp_cart_page"><div class="goopter_ppcp-button-container goopter_ppcp_' . $this->style_layout . '_' . $this->style_size . '"><div id="goopter_ppcp_cart_shortcode"></div>' . ($this->enable_apple_pay ? '<div id="goopter_ppcp_cart_shortcode_apple_pay"></div>' : '') . ($this->enable_google_pay ? '<div id="goopter_ppcp_cart_shortcode_google_pay"></div>' : '') . '</div></div>';
+                echo '<div class="goopter_ppcp_smart_button_shortcode goopter_ppcp_cart_page"><div class="goopter_ppcp-button-container goopter_ppcp_' . esc_attr($this->style_layout) . '_' . esc_attr($this->style_size) . '"><div id="goopter_ppcp_cart_shortcode"></div>' . ($this->enable_apple_pay ? '<div id="goopter_ppcp_cart_shortcode_apple_pay"></div>' : '') . ($this->enable_google_pay ? '<div id="goopter_ppcp_cart_shortcode_google_pay"></div>' : '') . '</div></div>';
             } else {
-                echo '<div class="goopter_ppcp-button-container goopter_ppcp_' . $this->style_layout . '_' . $this->style_size . '"><div id="goopter_ppcp_cart"></div>' . ($this->enable_apple_pay ? '<div id="goopter_ppcp_cart_apple_pay"></div>' : '') . ($this->enable_google_pay ? '<div id="goopter_ppcp_cart_google_pay"></div>' : '') . $separator_html . '</div>';
+                echo '<div class="goopter_ppcp-button-container goopter_ppcp_' . esc_attr($this->style_layout) . '_' . esc_attr($this->style_size) . '"><div id="goopter_ppcp_cart"></div>' . ($this->enable_apple_pay ? '<div id="goopter_ppcp_cart_apple_pay"></div>' : '') . ($this->enable_google_pay ? '<div id="goopter_ppcp_cart_google_pay"></div>' : '') . esc_html($separator_html) . '</div>';
             }
         }
     }
@@ -884,7 +884,7 @@ class Goopter_PayPal_PPCP_Smart_Button {
         $this->goopter_ppcp_smart_button_style_properties();
         if (WC()->cart->needs_payment()) {
             goopter_ppcp_add_css_js();
-            echo '<div class="goopter_ppcp-button-container goopter_ppcp_' . $this->style_layout . '_' . $this->style_size . '"><div id="goopter_ppcp_cart_top"></div>' . ($this->enable_apple_pay ? '<div id="goopter_ppcp_cart_top_apple_pay"></div>' : '') . ($this->enable_google_pay ? '<div id="goopter_ppcp_cart_top_google_pay"></div>' : '') . '</div>';
+            echo '<div class="goopter_ppcp-button-container goopter_ppcp_' . esc_attr($this->style_layout) . '_' . esc_attr($this->style_size) . '"><div id="goopter_ppcp_cart_top"></div>' . ($this->enable_apple_pay ? '<div id="goopter_ppcp_cart_top_apple_pay"></div>' : '') . ($this->enable_google_pay ? '<div id="goopter_ppcp_cart_top_google_pay"></div>' : '') . '</div>';
         }
     }
 
@@ -902,7 +902,12 @@ class Goopter_PayPal_PPCP_Smart_Button {
             $this->goopter_ppcp_smart_button_style_properties();
             if (WC()->cart->needs_payment()) {
                 goopter_ppcp_add_css_js();
-                echo apply_filters('goopter_ppcp_checkout_top_html', '<div class="goopter_ppcp-button-container goopter_ppcp_' . $this->style_layout . '_' . $this->style_size . '"><div id="goopter_ppcp_checkout_top"></div>' . ($this->enable_apple_pay ? '<div id="goopter_ppcp_checkout_top_apple_pay"></div>' : '') . ($this->enable_google_pay ? '<div id="goopter_ppcp_checkout_top_google_pay"></div>' : '') . '</div>');
+                echo wp_kses_post(
+                    apply_filters(
+                        'goopter_ppcp_checkout_top_html',
+                        '<div class="goopter_ppcp-button-container goopter_ppcp_' . esc_attr($this->style_layout) . '_' . esc_attr($this->style_size) . '"><div id="goopter_ppcp_checkout_top"></div>' . ($this->enable_apple_pay ? '<div id="goopter_ppcp_checkout_top_apple_pay"></div>' : '') . ($this->enable_google_pay ? '<div id="goopter_ppcp_checkout_top_google_pay"></div>' : '') . '</div>'
+                    )
+                );
             }
         }
     }
@@ -921,7 +926,26 @@ class Goopter_PayPal_PPCP_Smart_Button {
             $this->goopter_ppcp_smart_button_style_properties();
             if (WC()->cart->needs_payment()) {
                 goopter_ppcp_add_css_js();
-                echo apply_filters('goopter_ppcp_checkout_top_html', '<div class="goopter_ppcp top_checkout_container_from_pfw"><fieldset><legend class="express-title">' . __('PayPal Checkout', 'paypal-advanced-for-woocommerce') . '</legend><div class="wc_ppcp_express_checkout_gateways"><div class="goopter_ppcp-gateway express_payment_method_ppcp"><div class="goopter_ppcp-button-container goopter_ppcp_' . $this->style_layout . '_' . $this->style_size . '"><div id="goopter_ppcp_checkout_top"></div><div id="goopter_ppcp_checkout_top_apple_pay"></div><div id="goopter_ppcp_checkout_top_google_pay"></div></div></div></div></fieldset><span class="express-divider">OR</span></div>');
+                echo wp_kses_post(
+                    apply_filters(
+                        'goopter_ppcp_checkout_top_html',
+                        '<div class="goopter_ppcp top_checkout_container_from_pfw">
+                            <fieldset>
+                                <legend class="express-title">' . esc_html__('PayPal Checkout', 'paypal-advanced-for-woocommerce') . '</legend>
+                                <div class="wc_ppcp_express_checkout_gateways">
+                                    <div class="goopter_ppcp-gateway express_payment_method_ppcp">
+                                        <div class="goopter_ppcp-button-container goopter_ppcp_' . esc_attr($this->style_layout) . '_' . esc_attr($this->style_size) . '">
+                                            <div id="goopter_ppcp_checkout_top"></div>
+                                            <div id="goopter_ppcp_checkout_top_apple_pay"></div>
+                                            <div id="goopter_ppcp_checkout_top_google_pay"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <span class="express-divider">OR</span>
+                        </div>'
+                    )
+                );
             }
         }
     }
@@ -940,7 +964,14 @@ class Goopter_PayPal_PPCP_Smart_Button {
             $this->goopter_ppcp_smart_button_style_properties();
             if (WC()->cart->needs_payment()) {
                 goopter_ppcp_add_css_js();
-                echo apply_filters('goopter_ppcp_checkout_top_html', '<div id="goopter_ppcp_checkout_top"></div>' . ($this->enable_apple_pay ? '<div id="goopter_ppcp_checkout_top_apple_pay"></div>' : '') . ($this->enable_google_pay ? '<div id="goopter_ppcp_checkout_top_google_pay"></div>' : ''));
+                echo wp_kses_post(
+                    apply_filters(
+                        'goopter_ppcp_checkout_top_html',
+                        '<div id="goopter_ppcp_checkout_top"></div>' . 
+                        ($this->enable_apple_pay ? '<div id="goopter_ppcp_checkout_top_apple_pay"></div>' : '') . 
+                        ($this->enable_google_pay ? '<div id="goopter_ppcp_checkout_top_google_pay"></div>' : '')
+                    )
+                );                
             }
         }
     }
@@ -961,9 +992,9 @@ class Goopter_PayPal_PPCP_Smart_Button {
             if (goopter_ppcp_is_product_purchasable($product, $this->enable_tokenized_payments) === true) {
                 goopter_ppcp_add_css_js();
                 if ($is_shortcode === 'yes') {
-                    echo '<div class="goopter_ppcp_smart_button_shortcode goopter_ppcp_product_page"><div class="goopter_ppcp-button-container goopter_ppcp_' . $this->style_layout . '_' . $this->style_size . '"><div id="goopter_ppcp_product_shortcode"></div>' . ($this->enable_apple_pay ? '<div id="goopter_ppcp_product_shortcode_apple_pay"></div>' : '') . ($this->enable_google_pay ? '<div id="goopter_ppcp_product_shortcode_google_pay"></div>' : '') . '</div></div>';
+                    echo '<div class="goopter_ppcp_smart_button_shortcode goopter_ppcp_product_page"><div class="goopter_ppcp-button-container goopter_ppcp_' . esc_attr($this->style_layout) . '_' . esc_attr($this->style_size) . '"><div id="goopter_ppcp_product_shortcode"></div>' . ($this->enable_apple_pay ? '<div id="goopter_ppcp_product_shortcode_apple_pay"></div>' : '') . ($this->enable_google_pay ? '<div id="goopter_ppcp_product_shortcode_google_pay"></div>' : '') . '</div></div>';
                 } else {
-                    echo '<div class="goopter_ppcp-button-container goopter_ppcp_' . $this->style_layout . '_' . $this->style_size . '"><div id="goopter_ppcp_product"></div>' . ($this->enable_apple_pay ? '<div id="goopter_ppcp_product_apple_pay"></div>' : '') . ($this->enable_google_pay ? '<div id="goopter_ppcp_product_google_pay"></div>' : '') . '</div>';
+                    echo '<div class="goopter_ppcp-button-container goopter_ppcp_' . esc_attr($this->style_layout) . '_' . esc_attr($this->style_size) . '"><div id="goopter_ppcp_product"></div>' . ($this->enable_apple_pay ? '<div id="goopter_ppcp_product_apple_pay"></div>' : '') . ($this->enable_google_pay ? '<div id="goopter_ppcp_product_google_pay"></div>' : '') . '</div>';
                 }
             }
         } catch (Exception $ex) {
@@ -982,9 +1013,9 @@ class Goopter_PayPal_PPCP_Smart_Button {
             $this->goopter_ppcp_smart_button_style_properties();
             goopter_ppcp_add_css_js();
             if ($is_shortcode === 'yes') {
-                echo '<div class="goopter_ppcp_smart_button_shortcode goopter_ppcp_checkout_page"><div class="goopter_ppcp-button-container goopter_ppcp_' . $this->style_layout . '_' . $this->style_size . '"><div id="goopter_ppcp_checkout"></div></div></div>';
+                echo '<div class="goopter_ppcp_smart_button_shortcode goopter_ppcp_checkout_page"><div class="goopter_ppcp-button-container goopter_ppcp_' . esc_attr($this->style_layout) . '_' . esc_attr($this->style_size) . '"><div id="goopter_ppcp_checkout"></div></div></div>';
             } else {
-                echo '<div class="goopter_ppcp-button-container goopter_ppcp_' . $this->style_layout . '_' . $this->style_size . '"><div id="goopter_ppcp_checkout" ></div></div>';
+                echo '<div class="goopter_ppcp-button-container goopter_ppcp_' . esc_attr($this->style_layout) . '_' . esc_attr($this->style_size) . '"><div id="goopter_ppcp_checkout" ></div></div>';
             }
         }
     }
@@ -1000,10 +1031,10 @@ class Goopter_PayPal_PPCP_Smart_Button {
             $this->goopter_ppcp_smart_button_style_properties();
             goopter_ppcp_add_css_js();
             if ($this->enable_apple_pay) {
-                echo '<div id="goopter_ppcp_checkout_apple_pay" class="goopter_ppcp_' . $this->style_layout . '_' . $this->style_size . '" style=""></div>';
+                echo '<div id="goopter_ppcp_checkout_apple_pay" class="goopter_ppcp_' . esc_attr($this->style_layout) . '_' . esc_attr($this->style_size) . '" style=""></div>';
             }
             if ($this->enable_google_pay) {
-                echo '<div id="goopter_ppcp_checkout_google_pay" class="goopter_ppcp_' . $this->style_layout . '_' . $this->style_size . '" style=""></div>';
+                echo '<div id="goopter_ppcp_checkout_google_pay" class="goopter_ppcp_' . esc_attr($this->style_layout) . '_' . esc_attr($this->style_size) . '" style=""></div>';
             }
         }
     }
@@ -1034,22 +1065,26 @@ class Goopter_PayPal_PPCP_Smart_Button {
         ?>
         <div class="goopter_ppcp_billing_details">
         <?php if (wc_ship_to_billing_address_only() && WC()->cart->needs_shipping()) { ?>
-                <h3><?php esc_html_e('Billing &amp; Shipping', 'paypal-advanced-for-woocommerce'); ?> <?php echo $billing_edit_link; ?></h3>
+                <h3><?php esc_html_e('Billing &amp; Shipping', 'paypal-advanced-for-woocommerce'); ?> <?php echo esc_url($billing_edit_link); ?></h3>
             <?php } else { ?>
                 <h3>
                 <?php
                 esc_html_e('Billing details', 'paypal-advanced-for-woocommerce');
                 if ($this->set_billing_address) {
-                    echo $billing_edit_link;
+                    echo esc_url($billing_edit_link);
                 }
                 ?>
                 </h3>
                     <?php
                 }
                 $checkout_details = goopter_ppcp_get_mapped_billing_address($this->checkout_details, !$this->set_billing_address);
-                echo WC()->countries->get_formatted_address($checkout_details);
-                echo!empty($checkout_details['email']) ? '<p class="goopter-woocommerce-customer-details-email">' . $checkout_details['email'] . '</p>' : '';
-                echo!empty($checkout_details['phone']) ? '<p class="goopter-woocommerce-customer-details-phone">' . $checkout_details['phone'] . '</p>' : '';
+                echo wp_kses_post(WC()->countries->get_formatted_address($checkout_details));
+                echo !empty($checkout_details['email']) 
+                    ? '<p class="goopter-woocommerce-customer-details-email">' . esc_html($checkout_details['email']) . '</p>' 
+                    : '';
+                echo !empty($checkout_details['phone']) 
+                    ? '<p class="goopter-woocommerce-customer-details-phone">' . esc_html($checkout_details['phone']) . '</p>' 
+                    : '';
                 ?>
         </div>
             <?php
@@ -1067,7 +1102,7 @@ class Goopter_PayPal_PPCP_Smart_Button {
                         <?php esc_html_e( 'Edit', 'paypal-advanced-for-woocommerce' ); ?>
                     </a>
             </h3>
-        <?php echo WC()->countries->get_formatted_address(goopter_ppcp_get_mapped_shipping_address($this->checkout_details)); ?>
+            <?php echo wp_kses_post(WC()->countries->get_formatted_address(goopter_ppcp_get_mapped_shipping_address($this->checkout_details))); ?>
         </div>
             <?php
         }
@@ -1432,7 +1467,12 @@ class Goopter_PayPal_PPCP_Smart_Button {
         if (goopter_ppcp_has_active_session()) {
             $order_button_text = __('Cancel order', 'paypal-advanced-for-woocommerce');
             $cancel_order_url = add_query_arg(array('goopter_ppcp_action' => 'cancel_order', 'utm_nooverride' => '1', 'from' => 'checkout'), untrailingslashit(WC()->api_request_url('Goopter_PayPal_PPCP_Front_Action')));
-            echo apply_filters('goopter_ppcp_review_order_cance_button_html', '<a class="button alt goopter_ppcp_cancel" name="woocommerce_checkout_cancel_order" href="' . esc_attr($cancel_order_url) . '" >' . $order_button_text . '</a>');
+            echo wp_kses_post(
+                apply_filters(
+                    'goopter_ppcp_review_order_cance_button_html',
+                    '<a class="button alt goopter_ppcp_cancel" name="woocommerce_checkout_cancel_order" href="' . esc_url($cancel_order_url) . '">' . esc_html($order_button_text) . '</a>'
+                )
+            );
         }
     }
 
@@ -1459,7 +1499,7 @@ class Goopter_PayPal_PPCP_Smart_Button {
         global $wp;
         $order_id = absint($wp->query_vars['order-pay']);
         ?>
-        <input type="hidden" name="woo_order_id" value="<?php echo $order_id; ?>" />
+        <input type="hidden" name="woo_order_id" value="<?php echo esc_attr($order_id); ?>" />
         <?php
     }
 
@@ -2036,7 +2076,7 @@ class Goopter_PayPal_PPCP_Smart_Button {
 
     public function add_cart_data_in_html() {
         $fragments = $this->add_order_checkout_data_for_direct_checkouts([]);
-        echo '<div id="goopter_cart_totals" style="display:none;">' . $fragments['goopter_payments_data'] . '</div>';
+        echo '<div id="goopter_cart_totals" style="display:none;">' . wp_kses_post($fragments['goopter_payments_data']) . '</div>';
     }
 
     public function goopter_ppcp_woocommerce_valid_order_statuses_for_payment_complete($order_status_list, $order) {

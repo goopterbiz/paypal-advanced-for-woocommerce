@@ -917,7 +917,7 @@ if (!function_exists('goopter_ppcp_display_notice')) {
         } else {
             $message .= '</div>';
         }
-        echo $message;
+        echo esc_html($message);
     }
 
 }
@@ -963,7 +963,7 @@ if (!function_exists('goopter_session_expired_exception')) {
      * @throws Exception
      */
     function goopter_session_expired_exception($error = '') {
-        throw new Exception($error, 302);
+        throw new Exception(esc_html($error), 302);
     }
 
 }

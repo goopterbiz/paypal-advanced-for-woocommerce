@@ -413,8 +413,10 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'title' => __('Enable/Disable', 'paypal-advanced-for-woocommerce'),
                     'type' => 'checkbox',
                     // 'label' => __(sprintf('%s', AE_PPCP_NAME), 'paypal-advanced-for-woocommerce'),
+                    // phpcs:disable WordPress.WP.I18n.NoEmptyStrings
                     // translators: %s is replaced with the AE_PPCP_NAME constant.
-                    'label' => sprintf(__('-%s-', 'paypal-advanced-for-woocommerce'), AE_PPCP_NAME),
+                    'label' => sprintf(__('%s', 'paypal-advanced-for-woocommerce'), AE_PPCP_NAME),
+                    // phpcs:enable WordPress.WP.I18n.NoEmptyStrings
                     'default' => 'no',
                 ),
                 'title' => array(
@@ -1971,8 +1973,10 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'type' => 'text',
                     'description' => __('This controls what users see as the brand / company name on PayPal review pages.', 'paypal-advanced-for-woocommerce'),
                     // 'default' => __(get_bloginfo('name'), 'paypal-advanced-for-woocommerce'),
+                    // phpcs:disable WordPress.WP.I18n.NoEmptyStrings
                     // translators: %s is replaced with the site's name retrieved using get_bloginfo('name').
-                    'default' => sprintf(__('-%s-', 'paypal-advanced-for-woocommerce'), get_bloginfo('name')),
+                    'default' => sprintf(__('%s', 'paypal-advanced-for-woocommerce'), get_bloginfo('name')),
+                    // phpcs:enable WordPress.WP.I18n.NoEmptyStrings
                     'desc_tip' => true,
                 ),
                 'landing_page' => array(

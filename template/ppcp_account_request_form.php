@@ -28,7 +28,7 @@
     </div>
     <div class="ppcp_account_request-Modal-content">
         <div class="ppcp_account_request-Modal-question ppcp_account_request-isOpen">
-            <iframe src="<?php echo $ppcp_account_request_form_url; ?>" width="650px" height="420px;" marginheight="0" frameborder="0" border="0" scrolling="auto"></iframe>
+            <iframe src="<?php echo esc_url($ppcp_account_request_form_url); ?>" width="650px" height="420px;" marginheight="0" frameborder="0" border="0" scrolling="auto"></iframe>
         </div>
     </div>
 </div>

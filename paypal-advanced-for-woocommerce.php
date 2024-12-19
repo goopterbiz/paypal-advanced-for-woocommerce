@@ -406,13 +406,45 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
             return round($price, $precision);
         }
 
+        // public function http_api_curl_ec_add_curl_parameter($handle, $r, $url) {
+        //     $Force_tls_one_point_two = get_option('Force_tls_one_point_two', 'no');
+        //     if ((strstr($url, 'https://') && strstr($url, '.paypal.com')) && isset($Force_tls_one_point_two) && $Force_tls_one_point_two == 'yes') {
+        //         curl_setopt($handle, CURLOPT_VERBOSE, 1);
+        //         curl_setopt($handle, CURLOPT_SSLVERSION, 6);
+        //     }
+        // }
+
         public function http_api_curl_ec_add_curl_parameter($handle, $r, $url) {
             $Force_tls_one_point_two = get_option('Force_tls_one_point_two', 'no');
+        
+            // Check if the URL matches the conditions
             if ((strstr($url, 'https://') && strstr($url, '.paypal.com')) && isset($Force_tls_one_point_two) && $Force_tls_one_point_two == 'yes') {
-                curl_setopt($handle, CURLOPT_VERBOSE, 1);
-                curl_setopt($handle, CURLOPT_SSLVERSION, 6);
+                // Prepare arguments for wp_remote_get
+                $args = [
+                    'sslverify' => true,
+                    'sslversion' => CURL_SSLVERSION_TLSv1_2, // Force TLS 1.2
+                    'headers'   => [
+                        'User-Agent' => 'WordPress/' . get_bloginfo('version'),
+                    ],
+                ];
+        
+                // Perform the HTTP request using wp_remote_get
+                $response = wp_remote_get($url, $args);
+        
+                // Handle the response
+                if (is_wp_error($response)) {
+                    // error_log('Error with PayPal request: ' . $response->get_error_message());
+                    return false; // Log and return false if the request fails
+                }
+        
+                // If successful, retrieve and return the response body
+                return wp_remote_retrieve_body($response);
             }
+        
+            // Return false if conditions are not met
+            return false;
         }
+        
 
         public static function number_format($price, $order = null) {
             $decimals = 2;

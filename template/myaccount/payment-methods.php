@@ -62,8 +62,8 @@ $available_payment_gateways = WC()->payment_gateways->get_available_payment_gate
                                         if (in_array($paymentMethod, ['apple_pay', 'paypal', 'venmo'])) {
                                             $image_path = PAYPAL_FOR_WOOCOMMERCE_ASSET_URL . 'ppcp-gateway/images/icon/' . $paymentMethod . '.png';
                                             ?>
-                                            <img class='ppcp_payment_method_icon' src='<?php echo $image_path; ?>' alt='<?php echo ucwords(str_replace('_', ' ', $paymentMethod)) ?>'><?php
-                                            echo $paymentMethod == 'apple_pay' ? $ccEndingText($method) : '&nbsp;&nbsp;&nbsp;&nbsp;' . esc_html(wc_get_credit_card_type_label($method['method']['brand']));
+                                            <img class='ppcp_payment_method_icon' src='<?php echo esc_url($image_path); ?>' alt='<?php echo esc_html(ucwords(str_replace('_', ' ', $paymentMethod))); ?>'><?php
+                                            echo $paymentMethod == 'apple_pay' ? esc_html($ccEndingText($method)) : '&nbsp;&nbsp;&nbsp;&nbsp;' . esc_html(wc_get_credit_card_type_label($method['method']['brand']));
                                         }
                                     } elseif ($method['method']['gateway'] === 'goopter_ppcp_cc') {
                                         $brand = strtolower($method['method']['brand']);
@@ -79,11 +79,11 @@ $available_payment_gateways = WC()->payment_gateways->get_available_payment_gate
                                             'mastercard' => PAYPAL_FOR_WOOCOMMERCE_ASSET_URL . 'ppcp-gateway/images/icon/credit-cards/mastercard.png'
                                         );
                                         if (isset($icon_url[$brand])) {
-                                            echo sprintf('<img class="ppcp_payment_method_icon" src="%s" alt="Credit Card" />', $icon_url[$brand]);
+                                            echo sprintf('<img class="ppcp_payment_method_icon" src="%s" alt="Credit Card" />', esc_url($icon_url[$brand]));
                                         }
-                                        echo $ccEndingText($method);
+                                        echo esc_html($ccEndingText($method));
                                     } else {
-                                        echo $ccEndingText($method);
+                                        echo esc_html($ccEndingText($method));
                                     }
                                 } else {
                                     echo esc_html(wc_get_credit_card_type_label($method['method']['brand']));
