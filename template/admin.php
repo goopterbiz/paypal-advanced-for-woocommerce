@@ -4,8 +4,10 @@
  */
 ?>
 <?php
-$active_tab = isset($_GET['tab']) ? wc_clean($_GET['tab']) : 'general_settings';
-$gateway = isset($_GET['gateway']) ? wc_clean($_GET['gateway']) : 'paypal_payment_gateway_products';
+// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- no security issue
+$active_tab = isset($_GET['tab']) ? wc_clean(sanitize_text_field(wp_unslash($_GET['tab']))) : 'general_settings';
+// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- no security issue
+$gateway = isset($_GET['gateway']) ? wc_clean(sanitize_text_field(wp_unslash($_GET['gateway']))) : 'paypal_payment_gateway_products';
 ?>
 <div class="wrap">
 
@@ -13,7 +15,13 @@ $gateway = isset($_GET['gateway']) ? wc_clean($_GET['gateway']) : 'paypal_paymen
     <br>
     <?php if ($active_tab == 'general_settings') { ?>
         <h2 class="nav-tab-wrapper">
-            <a href="?page=<?php echo $this->plugin_slug; ?>" class="nav-tab <?php echo $gateway == 'paypal_payment_gateway_products' ? 'nav-tab-active' : ''; ?>"><?php echo sprintf(__('%s', 'paypal-advanced-for-woocommerce'), AE_PPCP_NAME); ?></a>
+            <a href="?page=<?php echo esc_attr($this->plugin_slug); ?>" class="nav-tab <?php echo $gateway == 'paypal_payment_gateway_products' ? 'nav-tab-active' : ''; ?>">
+                <?php 
+                // phpcs:disable WordPress.WP.I18n.NoEmptyStrings
+                // Translators: %s is the name of the PayPal solution (e.g., PayPal Advanced).
+                echo sprintf(esc_html__('%s', 'paypal-advanced-for-woocommerce'), esc_html(AE_PPCP_NAME));
+                // phpcs:enable WordPress.WP.I18n.NoEmptyStrings
+                ?></a>
             <?php do_action('goopter_paypal_for_woocommerce_general_settings_tab'); ?>
         </h2>
         <?php

@@ -22,6 +22,8 @@
 
     var wcf_init_create_paypal_ppcp_goopter_payments_order = function (ajax_data, gateway) {
         ajax_data.action = 'wcf_create_paypal_ppcp_goopter_payments_order';
+        ajax_data.cartflow_nonce = cartflow_vars.nonce;
+        
         $.ajax({
             url: cartflows.ajax_url,
             data: ajax_data,
@@ -45,7 +47,8 @@
                 var ajax_data = {
                     action: 'wcf_capture_paypal_ppcp_goopter_order',
                     step_id: cartflows_offer.step_id,
-                    order_id: cartflows_offer.order_id
+                    order_id: cartflows_offer.order_id,
+                    cartflow_nonce: cartflow_vars.nonce
                 };
                 $('body').trigger('wcf-show-loader', 'yes');
                 $.ajax({

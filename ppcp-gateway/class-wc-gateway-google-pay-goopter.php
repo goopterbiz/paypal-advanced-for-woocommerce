@@ -90,7 +90,10 @@ class WC_Gateway_Google_Pay_Goopter extends WC_Gateway_PPCP_Goopter {
     public function form() {
         try {
             ?>
-            <p><?php echo __($this->google_pay_payments_description, 'paypal-advanced-for-woocommerce'); ?></p>
+            <?php 
+                $description = $this->google_pay_payments_description ?: __('Default Google Pay description', 'paypal-advanced-for-woocommerce');
+                echo '<p>' . esc_html($description) . '</p>'; 
+            ?>
             <fieldset id="wc-<?php echo esc_attr($this->id); ?>-form" class='wc-google-pay-form wc-payment-form'>
                 <?php do_action('woocommerce_google_pay_form_start', $this->id); ?>
                 <?php do_action('woocommerce_google_pay_form_start', $this->id); ?>

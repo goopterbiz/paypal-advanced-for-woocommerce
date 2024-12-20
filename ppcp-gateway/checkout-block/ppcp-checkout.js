@@ -284,10 +284,10 @@ const ppcp_uniqueEvents = new Set([
 
 ppcp_uniqueEvents.forEach(function (action) {
     addAction(action, "c", function () {
-        jQuery("#goopter_ppcp_checkout").block({
-            message: null,
-            overlayCSS: {background: "#fff", opacity: 0.6},
-        });
+        // jQuery("#goopter_ppcp_checkout").block({
+        //     message: null,
+        //     overlayCSS: {background: "#fff", opacity: 0.6},
+        // });
         setTimeout(function () {
             jQuery(document.body).trigger("ppcp_checkout_updated");
         }, 2000);

@@ -94,7 +94,7 @@ class Goopter_PayPal_PPCP_Apple_Pay_Configurations
         try {
             $this->addDomainValidationFiles();
         } catch (Exception $exception) {
-            echo '<div class="error">' . $exception->getMessage() . '</div>';
+            echo '<div class="error">' . esc_html( $exception->getMessage() ) . '</div>';
         }
         try {
             $checkIsDomainAdded = self::isApplePayDomainAdded($jsonResponse);
@@ -124,7 +124,7 @@ class Goopter_PayPal_PPCP_Apple_Pay_Configurations
         }
 
         if ($addedDomains['status'] && count($addedDomains['domains'])) {
-            $domainName = parse_url( get_site_url(), PHP_URL_HOST );
+            $domainName = wp_parse_url( get_site_url(), PHP_URL_HOST );
             foreach ($addedDomains['domains'] as $addedDomain) {
                 if ($addedDomain['domain'] == $domainName) {
                     return true;
@@ -158,7 +158,7 @@ class Goopter_PayPal_PPCP_Apple_Pay_Configurations
                     $instance->addDomainValidationFiles();
                 } catch (Exception $exception) {}
 
-                $domainNameToRegister = parse_url( get_site_url(), PHP_URL_HOST );
+                $domainNameToRegister = wp_parse_url( get_site_url(), PHP_URL_HOST );
                 $result = $instance->registerDomain($domainNameToRegister);
                 return $result['status'];
             } else {
@@ -177,7 +177,7 @@ class Goopter_PayPal_PPCP_Apple_Pay_Configurations
     {
         if (self::isApplePayDomainAdded()) {
             $instance = Goopter_PayPal_PPCP_Apple_Pay_Configurations::instance();
-            $domainNameToRemove = parse_url(get_site_url(), PHP_URL_HOST);
+            $domainNameToRemove = wp_parse_url(get_site_url(), PHP_URL_HOST);
             $result = $instance->removeDomain($domainNameToRemove);
             return $result['status'];
         }
@@ -190,7 +190,7 @@ class Goopter_PayPal_PPCP_Apple_Pay_Configurations
     public function registerDomain($domainNameToRegister)
     {
         if (!filter_var($domainNameToRegister, FILTER_VALIDATE_DOMAIN)) {
-            throw new Exception(__('Please enter valid domain name to register.', 'paypal-advanced-for-woocommerce'));
+            throw new Exception(esc_html__('Please enter a valid domain name to register.', 'paypal-advanced-for-woocommerce'));
         }
         $domainParams = [
             "provider_type" => "APPLE_PAY",
@@ -266,7 +266,15 @@ class Goopter_PayPal_PPCP_Apple_Pay_Configurations
 
     public function registerApplePayDomain()
     {
-        $domainNameToRegister = $_POST['apple_pay_domain'] ?? parse_url( get_site_url(), PHP_URL_HOST );
+        if ( !isset($_POST['goopter_register_apple_pay_domain_nonce']) || !wp_verify_nonce(sanitize_key(wp_unslash($_POST['goopter_register_apple_pay_domain_nonce'])), 'goopter_register_apple_pay_domain_nonce') ) {
+            $logger = wc_get_logger();  // Get the logger instance
+            $logger->error('register apple pay domain Nonce verification failed. Nonce not valid.', array('source' => 'ppcp-gateway/admin/class-goopter-paypal-ppcp-apple-pay-configurations.php'));
+        }
+
+        // $domainNameToRegister = sanitize_text_field(wp_unslash($_POST['apple_pay_domain'])) ?? wp_parse_url( get_site_url(), PHP_URL_HOST );
+        $domainNameToRegister = isset($_POST['apple_pay_domain']) && !empty($_POST['apple_pay_domain']) 
+            ? sanitize_text_field(wp_unslash($_POST['apple_pay_domain'])) 
+            : wp_parse_url(get_site_url(), PHP_URL_HOST);
 
         try {
             $result = $this->registerDomain($domainNameToRegister);
@@ -279,7 +287,15 @@ class Goopter_PayPal_PPCP_Apple_Pay_Configurations
 
     public function removeApplePayDomain()
     {
-        $domainNameToRemove = $_REQUEST['domain'] ?? parse_url( get_site_url(), PHP_URL_HOST );
+        if ( !isset($_POST['goopter_remove_apple_pay_domain_nonce']) || !wp_verify_nonce(sanitize_key(wp_unslash($_POST['goopter_remove_apple_pay_domain_nonce'])), 'goopter_remove_apple_pay_domain_nonce') ) {
+            $logger = wc_get_logger();  // Get the logger instance
+            $logger->error('remove apple pay domain Nonce verification failed. Nonce not valid.', array('source' => 'ppcp-gateway/admin/class-goopter-paypal-ppcp-apple-pay-configurations.php'));
+        }
+
+        // $domainNameToRemove = sanitize_text_field(wp_unslash($_REQUEST['domain'])) ?? wp_parse_url( get_site_url(), PHP_URL_HOST );
+        $domainNameToRemove = isset($_REQUEST['domain']) && !empty($_REQUEST['domain']) 
+            ? sanitize_text_field(wp_unslash($_REQUEST['domain'])) 
+            : wp_parse_url(get_site_url(), PHP_URL_HOST);
         $result = $this->removeDomain($domainNameToRemove);
         wp_send_json($result);
         die;
@@ -287,10 +303,23 @@ class Goopter_PayPal_PPCP_Apple_Pay_Configurations
 
     private function addDomainValidationFiles()
     {
-        $fileDir = ABSPATH.'.well-known';
-        if (!is_dir($fileDir)) {
-            mkdir($fileDir);
+        // $fileDir = ABSPATH.'.well-known';
+        // if (!is_dir($fileDir)) {
+        //     mkdir($fileDir);
+        // }
+        global $wp_filesystem;
+        // Include the WP_Filesystem functionality if it’s not already loaded.
+        if ( ! function_exists( 'WP_Filesystem' ) ) {
+            require_once ABSPATH . 'wp-admin/includes/file.php';
         }
+        // Initialize WP_Filesystem.
+        WP_Filesystem();
+        $fileDir = ABSPATH . '.well-known';
+        // Check if the directory exists, and create it if it doesn't.
+        if ( ! $wp_filesystem->is_dir( $fileDir ) ) {
+            $wp_filesystem->mkdir( $fileDir );
+        }
+
         $localFileLoc = $this->apple_pay_domain_validation->getDomainAssociationLibFilePath();
         $domainValidationFile = $this->apple_pay_domain_validation->getDomainAssociationFilePath();
 
@@ -302,35 +331,98 @@ class Goopter_PayPal_PPCP_Apple_Pay_Configurations
                 $this->updateDomainVerificationFileContent($localFileLoc);
             }
         } catch (Exception $exception) {
-            throw new Exception("Unable to update the verification file content. Error: " . $exception->getMessage());
+            throw new Exception(esc_html__("Unable to update the verification file content. Error: ", 'paypal-advanced-for-woocommerce') . esc_html($exception->getMessage()));
         }
         if (file_exists($targetLocation)) {
-            @unlink($targetLocation);
-            @unlink($targetLocation . '.txt');
+            wp_delete_file($targetLocation);
+            wp_delete_file($targetLocation . '.txt');
         }
         if (!copy($localFileLoc, $targetLocation)) {
-            throw new Exception(sprintf('Unable to copy the files from %s to location %s', $localFileLoc, $targetLocation));
+            throw new Exception(esc_html(sprintf(
+                'Unable to copy the files from %s to location %s',
+                esc_html($localFileLoc),
+                esc_html($targetLocation)
+            )));
         }
         // Add the .txt version to make sure it works.
         copy($localFileLoc, $targetLocation . '.txt');
         return true;
     }
 
+    // private function updateDomainVerificationFileContent($localFileLocation)
+    // {
+    //     $ch = curl_init();
+    //     curl_setopt($ch, CURLOPT_URL, $this->payPalDomainValidationFile);
+    //     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    //     curl_setopt($ch, CURLOPT_HEADER, false);
+    //     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    //     $response = curl_exec($ch);
+    //     $resultStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    //     curl_close($ch);
+
+    //     if (in_array($resultStatus, [200, 304])) {
+    //         $fp = fopen($localFileLocation, "w");
+    //         fwrite($fp, $response);
+    //         fclose($fp);
+    //     }
+    // }
+
     private function updateDomainVerificationFileContent($localFileLocation)
     {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $this->payPalDomainValidationFile);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HEADER, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        $response = curl_exec($ch);
-        $resultStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-
-        if (in_array($resultStatus, [200, 304])) {
-            $fp = fopen($localFileLocation, "w");
-            fwrite($fp, $response);
-            fclose($fp);
+        $logger = wc_get_logger(); // WooCommerce logger
+        $context = ['source' => 'paypal-domain-verification'];
+    
+        // Perform the GET request using wp_remote_get
+        $response = wp_remote_get($this->payPalDomainValidationFile, [
+            'sslverify' => false, // Disable SSL verification if necessary
+        ]);
+    
+        // Check for errors in the request
+        if (is_wp_error($response)) {
+            $logger->error('Error fetching PayPal domain validation file: ' . $response->get_error_message(), $context);
+            return;
         }
+    
+        // Get the HTTP status code
+        $resultStatus = wp_remote_retrieve_response_code($response);
+    
+        // // Check if the response status is 200 or 304
+        // if (in_array($resultStatus, [200, 304])) {
+        //     // Retrieve the response body
+        //     $body = wp_remote_retrieve_body($response);
+    
+        //     // Write the response body to the specified file location
+        //     if ($fp = fopen($localFileLocation, "w")) {
+        //         fwrite($fp, $body);
+        //         fclose($fp);
+        //     } else {
+        //         $logger->error("Unable to write to file: $localFileLocation", $context);
+        //     }
+        // } else {
+        //     $logger->warning("Unexpected HTTP status code: $resultStatus", $context);
+        // }
+
+        global $wp_filesystem;
+        // Load the WP_Filesystem if it’s not already loaded
+        if ( ! function_exists( 'WP_Filesystem' ) ) {
+            require_once ABSPATH . 'wp-admin/includes/file.php';
+        }
+        // Initialize WP_Filesystem
+        WP_Filesystem();
+        // Check if the response status is 200 or 304
+        if ( in_array( $resultStatus, [200, 304] ) ) {
+            // Retrieve the response body
+            $body = wp_remote_retrieve_body( $response );
+            // Write the response body to the specified file location
+            if ( $wp_filesystem->put_contents( $localFileLocation, $body, FS_CHMOD_FILE ) ) {
+                // File successfully written
+            } else {
+                $logger->error( "Unable to write to file: $localFileLocation", $context );
+            }
+        } else {
+            $logger->warning( "Unexpected HTTP status code: $resultStatus", $context );
+        }
+
     }
+    
 }

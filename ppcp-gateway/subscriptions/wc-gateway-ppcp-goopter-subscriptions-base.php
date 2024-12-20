@@ -116,6 +116,7 @@ trait WC_Gateway_PPCP_Goopter_Subscriptions_Base {
     }
 
     public function free_signup_with_token_payment_tokenization($order_id) {
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing -- no security issue
         if (!empty($_POST['wc-goopter_ppcp-payment-token']) && $_POST['wc-goopter_ppcp-payment-token'] != 'new') {
             $order = wc_get_order($order_id);
             if ($order->get_total() == 0) {

@@ -229,7 +229,7 @@ class Goopter_PayPal_PPCP_Seller_Onboarding {
         try {
             $posted_raw = goopter_ppcp_get_raw_data();
             $this->api_log->log('goopter_ppcp_login_seller', 'error');
-            $this->api_log->log(print_r($posted_raw, true), 'error');
+            $this->api_log->log(wp_json_encode($posted_raw, true), 'error');
             if (empty($posted_raw)) {
                 return false;
             }
@@ -265,6 +265,7 @@ class Goopter_PayPal_PPCP_Seller_Onboarding {
     }
 
     public function goopter_ppcp_listen_for_merchant_id() {
+        // phpcs:disable WordPress.Security.NonceVerification.Recommended -- External callback by paypal, nonce not applicable
         try {
             $this->is_sandbox = false;
             if (!$this->is_valid_site_request()) {
@@ -333,6 +334,7 @@ class Goopter_PayPal_PPCP_Seller_Onboarding {
             $this->api_log->log("The exception was created on line: " . $ex->getFile() . ' ' . $ex->getLine(), 'error');
             $this->api_log->log($ex->getMessage(), 'error');
         }
+        // phpcs:enable WordPress.Security.NonceVerification.Recommended
     }
 
     public function goopter_track_seller_onboarding_status_from_cache($merchant_id, $force_refresh = false) {
@@ -382,6 +384,7 @@ class Goopter_PayPal_PPCP_Seller_Onboarding {
     }
 
     public function is_valid_site_request() {
+        // phpcs:disable WordPress.Security.NonceVerification.Recommended -- not related with security
         if (!isset($_REQUEST['section']) || !in_array(sanitize_text_field(wp_unslash($_REQUEST['section'])), array('goopter_ppcp'), true)) {
             return false;
         }
@@ -389,6 +392,7 @@ class Goopter_PayPal_PPCP_Seller_Onboarding {
             return false;
         }
         return true;
+        // phpcs:enable WordPress.Security.NonceVerification.Recommended -- not related with security
     }
 
     public function goopter_is_apple_pay_approved($result) {

@@ -121,7 +121,12 @@ class Goopter_Admin_Order_Payment_Process {
         if ($is_disable_button == true) {
             $is_disable = 'disabled';
         }
-        echo '<div class="wrap goopter_admin_payment_process">' . $reason_message . '<input type="hidden" name="goopter_admin_order_payment_process_sec" value="' . wp_create_nonce('goopter_admin_order_payment_process_sec') . '" /><input type="submit" ' . $is_disable . ' id="goopter_admin_order_payment_process_submit_button" value="Process Reference Transaction" name="goopter_admin_order_payment_process_submit_button" class="button button-primary"></div>';
+        // echo '<div class="wrap goopter_admin_payment_process">' . $reason_message . '<input type="hidden" name="goopter_admin_order_payment_process_sec" value="' . wp_create_nonce('goopter_admin_order_payment_process_sec') . '" /><input type="submit" ' . $is_disable . ' id="goopter_admin_order_payment_process_submit_button" value="Process Reference Transaction" name="goopter_admin_order_payment_process_submit_button" class="button button-primary"></div>';
+        echo '<div class="wrap goopter_admin_payment_process">' .
+            wp_kses_post( $reason_message ) .
+            '<input type="hidden" name="goopter_admin_order_payment_process_sec" value="' . esc_attr( wp_create_nonce( 'goopter_admin_order_payment_process_sec' ) ) . '" />' .
+            '<input type="submit" ' . esc_attr( $is_disable ) . ' id="goopter_admin_order_payment_process_submit_button" value="' . esc_attr( 'Process Reference Transaction' ) . '" name="goopter_admin_order_payment_process_submit_button" class="button button-primary">' .
+            '</div>';
     }
 
     public function goopter_create_order_button($reason_message, $is_disable_button) {
@@ -130,7 +135,13 @@ class Goopter_Admin_Order_Payment_Process {
             $is_disable = 'disabled';
         }
         $checkbox = '<br><label><input type="checkbox" name="copy_items_to_new_invoice">Copy items to new order?</label><br>';
-        echo '<div class="wrap goopter_create_reference_order_section">' . $reason_message . '<input type="hidden" name="goopter_create_reference_order_sec" value="' . wp_create_nonce('goopter_create_reference_order_sec') . '" /><input type="submit" ' . $is_disable . ' id="goopter_create_reference_order_submit_button" value="Create Reference Transaction Order" name="goopter_create_reference_order_submit_button" class="button button-primary">' . $checkbox . '</div>';
+        // echo '<div class="wrap goopter_create_reference_order_section">' . $reason_message . '<input type="hidden" name="goopter_create_reference_order_sec" value="' . wp_create_nonce('goopter_create_reference_order_sec') . '" /><input type="submit" ' . $is_disable . ' id="goopter_create_reference_order_submit_button" value="Create Reference Transaction Order" name="goopter_create_reference_order_submit_button" class="button button-primary">' . $checkbox . '</div>';
+        echo '<div class="wrap goopter_create_reference_order_section">' .
+            wp_kses_post( $reason_message ) .
+            '<input type="hidden" name="goopter_create_reference_order_sec" value="' . esc_attr( wp_create_nonce( 'goopter_create_reference_order_sec' ) ) . '" />' .
+            '<input type="submit" ' . esc_attr( $is_disable ) . ' id="goopter_create_reference_order_submit_button" value="' . esc_attr( 'Create Reference Transaction Order' ) . '" name="goopter_create_reference_order_submit_button" class="button button-primary">' .
+            wp_kses_post( $checkbox ) .
+            '</div>';
     }
 
     public function goopter_is_order_status_pending($order) {
@@ -139,7 +150,13 @@ class Goopter_Admin_Order_Payment_Process {
 
     public function goopter_admin_create_reference_order($post_id, $post_or_order_object) {
         if (!empty($_POST['goopter_create_reference_order_submit_button']) && $_POST['goopter_create_reference_order_submit_button'] == 'Create Reference Transaction Order') {
-            if (wp_verify_nonce($_POST['goopter_create_reference_order_sec'], 'goopter_create_reference_order_sec')) {
+            if (
+                isset($_POST['goopter_create_reference_order_sec']) &&
+                wp_verify_nonce(
+                    sanitize_text_field(wp_unslash($_POST['goopter_create_reference_order_sec'])),
+                    'goopter_create_reference_order_sec'
+                )
+            ) {
                 $order = ( $post_or_order_object instanceof WP_Post ) ? wc_get_order( $post_or_order_object->ID ) : $post_or_order_object;
                 if (ae_is_active_screen(ae_get_shop_order_screen_id())) {
                     do_action('goopter_admin_create_reference_order_action_hook', $order);
@@ -151,7 +168,13 @@ class Goopter_Admin_Order_Payment_Process {
 
     public function goopter_admin_order_process_payment($post_id, $post_or_order_object) {
         if (!empty($_POST['goopter_admin_order_payment_process_submit_button']) && $_POST['goopter_admin_order_payment_process_submit_button'] == 'Process Reference Transaction') {
-            if (wp_verify_nonce($_POST['goopter_admin_order_payment_process_sec'], 'goopter_admin_order_payment_process_sec')) {
+            if (
+                isset($_POST['goopter_admin_order_payment_process_sec']) &&
+                wp_verify_nonce(
+                    sanitize_text_field(wp_unslash($_POST['goopter_admin_order_payment_process_sec'])),
+                    'goopter_admin_order_payment_process_sec'
+                )
+            ) {
                 $order = ( $post_or_order_object instanceof WP_Post ) ? wc_get_order( $post_or_order_object->ID ) : $post_or_order_object;
                 if (ae_is_active_screen(ae_get_shop_order_screen_id())) {
                     do_action('goopter_admin_order_process_payment_action_hook', $order);
@@ -189,6 +212,17 @@ class Goopter_Admin_Order_Payment_Process {
     }
 
     public function goopter_admin_create_new_order($order) {
+        if (
+            !isset($_POST['goopter_create_reference_order_sec']) ||
+            wp_verify_nonce(
+                sanitize_text_field(wp_unslash($_POST['goopter_create_reference_order_sec'])),
+                'goopter_create_reference_order_sec'
+            )
+        ) {
+            $logger = wc_get_logger();  // Get the logger instance
+            $logger->error('goopter admin create new order nonce verification failed. Nonce not valid.', array('source' => 'goopter-includes/goopter-admin-order-payment-process.php'));
+        }
+
         $args = array(
             'customer_id' => $order->get_user_id(),
             'customer_note' => wptexturize($order->get_customer_note()),

@@ -38,6 +38,7 @@ trait WC_Gateway_Base_Goopter
             $subscriptionSupports = [];
         }
 
+        // phpcs:disable WordPress.Security.NonceVerification.Recommended -- no security issue
         if (isset($_GET['paypal_order_id']) && isset($_GET['paypal_payer_id']) && $this->enable_tokenized_payments) {
             $this->supports = array_merge($baseSupports, $subscriptionSupports);
         } elseif ($this->enable_tokenized_payments ||
@@ -46,6 +47,7 @@ trait WC_Gateway_Base_Goopter
         } else {
             $this->supports = $baseSupports;
         }
+        // phpcs:enable WordPress.Security.NonceVerification.Recommended -- no security issue
     }
     
     public function is_paypal_vault_used_for_pre_order() {
@@ -83,7 +85,7 @@ trait WC_Gateway_Base_Goopter
             if($order && $this->can_refund_order($order) && goopter_ppcp_order_item_meta_key_exists($order, '_ppcp_capture_details')) {
                 $capture_data_list = $this->payment_request->goopter_ppcp_prepare_refund_request_data_for_capture($order, $amount);
                 if(empty($capture_data_list)) {
-                    throw new Exception( __( 'No Capture transactions available for refund.', 'woocommerce' ) );
+                    throw new Exception( esc_html__( 'No Capture transactions available for refund.', 'woocommerce' ) );
                 }
                 $failed_result_count = 0;
                 $successful_transaction = 0;

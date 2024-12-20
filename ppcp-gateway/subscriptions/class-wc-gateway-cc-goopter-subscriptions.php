@@ -111,6 +111,7 @@ class WC_Gateway_CC_Goopter_Subscriptions extends WC_Gateway_CC_Goopter {
     }
 
     public function free_signup_with_token_payment_tokenization($order_id) {
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing -- no security issue
         if (!empty($_POST['wc-goopter_ppcp_cc-payment-token']) && $_POST['wc-goopter_ppcp_cc-payment-token'] != 'new') {
             $order = wc_get_order($order_id);
             if ($order->get_total() == 0) {

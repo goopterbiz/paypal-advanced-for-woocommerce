@@ -64,9 +64,11 @@ class WFOCU_Paypal_For_WC_Gateway_Goopter_PPCP extends WFOCU_Gateway {
     }
 
     public function replace_form_template($template) {
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- from third party plugin
         if (isset($_GET['paypal_order_id'])) {
             WFACP_Core()->public->is_paypal_express_active_session = true;
-            $checkout_details = $this->payment_request->goopter_ppcp_get_checkout_details($_GET['paypal_order_id']);
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- from third party plugin
+            $checkout_details = $this->payment_request->goopter_ppcp_get_checkout_details(sanitize_text_field(wp_unslash($_GET['paypal_order_id'])));
             $shipping_address = goopter_ppcp_get_mapped_shipping_address($checkout_details);
             $states_list = WC()->countries->get_states();
             if (!empty($shipping_address)) {
@@ -195,9 +197,9 @@ class WFOCU_Paypal_For_WC_Gateway_Goopter_PPCP extends WFOCU_Gateway {
             WFOCU_Core()->data->set('_upsell_package', $existing_package);
             if (isset($resp_body['status']) && 'failed' === $resp_body['status']) {
                 $data = WFOCU_Core()->process_offer->_handle_upsell_charge(false);
-                WFOCU_Core()->log->log('Order #' . WFOCU_WC_Compatibility::get_order_id($get_order) . ': Unable to capture paypal Order refer error below' . print_r($resp_body, true));
+                WFOCU_Core()->log->log('Order #' . WFOCU_WC_Compatibility::get_order_id($get_order) . ': Unable to capture paypal Order refer error below' . wp_json_encode($resp_body, true));
             } else {
-                $resp_body = json_decode(json_encode($resp_body), FALSE);
+                $resp_body = json_decode(wp_json_encode($resp_body), FALSE);
                 if (isset($resp_body->status) && 'COMPLETED' === $resp_body->status) {
                     if (isset($resp_body->payment_source->paypal->attributes->vault->id) && isset($resp_body->payment_source->paypal->attributes->vault->status) && 'CREATED' === $resp_body->payment_source->paypal->attributes->vault->status) {
                         $txn_id = $resp_body->payment_source->paypal->attributes->vault->id;
@@ -218,7 +220,7 @@ class WFOCU_Paypal_For_WC_Gateway_Goopter_PPCP extends WFOCU_Gateway {
                     $data['redirect_url'] = WFOCU_Core()->public->get_the_upsell_url($get_offer);
                 } else {
                     $data = WFOCU_Core()->process_offer->_handle_upsell_charge(false);
-                    WFOCU_Core()->log->log('Order #' . WFOCU_WC_Compatibility::get_order_id($get_order) . ': Unable to capture paypal Order refer error below' . print_r($resp_body, true));
+                    WFOCU_Core()->log->log('Order #' . WFOCU_WC_Compatibility::get_order_id($get_order) . ': Unable to capture paypal Order refer error below' . wp_json_encode($resp_body, true));
                 }
             }
             wp_redirect($data['redirect_url']);
@@ -233,6 +235,7 @@ class WFOCU_Paypal_For_WC_Gateway_Goopter_PPCP extends WFOCU_Gateway {
             $get_current_offer = WFOCU_Core()->data->get('current_offer');
             $get_current_offer_meta = WFOCU_Core()->offers->get_offer_meta($get_current_offer);
             WFOCU_Core()->data->set('_offer_result', true);
+            // phpcs:ignore WordPress.Security.NonceVerification.Missing -- from third party plugin
             $posted_data = WFOCU_Core()->process_offer->parse_posted_data($_POST);
             if (true === WFOCU_AJAX_Controller::validate_charge_request($posted_data)) {
                 WFOCU_Core()->process_offer->execute($get_current_offer_meta);
@@ -259,7 +262,7 @@ class WFOCU_Paypal_For_WC_Gateway_Goopter_PPCP extends WFOCU_Gateway {
                         'disbursement_mode' => 'INSTANT',
                     ),
                 );
-                WFOCU_Core()->log->log("Order: #" . $get_order->get_id() . " paypal args" . print_r($data, true));
+                WFOCU_Core()->log->log("Order: #" . $get_order->get_id() . " paypal args" . wp_json_encode($data, true));
                 $environment = $get_order->get_meta('_enviorment');
                 $arguments = apply_filters('wfocu_ppcp_gateway_process_client_order_api_args', array(
                     'method' => 'POST',
@@ -281,10 +284,10 @@ class WFOCU_Paypal_For_WC_Gateway_Goopter_PPCP extends WFOCU_Gateway {
                         'status' => false,
                         'redirect_url' => $data['redirect_url'],
                     );
-                    WFOCU_Core()->log->log('Order #' . WFOCU_WC_Compatibility::get_order_id($get_order) . ': Unable to create paypal Order refer error below' . print_r($response, true));
+                    WFOCU_Core()->log->log('Order #' . WFOCU_WC_Compatibility::get_order_id($get_order) . ': Unable to create paypal Order refer error below' . wp_json_encode($response, true));
                     wp_send_json($json_response);
                 } else {
-                    $response = json_decode(json_encode($response), FALSE);
+                    $response = json_decode(wp_json_encode($response), FALSE);
                     if ('CREATED' === $response->status || 'PAYER_ACTION_REQUIRED' === $response->status) {
                         $approve_link = $response->links[1]->href;
                         $get_order->update_meta_data('wfocu_ppcp_order_current', $response->id);
@@ -404,6 +407,7 @@ class WFOCU_Paypal_For_WC_Gateway_Goopter_PPCP extends WFOCU_Gateway {
                 $get_current_offer = WFOCU_Core()->data->get('current_offer');
                 $get_current_offer_meta = WFOCU_Core()->offers->get_offer_meta($get_current_offer);
                 WFOCU_Core()->data->set('_offer_result', true);
+                // phpcs:ignore WordPress.Security.NonceVerification.Missing -- from third party plugin
                 $posted_data = WFOCU_Core()->process_offer->parse_posted_data($_POST);
                 $ppcp_data = $this->get_ppcp_meta();
                 if (true === WFOCU_AJAX_Controller::validate_charge_request($posted_data)) {
@@ -450,7 +454,7 @@ class WFOCU_Paypal_For_WC_Gateway_Goopter_PPCP extends WFOCU_Gateway {
                             'usage' => 'SUBSEQUENT'
                         );
                     }
-                    WFOCU_Core()->log->log("Order: #" . $get_order->get_id() . " paypal args" . print_r($data, true));
+                    WFOCU_Core()->log->log("Order: #" . $get_order->get_id() . " paypal args" . wp_json_encode($data, true));
                     $environment = $get_order->get_meta('_enviorment');
                     $arguments = apply_filters('wfocu_ppcp_gateway_process_client_order_api_args', array(
                         'method' => 'POST',
@@ -466,11 +470,11 @@ class WFOCU_Paypal_For_WC_Gateway_Goopter_PPCP extends WFOCU_Gateway {
 
                     $url = $this->get_api_base($environment) . 'v2/checkout/orders';
                     $ppcp_resp = $this->api_request->request($url, $arguments, 'create_order');
-                    WFOCU_Core()->log->log("Order: #" . $get_order->get_id() . " paypal response" . print_r($ppcp_resp, true));
+                    WFOCU_Core()->log->log("Order: #" . $get_order->get_id() . " paypal response" . wp_json_encode($ppcp_resp, true));
                     if (!isset($ppcp_resp['id']) || empty($ppcp_resp['id'])) {
                         $data = WFOCU_Core()->process_offer->_handle_upsell_charge(false);
                         $is_successful = false;
-                        WFOCU_Core()->log->log('Order #' . WFOCU_WC_Compatibility::get_order_id($get_order) . ': Unable to create paypal Order refer error below' . print_r($ppcp_resp, true));
+                        WFOCU_Core()->log->log('Order #' . WFOCU_WC_Compatibility::get_order_id($get_order) . ': Unable to create paypal Order refer error below' . wp_json_encode($ppcp_resp, true));
                     } else {
                         $order->update_meta_data('_paypal_order_id', $ppcp_resp['id']);
                         $order->save();
@@ -487,7 +491,7 @@ class WFOCU_Paypal_For_WC_Gateway_Goopter_PPCP extends WFOCU_Gateway {
                             $is_successful = true;
                         } else {
                             $is_successful = false;
-                            WFOCU_Core()->log->log('Order #' . WFOCU_WC_Compatibility::get_order_id($get_order) . ': Unable to create paypal Order refer error below' . print_r($ppcp_resp, true));
+                            WFOCU_Core()->log->log('Order #' . WFOCU_WC_Compatibility::get_order_id($get_order) . ': Unable to create paypal Order refer error below' . wp_json_encode($ppcp_resp, true));
                         }
                     }
                 } else {
@@ -540,7 +544,9 @@ class WFOCU_Paypal_For_WC_Gateway_Goopter_PPCP extends WFOCU_Gateway {
                     'value' => (string) $this->round($total_amount),
                     'breakdown' => $this->get_item_breakdown($order, $offer_package),
                 ),
-                'description' => __('One Time Offer - ' . $order->get_id(), 'paypal-advanced-for-woocommerce'),
+                // 'description' => __('One Time Offer - ' . $order->get_id(), 'paypal-advanced-for-woocommerce'),
+                // translators: %s will be replaced with the order ID.
+                'description' => sprintf(__('One Time Offer - %s', 'paypal-advanced-for-woocommerce'), $order->get_id()),
                 'items' => $this->add_offer_item_data($order, $offer_package),
                 'payee' => array(
                     'merchant_id' => $args['merchant_id']
@@ -685,10 +691,11 @@ class WFOCU_Paypal_For_WC_Gateway_Goopter_PPCP extends WFOCU_Gateway {
         } else {
             return ( 'live' === $mode ) ? $live_url : $sandbox_url;
         }
-    }
+}
 
     public function process_refund_offer($order) {
         try {
+            // phpcs:ignore WordPress.Security.NonceVerification.Missing -- from third party plugin
             $refund_data = $_POST;
             $order_id = WFOCU_WC_Compatibility::get_order_id($order);
             $amount = isset($refund_data['amt']) ? $refund_data['amt'] : '';
@@ -739,12 +746,15 @@ class WFOCU_Paypal_For_WC_Gateway_Goopter_PPCP extends WFOCU_Gateway {
             }
             if ($addr == -1) {
                 if (array_key_exists('SERVER_ADDR', $_SERVER)) {
-                    $addr = ip2long($_SERVER['SERVER_ADDR']);
+                    $addr = ip2long(sanitize_text_field(wp_unslash($_SERVER['SERVER_ADDR'])));
                 } else {
                     $addr = php_uname('n');
                 }
             }
-            return $addr . $pid . $_SERVER['REQUEST_TIME'] . mt_rand(0, 0xffff);
+            // return $addr . $pid . sanitize_text_field(wp_unslash($_SERVER['REQUEST_TIME'])) . wp_rand(0, 0xffff);
+            return $addr . $pid . (isset($_SERVER['REQUEST_TIME']) 
+                ? sanitize_text_field(wp_unslash($_SERVER['REQUEST_TIME'])) 
+                : time()) . wp_rand(0, 0xffff);
         } catch (Exception $ex) {
             
         }
@@ -757,12 +767,12 @@ class WFOCU_Paypal_For_WC_Gateway_Goopter_PPCP extends WFOCU_Gateway {
             );
             $partner_client_id = ($environment == 'sandbox') ? PAYPAL_PPCP_SANDBOX_PARTNER_CLIENT_ID : PAYPAL_PPCP_PARTNER_CLIENT_ID;
             $merchant_id = ($environment == 'sandbox') ? $this->setting_obj->get('sandbox_merchant_id', '') : $this->setting_obj->get('live_merchant_id', '');
-            $returnData = base64_encode(json_encode($temp)) . '.';
+            $returnData = base64_encode(wp_json_encode($temp)) . '.';
             $temp = array(
                 "iss" => $partner_client_id,
                 "payer_id" => $merchant_id
             );
-            $returnData .= base64_encode(json_encode($temp)) . '.';
+            $returnData .= base64_encode(wp_json_encode($temp)) . '.';
             return $returnData;
         } catch (Exception $ex) {
             

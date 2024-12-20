@@ -27,17 +27,7 @@ class WC_Gateway_PPCP_Goopter_Subscriptions_Helper {
 
         }
     }
-
-    public function goopter_ppcp_is_save_payment_token($current, $order_id) {
-        if ((!empty($_POST['wc-goopter_ppcp_cc-new-payment-method']) && $_POST['wc-goopter_ppcp_cc-new-payment-method'] == true) || $this->is_subscription($order_id) || $this->goopter_paypal_for_woo_wc_autoship_cart_has_autoship_item()) {
-            return true;
-        }
-        if ((!empty($_POST['wc-goopter_ppcp-new-payment-method']) && $_POST['wc-goopter_ppcp-new-payment-method'] == true) || $this->is_subscription($order_id) || $this->goopter_paypal_for_woo_wc_autoship_cart_has_autoship_item()) {
-            return true;
-        }
-        return false;
-    }
-
+    
     public function save_payment_token($order, $payment_tokens_id) {
         $order_id = $order->get_id();
         $goopter_ppcp_used_payment_method = $order->get_meta('_goopter_ppcp_used_payment_method', true);
@@ -109,8 +99,8 @@ class WC_Gateway_PPCP_Goopter_Subscriptions_Helper {
                         $token->set_expiry_month($card_exp_month);
                         $token->set_expiry_year($card_exp_year);
                     } else {
-                        $token->set_expiry_month(date('m'));
-                        $token->set_expiry_year(date('Y', strtotime('+5 years')));
+                        $token->set_expiry_month(gmdate('m'));
+                        $token->set_expiry_year(gmdate('Y', strtotime('+5 years')));
                     }
                 }
                 $token->set_user_id($customer_id);
@@ -139,8 +129,8 @@ class WC_Gateway_PPCP_Goopter_Subscriptions_Helper {
                 $token->set_gateway_id($order->get_payment_method());
                 $token->set_card_type($email_address);
                 $token->set_last4(substr($payment_token, -4));
-                $token->set_expiry_month(date('m'));
-                $token->set_expiry_year(date('Y', strtotime('+20 years')));
+                $token->set_expiry_month(gmdate('m'));
+                $token->set_expiry_year(gmdate('Y', strtotime('+20 years')));
                 $token->set_user_id($customer_id);
                 if ($token->validate()) {
                     $token->save();
@@ -167,8 +157,8 @@ class WC_Gateway_PPCP_Goopter_Subscriptions_Helper {
                 $token->set_gateway_id($order->get_payment_method());
                 $token->set_card_type($email_address);
                 $token->set_last4(substr($payment_token, -4));
-                $token->set_expiry_month(date('m'));
-                $token->set_expiry_year(date('Y', strtotime('+20 years')));
+                $token->set_expiry_month(gmdate('m'));
+                $token->set_expiry_year(gmdate('Y', strtotime('+20 years')));
                 $token->set_user_id($customer_id);
                 if ($token->validate()) {
                     $token->save();

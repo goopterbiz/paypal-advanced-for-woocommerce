@@ -6,9 +6,10 @@ echo "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n";
 echo esc_html(wp_strip_all_tags($email_heading));
 echo "\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n\n";
 
-
+// Translators: %s is the billing first name of the customer.
 echo sprintf(esc_html__('Hi %s,', 'paypal-advanced-for-woocommerce'), esc_html($order->get_billing_first_name())) . "\n\n";
 
+// Translators: %s is the order number.
 echo sprintf(esc_html__('Just to let you know &mdash; we\'ve received your order #%s, and it is now being processed:', 'paypal-advanced-for-woocommerce'), esc_html($order->get_order_number())) . "\n\n";
 
 do_action('woocommerce_email_order_details', $order, $sent_to_admin, $plain_text, $email);

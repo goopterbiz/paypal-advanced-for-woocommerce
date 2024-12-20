@@ -58,6 +58,7 @@ class Goopter_Utility {
     }
 
     public function save($post_id, $post_or_order_object) {
+        // phpcs:disable WordPress.Security.NonceVerification.Missing -- checked by woocommerce hook: woocommerce_process_shop_order_meta
         if (!empty($_POST['save']) && $_POST['save'] == 'Submit') {
             $order = ( $post_or_order_object instanceof WP_Post ) ? wc_get_order( $post_or_order_object->ID ) : $post_or_order_object;
             if (!is_a($order, 'WC_Order')) {
@@ -68,7 +69,7 @@ class Goopter_Utility {
                     $this->payment_method = $order->get_payment_method();
                 }
                 if (!empty($_POST['goopter_payment_action'])) {
-                    $action = wc_clean($_POST['goopter_payment_action']);
+                    $action = wc_clean(sanitize_text_field(wp_unslash($_POST['goopter_payment_action'])));
                     $hook_name = 'wc_' . $this->payment_method . '_' . strtolower($action);
                     if (!did_action('woocommerce_order_action_' . sanitize_title($hook_name))) {
                         do_action('woocommerce_order_action_' . sanitize_title($hook_name), $order);
@@ -76,6 +77,7 @@ class Goopter_Utility {
                 }
             }
         }
+        // phpcs:enable WordPress.Security.NonceVerification.Missing -- checked by woocommerce hook: woocommerce_process_shop_order_meta
     }
 
         public function goopter_paypal_for_woocommerce_billing_agreement_details($order) {
@@ -90,9 +92,9 @@ class Goopter_Utility {
             }
             ?>
         <h3>
-        <?php _e('Billing Agreement Details', 'paypal-advanced-for-woocommerce'); ?>
+            <?php esc_html_e( 'Billing Agreement Details', 'paypal-advanced-for-woocommerce' ); ?>
         </h3>
-        <p> <?php echo $billing_agreement_id; ?></p> <?php
+        <p><?php echo esc_html( $billing_agreement_id ); ?></p> <?php
     }
 
     public static function goopter_set_address($new_order, $address, $type = 'billing') {

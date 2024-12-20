@@ -167,6 +167,12 @@ class Goopter_PayPal_PPCP_Payment {
 
     public function goopter_ppcp_create_order_request($woo_order_id = null) {
         try {
+            if (!isset($_POST['woocommerce-process-checkout-nonce']) || !wp_verify_nonce(sanitize_key(wp_unslash($_POST['woocommerce-process-checkout-nonce'])), 'woocommerce-process_checkout')) {
+                // Nonce is invalid
+                $logger = wc_get_logger();  // Get the logger instance
+                $logger->error('create order nonce verification failed. Nonce not valid.', array('source' => 'ppcp-gateway/class-goopter-paypal-ppcp-payment.php'));
+            }
+
             $return_response = [];
             if (goopter_ppcp_get_order_total($woo_order_id) === 0) {
                 $wc_notice = __('Sorry, your session has expired.', 'paypal-advanced-for-woocommerce');
@@ -183,8 +189,8 @@ class Goopter_PayPal_PPCP_Payment {
             $decimals = $this->goopter_ppcp_get_number_of_decimal_digits();
             $reference_id = wc_generate_order_key();
             Goopter_Session_Manager::set('reference_id', $reference_id);
-            $payment_method = wc_clean(!empty($_POST['goopter_ppcp_payment_method_title']) ? $_POST['goopter_ppcp_payment_method_title'] : '');
-            $payment_method_id = wc_clean(!empty($_POST['payment_method']) ? $_POST['payment_method'] : '');
+            $payment_method = wc_clean(!empty($_POST['goopter_ppcp_payment_method_title']) ? sanitize_text_field(wp_unslash($_POST['goopter_ppcp_payment_method_title'])) : '');
+            $payment_method_id = wc_clean(!empty($_POST['payment_method']) ? sanitize_text_field(wp_unslash($_POST['payment_method'])) : '');
             if (!empty($payment_method_id)) {
                 Goopter_Session_Manager::set('payment_method_id', $payment_method_id);
             }
@@ -194,7 +200,7 @@ class Goopter_PayPal_PPCP_Payment {
                 Goopter_Session_Manager::set('used_payment_method', $payment_method);
                 $this->goopter_ppcp_used_payment_method = $payment_method;
             } elseif (!empty($_POST['goopter_ppcp_cc_payment_method_title'])) {
-                $payment_method_title = goopter_ppcp_get_payment_method_title(wc_clean($_POST['goopter_ppcp_cc_payment_method_title']));
+                $payment_method_title = goopter_ppcp_get_payment_method_title(wc_clean(sanitize_text_field(wp_unslash($_POST['goopter_ppcp_cc_payment_method_title']))));
                 Goopter_Session_Manager::set('payment_method_title', $payment_method_title);
                 Goopter_Session_Manager::set('used_payment_method', 'card');
                 $this->goopter_ppcp_used_payment_method = 'card';
@@ -436,6 +442,7 @@ class Goopter_PayPal_PPCP_Payment {
                     ob_end_clean();
                 }
                 if (str_contains($errorMessage, 'CURRENCY_NOT_SUPPORTED')) {
+                    // Translators: %s is the unsupported currency code.
                     wp_send_json_error(sprintf(__('Currency code (%s) is not currently supported.', 'paypal-advanced-for-woocommerce'), $currency_code));
                 } else {
                     wp_send_json_error(__('We were unable to process your order, please try again with same or other payment method(s).', 'paypal-advanced-for-woocommerce'));
@@ -703,7 +710,7 @@ class Goopter_PayPal_PPCP_Payment {
                             $desc .= ' ' . ucwords($value['name']);
                         }
                         if (!empty($value['price'])) {
-                            $desc .= ' (' . strip_tags(wc_price($value['price'], array('currency' => get_woocommerce_currency()))) . ')';
+                            $desc .= ' (' . wp_strip_all_tags(wc_price($value['price'], array('currency' => get_woocommerce_currency()))) . ')';
                         }
                         if (!empty($value['value'])) {
                             $desc .= ': ' . $value['value'];
@@ -889,8 +896,10 @@ class Goopter_PayPal_PPCP_Payment {
     public function goopter_ppcp_shipping_preference() {
         $shipping_preference = 'GET_FROM_FILE';
         $page = null;
+        // phpcs:disable WordPress.Security.NonceVerification.Recommended -- no security issue
         if (isset($_GET) && !empty($_GET['from'])) {
-            $page = $_GET['from'];
+            $page = sanitize_text_field(wp_unslash($_GET['from']));
+        // phpcs:enable WordPress.Security.NonceVerification.Recommended -- no security issue
         } elseif (is_cart()) {
             $page = 'cart';
         } elseif (is_checkout() || is_checkout_pay_page()) {
@@ -1011,13 +1020,16 @@ class Goopter_PayPal_PPCP_Payment {
 
         if ($addr == -1) {
             if (array_key_exists('SERVER_ADDR', $_SERVER)) {
-                $addr = ip2long($_SERVER['SERVER_ADDR']);
+                $addr = ip2long(sanitize_text_field(wp_unslash($_SERVER['SERVER_ADDR'])));
             } else {
                 $addr = php_uname('n');
             }
         }
 
-        return $addr . $pid . $_SERVER['REQUEST_TIME'] . mt_rand(0, 0xffff);
+        // return $addr . $pid . sanitize_text_field(wp_unslash($_SERVER['REQUEST_TIME'])) . wp_rand(0, 0xffff);
+        return $addr . $pid . (isset($_SERVER['REQUEST_TIME']) 
+            ? sanitize_text_field(wp_unslash($_SERVER['REQUEST_TIME'])) 
+            : time()) . wp_rand(0, 0xffff);
     }
 
     public function goopter_ppcp_get_readable_message($error, $error_email_notification_param = array()) {
@@ -1083,12 +1095,12 @@ class Goopter_PayPal_PPCP_Payment {
                 'cookies' => array()
             );
             $api_response = $this->api_request->request($this->paypal_order_api . $paypal_order_id, $args, 'get_order');
-            $api_response = json_decode(json_encode($api_response), true);
+            $api_response = json_decode(wp_json_encode($api_response), true);
             if (isset($api_response['id'])) {
                 return $api_response;
             }
             $this->api_log->log("Unable to find the PayPal order: " . $paypal_order_id, 'error');
-            $this->api_log->log(print_r($api_response, true), 'error');
+            $this->api_log->log(wp_json_encode($api_response, true), 'error');
         } catch (Exception $ex) {
             $this->api_log->log("The exception was created on line: " . $ex->getFile() . ' ' . $ex->getLine(), 'error');
             $this->api_log->log($ex->getMessage(), 'error');
@@ -1123,7 +1135,7 @@ class Goopter_PayPal_PPCP_Payment {
                 'cookies' => array()
             );
             $this->api_response = $this->api_request->request($this->paypal_order_api . $paypal_order_id, $args, 'get_order');
-            $this->api_response = json_decode(json_encode($this->api_response), FALSE);
+            $this->api_response = json_decode(wp_json_encode($this->api_response), FALSE);
             Goopter_Session_Manager::set('paypal_order_id', $paypal_order_id);
             Goopter_Session_Manager::set('paypal_transaction_details', $this->api_response);
             return $this->api_response;
@@ -1313,7 +1325,8 @@ class Goopter_PayPal_PPCP_Payment {
                                 return $this->get_preferred_order_status($payment_status, $order_id);
                             }, 20, 2);
                             $order->payment_complete($transaction_id);
-                            $order->add_order_note(sprintf(__('Payment via %s: %s.', 'paypal-advanced-for-woocommerce'), $order->get_payment_method_title(), ucfirst(strtolower($payment_status))));
+                            // Translators: %1$s is the payment method title, %2$s is the payment status.
+                            $order->add_order_note(sprintf(__('Payment via %1$s: %2$s.', 'paypal-advanced-for-woocommerce'), $order->get_payment_method_title(), ucfirst(strtolower($payment_status))));
                         } else {
                             $payment_status_reason = isset($this->api_response['purchase_units']['0']['payments']['captures']['0']['status_details']['reason']) ? $this->api_response['purchase_units']['0']['payments']['captures']['0']['status_details']['reason'] : '';
                             $this->goopter_ppcp_update_woo_order_status($woo_order_id, $payment_status, $payment_status_reason);
@@ -1344,6 +1357,7 @@ class Goopter_PayPal_PPCP_Payment {
                         }, 20, 2);
                         $order->payment_complete($transaction_id);
                     } elseif ($payment_status === 'DECLINED') {
+                        // Translators: %s is the payment method title.
                         $order->update_status('failed', sprintf(__('Payment via %s declined.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title));
                         $order->save();
                         wc_add_notice(__('Unfortunately your order cannot be processed as the originating bank/merchant has declined your transaction. Please attempt your purchase again.', 'paypal-advanced-for-woocommerce'), 'error');
@@ -1359,7 +1373,8 @@ class Goopter_PayPal_PPCP_Payment {
                     }
                     $order->update_meta_data('_payment_status', $payment_status);
                     $order->save();
-                    $order->add_order_note(sprintf(__('%s Capture Transaction ID: %s', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $transaction_id));
+                    // Translators: %1$s is the payment method title, %2$s is the capture transaction ID.
+                    $order->add_order_note(sprintf(__('%1$s Capture Transaction ID: %2$s', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $transaction_id));
                     $order->add_order_note('Seller Protection Status: ' . goopter_ppcp_readable($seller_protection));
                     return true;
                 } else {
@@ -1705,14 +1720,17 @@ class Goopter_PayPal_PPCP_Payment {
                 $gross_amount = $this->api_response['seller_payable_breakdown']['gross_amount']['value'] ?? '';
                 $refund_transaction_id = $this->api_response['id'] ?? '';
                 $order->add_order_note(
+                    // Translators: %1$s is the refunded amount with currency, %2$s is the refund transaction ID.
                         sprintf(__('Refunded %1$s - Refund ID: %2$s', 'paypal-advanced-for-woocommerce'), wc_price($gross_amount, array('currency' => $currency_code)), $refund_transaction_id)
                 );
             } else if (isset($this->api_response['status']) && $this->api_response['status'] == "PENDING") {
                 $gross_amount = $this->api_response['seller_payable_breakdown']['gross_amount']['value'] ?? '';
                 $refund_transaction_id = $this->api_response['id'] ?? '';
                 $pending_reason_text = $this->api_response['status_details']['reason'] ?? '';
-                $order->add_order_note(sprintf(__('Payment via %s Pending. Pending reason: %s.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $pending_reason_text));
+                // Translators: %1$s is the payment method title, %2$s is the pending reason text.
+                $order->add_order_note(sprintf(__('Payment via %1$s Pending. Pending reason: %2$s.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $pending_reason_text));
                 $order->add_order_note(
+                    // Translators: %1$s is the refunded amount with currency, %2$s is the refund transaction ID.
                         sprintf(__('Refund Amount %1$s - Refund ID: %2$s', 'paypal-advanced-for-woocommerce'), wc_price($gross_amount, array('currency' => $currency_code)), $refund_transaction_id)
                 );
             } else {
@@ -1872,8 +1890,10 @@ class Goopter_PayPal_PPCP_Payment {
                             return $this->get_preferred_order_status($payment_status, $order_id);
                         }, 20, 2);
                         $order->payment_complete($transaction_id);
-                        $order->add_order_note(sprintf(__('Payment via %s: %s.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, ucfirst(strtolower($payment_status))));
+                        // Translators: %1$s is the payment method title, %2$s is the payment status.
+                        $order->add_order_note(sprintf(__('Payment via %1$s: %2$s.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, ucfirst(strtolower($payment_status))));
                     } elseif ($payment_status === 'DECLINED') {
+                        // Translators: %s is the payment method title.
                         $order->update_status('failed', sprintf(__('Payment via %s declined.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title));
                         wc_add_notice(__('Unfortunately your order cannot be processed as the originating bank/merchant has declined your transaction. Please attempt your purchase again.', 'paypal-advanced-for-woocommerce'), 'error');
                         $order->save();
@@ -1886,7 +1906,8 @@ class Goopter_PayPal_PPCP_Payment {
                     $order->set_transaction_id($transaction_id);
                     $order->update_meta_data('_auth_transaction_id', $transaction_id);
                     $order->update_meta_data('_paymentaction', 'authorize');
-                    $order->add_order_note(sprintf(__('%s Authorization Transaction ID: %s', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $transaction_id));
+                    // Translators: %1$s is the payment method title, %2$s is the authorization transaction ID.
+                    $order->add_order_note(sprintf(__('%1$s Authorization Transaction ID: %2$s', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $transaction_id));
                     $order->add_order_note('Seller Protection Status: ' . goopter_ppcp_readable($seller_protection));
                     if (class_exists('Goopter_PayPal_PPCP_Admin_Action')) {
                         Goopter_PayPal_PPCP_Admin_Action::instance()->removeAutoCaptureHooks();
@@ -1901,8 +1922,9 @@ class Goopter_PayPal_PPCP_Payment {
                     $response_code = __('Processor authorization status: ', 'paypal-advanced-for-woocommerce');
                     $response_code .= $payment_status;
                     $order->add_order_note($response_code);
+                    // Translators: %s is the payment method title.
                     $order->update_status('failed', sprintf(__('Payment via %s declined.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title));
-                    wc_add_notice(__('Unfortunately your order cannot be processed as the originating bank/merchant has declined your transaction. Please attempt your purchase again.'), 'error');
+                    wc_add_notice(__('Unfortunately your order cannot be processed as the originating bank/merchant has declined your transaction. Please attempt your purchase again.', 'paypal-advanced-for-woocommerce'), 'error');
                     $order->save();
                     return false;
                 }
@@ -1934,7 +1956,7 @@ class Goopter_PayPal_PPCP_Payment {
                 'cookies' => array()
             );
             $this->api_response = $this->api_request->request($this->auth . $authorization_id, $args, 'get_authorized');
-            $this->api_response = json_decode(json_encode($this->api_response), FALSE);
+            $this->api_response = json_decode(wp_json_encode($this->api_response), FALSE);
             Goopter_Session_Manager::set('paypal_transaction_details', $this->api_response);
             return $this->api_response;
         } catch (Exception $ex) {
@@ -1962,7 +1984,7 @@ class Goopter_PayPal_PPCP_Payment {
                 $args['body'] = $void_arg;
             }
             $this->api_response = $this->api_request->request($this->auth . $authorization_id . '/void', $args, 'void_authorized');
-            $this->api_response = json_decode(json_encode($this->api_response), true);
+            $this->api_response = json_decode(wp_json_encode($this->api_response), true);
             if (isset($this->api_response['status']) && strtolower($this->api_response['status']) == 'voided') {
                 return $this->api_response;
             } else {
@@ -2090,12 +2112,14 @@ class Goopter_PayPal_PPCP_Payment {
                     return $this->get_preferred_order_status($payment_status, $order_id);
                 }, 20, 2);
                 $order->payment_complete($transaction_id);
-                $order->add_order_note(sprintf(__('Payment via %s: %s .', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, ucfirst(strtolower($payment_status))));
+                // Translators: %1$s is the payment method title, %2$s is the payment status.
+                $order->add_order_note(sprintf(__('Payment via %1$s: %2$s .', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, ucfirst(strtolower($payment_status))));
             } else {
                 $payment_status_reason = $this->checkout_details->purchase_units[0]->payments->captures[0]->status_details->reason ?? '';
                 $this->goopter_ppcp_update_woo_order_status($order_id, $payment_status, $payment_status_reason);
             }
-            $order->add_order_note(sprintf(__('%s Capture Transaction ID: %s', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $transaction_id));
+            // Translators: %1$s is the payment method title, %2$s is the capture transaction ID.
+            $order->add_order_note(sprintf(__('%1$s Capture Transaction ID: %2$s', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $transaction_id));
             $order->add_order_note('Seller Protection Status: ' . goopter_ppcp_readable($seller_protection));
         } elseif ($this->paymentaction === 'authorize' && !empty($this->checkout_details->status) && $this->checkout_details->status == 'COMPLETED' && $order !== false) {
             $transaction_id = isset($this->checkout_details->purchase_units[0]->payments->authorizations[0]->id) ? $this->checkout_details->purchase_units['0']->payments->authorizations[0]->id : '';
@@ -2103,13 +2127,15 @@ class Goopter_PayPal_PPCP_Payment {
             $payment_status = $this->checkout_details->purchase_units[0]->payments->authorizations[0]->status ?? '';
             $payment_status_reason = $this->checkout_details->purchase_units[0]->payments->authorizations[0]->status_details->reason ?? '';
             if (!empty($payment_status_reason)) {
-                $order->add_order_note(sprintf(__('Payment via %s Pending. PayPal reason: %s.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $payment_status_reason));
+                // Translators: %1$s is the payment method title, %2$s is the PayPal pending reason.
+                $order->add_order_note(sprintf(__('Payment via %1$s Pending. PayPal reason: %2$s.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $payment_status_reason));
             }
             $order->set_transaction_id($transaction_id);
             $order->update_meta_data('_payment_status', $payment_status);
             $order->update_meta_data('_auth_transaction_id', $transaction_id);
             $order->update_meta_data('_paymentaction', $this->paymentaction);
-            $order->add_order_note(sprintf(__('%s Authorization Transaction ID: %s', 'paypal-advanced-for-woocommerce'), $this->title, $transaction_id));
+            // Translators: %1$s is the payment method title, %2$s is the authorization transaction ID.
+            $order->add_order_note(sprintf(__('%1$s Authorization Transaction ID: %2$s', 'paypal-advanced-for-woocommerce'), $this->title, $transaction_id));
             $order->add_order_note('Seller Protection Status: ' . goopter_ppcp_readable($seller_protection));
             if (class_exists('Goopter_PayPal_PPCP_Admin_Action')) {
                 Goopter_PayPal_PPCP_Admin_Action::instance()->removeAutoCaptureHooks();
@@ -2124,12 +2150,12 @@ class Goopter_PayPal_PPCP_Payment {
         $temp = array(
             "alg" => "none"
         );
-        $returnData = base64_encode(json_encode($temp)) . '.';
+        $returnData = base64_encode(wp_json_encode($temp)) . '.';
         $temp = array(
             "iss" => $this->partner_client_id,
             "payer_id" => $this->merchant_id
         );
-        $returnData .= base64_encode(json_encode($temp)) . '.';
+        $returnData .= base64_encode(wp_json_encode($temp)) . '.';
         return $returnData;
     }
     
@@ -2467,7 +2493,7 @@ class Goopter_PayPal_PPCP_Payment {
                 $message .= "<strong>" . __('User IP: ', 'paypal-advanced-for-woocommerce') . "</strong>" . WC_Geolocation::get_ip_address() . PHP_EOL;
                 $message = apply_filters('ae_ppec_error_email_message', $message);
                 $message = $mailer->wrap_message($error_email_notify_subject, $message);
-                $mailer->send(get_option('admin_email'), strip_tags($error_email_notify_subject), $message);
+                $mailer->send(get_option('admin_email'), wp_strip_all_tags($error_email_notify_subject), $message);
             } catch (Exception $ex) {
                 $this->api_log->log("The exception was created on line: " . $ex->getFile() . ' ' . $ex->getLine(), 'error');
                 $this->api_log->log($ex->getMessage(), 'error');
@@ -2488,9 +2514,11 @@ class Goopter_PayPal_PPCP_Payment {
             switch (strtoupper($payment_status)) :
                 case 'COMPLETED' :
                     $order->payment_complete();
-                    $order->add_order_note(sprintf(__('Payment via %s: %s.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, ucfirst(strtolower($payment_status))));
+                    // Translators: %1$s is the payment method title, %2$s is the payment status.
+                    $order->add_order_note(sprintf(__('Payment via %1$s: %2$s.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, ucfirst(strtolower($payment_status))));
                     break;
                 case 'DECLINED' :
+                    // Translators: %s is the payment method title.
                     $order->update_status('failed', sprintf(__('Payment via %s declined.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title));
                     break;
                 case 'PENDING' :
@@ -2534,24 +2562,30 @@ class Goopter_PayPal_PPCP_Payment {
                             break;
                     }
                     if ($payment_status === 'PENDING') {
-                        $order->update_status('on-hold', sprintf(__('Payment via %s Pending. PayPal Pending reason: %s.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $pending_reason_text));
+                        // Translators: %1$s is the payment method title, %2$s is the PayPal pending reason text.
+                        $order->update_status('on-hold', sprintf(__('Payment via %1$s Pending. PayPal Pending reason: %2$s.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $pending_reason_text));
                     }
                     if ($payment_status === 'DECLINED') {
-                        $order->update_status('failed', sprintf(__('Payment via %s declined. PayPal declined reason: %s.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $pending_reason_text));
+                        // Translators: %1$s is the payment method title, %2$s is the PayPal declined reason text.
+                        $order->update_status('failed', sprintf(__('Payment via %1$s declined. PayPal declined reason: %2$s.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $pending_reason_text));
                     }
                     break;
                 case 'PARTIALLY_REFUNDED' :
                     $order->update_status('on-hold');
-                    $order->add_order_note(sprintf(__('Payment via %s partially refunded. PayPal reason: %s.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $pending_reason));
+                    // Translators: %1$s is the payment method title, %2$s is the PayPal refund reason.
+                    $order->add_order_note(sprintf(__('Payment via %1$s partially refunded. PayPal reason: %2$s.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $pending_reason));
                     break;
                 case 'REFUNDED' :
                     $order->update_status('refunded');
-                    $order->add_order_note(sprintf(__('Payment via %s refunded. PayPal reason: %s.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $pending_reason));
+                    // Translators: %1$s is the payment method title, %2$s is the PayPal refund reason.
+                    $order->add_order_note(sprintf(__('Payment via %1$s refunded. PayPal reason: %2$s.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $pending_reason));
                     break;
                 case 'FAILED' :
-                    $order->update_status('failed', sprintf(__('Payment via %s failed. PayPal reason: %s.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $pending_reason));
+                    // Translators: %1$s is the payment method title, %2$s is the PayPal failure reason.
+                    $order->update_status('failed', sprintf(__('Payment via %1$s failed. PayPal reason: %2$s.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $pending_reason));
                     break;
                 case 'VOIDED' :
+                    // Translators: %s is the payment method title.
                     $order->update_status('cancelled', sprintf(__('Payment via %s Voided.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title));
                     break;
                 default:
@@ -2568,6 +2602,7 @@ class Goopter_PayPal_PPCP_Payment {
             $order = wc_get_order($orderid);
             switch (strtoupper($payment_status)) :
                 case 'DECLINED' :
+                    // Translators: %s is the payment method title.
                     $order->add_order_note(sprintf(__('Payment via %s declined.', 'paypal-advanced-for-woocommerce'), $order->get_payment_method_title()));
                 case 'PENDING' :
                     switch (strtoupper($pending_reason)) {
@@ -2610,20 +2645,23 @@ class Goopter_PayPal_PPCP_Payment {
                             break;
                     }
                     if ($payment_status === 'PENDING') {
-                        $order->add_order_note(sprintf(__('Payment via %s Pending. PayPal Pending reason: %s.', 'paypal-advanced-for-woocommerce'), $order->get_payment_method_title(), $pending_reason_text));
+                        // Translators: %1$s is the payment method title, %2$s is the PayPal pending reason.
+                        $order->add_order_note(sprintf(__('Payment via %1$s Pending. PayPal Pending reason: %2$s.', 'paypal-advanced-for-woocommerce'), $order->get_payment_method_title(), $pending_reason_text));
                     }
                     if ($payment_status === 'DECLINED') {
-                        $order->add_order_note(sprintf(__('Payment via %s declined. PayPal declined reason: %s.', 'paypal-advanced-for-woocommerce'), $order->get_payment_method_title(), $pending_reason_text));
+                        // Translators: %1$s is the payment method title, %2$s is the PayPal declined reason.
+                        $order->add_order_note(sprintf(__('Payment via %1$s declined. PayPal declined reason: %2$s.', 'paypal-advanced-for-woocommerce'), $order->get_payment_method_title(), $pending_reason_text));
                     }
                     break;
                 case 'PARTIALLY_REFUNDED' :
-
-                    $order->add_order_note(sprintf(__('Payment via %s partially refunded. PayPal reason: %s.', 'paypal-advanced-for-woocommerce'), $order->get_payment_method_title(), $pending_reason));
+                    // Translators: %1$s is the payment method title, %2$s is the PayPal refund reason.
+                    $order->add_order_note(sprintf(__('Payment via %1$s partially refunded. PayPal reason: %2$s.', 'paypal-advanced-for-woocommerce'), $order->get_payment_method_title(), $pending_reason));
                 case 'REFUNDED' :
-
-                    $order->add_order_note(sprintf(__('Payment via %s refunded. PayPal reason: %s.', 'paypal-advanced-for-woocommerce'), $order->get_payment_method_title(), $pending_reason));
+                    // Translators: %1$s is the payment method title, %2$s is the PayPal refund reason.
+                    $order->add_order_note(sprintf(__('Payment via %1$s refunded. PayPal reason: %2$s.', 'paypal-advanced-for-woocommerce'), $order->get_payment_method_title(), $pending_reason));
                 case 'FAILED' :
-                    $order->add_order_note(sprintf(__('Payment via %s failed. PayPal reason: %s.', 'paypal-advanced-for-woocommerce'), $order->get_payment_method_title(), $pending_reason));
+                    // Translators: %1$s is the payment method title, %2$s is the PayPal failure reason.
+                    $order->add_order_note(sprintf(__('Payment via %1$s failed. PayPal reason: %2$s.', 'paypal-advanced-for-woocommerce'), $order->get_payment_method_title(), $pending_reason));
                     break;
                 default:
                     break;
@@ -2646,7 +2684,7 @@ class Goopter_PayPal_PPCP_Payment {
                 'cookies' => array()
             );
             $this->api_response = $this->api_request->request($this->paypal_order_api . $paypal_order_id, $args, 'get_order');
-            $this->api_response = json_decode(json_encode($this->api_response), true);
+            $this->api_response = json_decode(wp_json_encode($this->api_response), true);
             return $this->api_response;
         } catch (Exception $ex) {
             $this->api_log->log("The exception was created on line: " . $ex->getFile() . ' ' . $ex->getLine(), 'error');
@@ -2666,7 +2704,7 @@ class Goopter_PayPal_PPCP_Payment {
                 'cookies' => array()
             );
             $this->api_response = $this->api_request->request($this->auth . $authorization_id, $args, 'get_authorized');
-            $this->api_response = json_decode(json_encode($this->api_response), true);
+            $this->api_response = json_decode(wp_json_encode($this->api_response), true);
             return $this->api_response;
         } catch (Exception $ex) {
             $this->api_log->log("The exception was created on line: " . $ex->getFile() . ' ' . $ex->getLine(), 'error');
@@ -2797,7 +2835,7 @@ class Goopter_PayPal_PPCP_Payment {
                         if (!empty($item_amount)) {
                             $transaction_id = isset($this->api_response['transaction_id']) ? $this->api_response['transaction_id'] : $transaction_id;
                             $transaction_amount = isset($this->api_response['amount']['value']) ? $this->api_response['amount']['value'] : $item_amount;
-                            $transaction_date = date('m/d/y H:i', strtotime($this->api_response['update_time']));
+                            $transaction_date = gmdate('m/d/y H:i', strtotime($this->api_response['update_time']));
                             $ppcp_capture_details[] = array(
                                 '_ppcp_transaction_id' => $transaction_id,
                                 '_ppcp_transaction_date' => $transaction_date,
@@ -2817,7 +2855,8 @@ class Goopter_PayPal_PPCP_Payment {
                 $payment_status = $this->api_response['status'] ?? '';
                 $order->update_meta_data('_payment_status', $payment_status);
                 $order->save();
-                $order->add_order_note(sprintf(__('%s Capture Transaction ID: %s', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $transaction_id));
+                // Translators: %1$s is the payment method title, %2$s is the capture transaction ID.
+                $order->add_order_note(sprintf(__('%1$s Capture Transaction ID: %2$s', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $transaction_id));
                 $order->add_order_note('Seller Protection Status: ' . goopter_ppcp_readable($seller_protection));
                 // PFW-1693 - We need to mark the order as completed if the order total is less than or equal to the captured amount
                 if ('PARTIALLY_CAPTURED' === $payment_status && $total_order_value <= $captured_amount) {
@@ -2829,10 +2868,12 @@ class Goopter_PayPal_PPCP_Payment {
                         return $this->get_preferred_order_status($payment_status, $order_id);
                     }, 20, 2);
                     $order->payment_complete();
-                    $order->add_order_note(sprintf(__('Payment via %s: %s.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, ucfirst(strtolower($payment_status))));
+                    // Translators: %1$s is the payment method title, %2$s is the payment status.
+                    $order->add_order_note(sprintf(__('Payment via %1$s: %2$s.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, ucfirst(strtolower($payment_status))));
                 } elseif ('PARTIALLY_CAPTURED' === $payment_status) {
                     $order->update_status('wc-partial-payment');
                 } elseif ($payment_status === 'DECLINED') {
+                    // Translators: %s is the payment method title.
                     $order->update_status('failed', sprintf(__('Payment via %s declined.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title));
                     if (function_exists('wc_add_notice')) {
                         wc_add_notice(__('Unfortunately your order cannot be processed as the originating bank/merchant has declined your transaction. Please attempt your purchase again.', 'paypal-advanced-for-woocommerce'), 'error');
@@ -3007,6 +3048,7 @@ class Goopter_PayPal_PPCP_Payment {
 
     public function goopter_ppcp_capture_order_using_payment_method_token($order_id) {
         try {
+            // phpcs:disable WordPress.Security.NonceVerification.Missing -- no security issue, paypal token is used to verify
             $order = wc_get_order($order_id);
             $goopter_ppcp_payment_method_title = $this->get_payment_method_title_for_order($order_id);
             $this->paymentaction = apply_filters('goopter_ppcp_paymentaction', $this->paymentaction, $order_id);
@@ -3141,7 +3183,7 @@ class Goopter_PayPal_PPCP_Payment {
                         if (isset($this->api_response['payment_source']['card']['from_request']['expiry'])) {
                             $token_id = '';
                             if (!empty($_POST['wc-goopter_ppcp_cc-payment-token']) && $_POST['wc-goopter_ppcp_cc-payment-token'] != 'new') {
-                                $token_id = wc_clean($_POST['wc-goopter_ppcp_cc-payment-token']);
+                                $token_id = wc_clean(sanitize_text_field(wp_unslash($_POST['wc-goopter_ppcp_cc-payment-token'])));
                             } else {
                                 $payment_tokens_id = goopter_ppcp_get_post_meta($order, '_payment_tokens_id', true);
                                 $token_id = goopter_ppcp_get_token_id_by_token($payment_tokens_id);
@@ -3164,8 +3206,8 @@ class Goopter_PayPal_PPCP_Payment {
                                         $token->set_expiry_month($card_exp_month);
                                         $token->set_expiry_year($card_exp_year);
                                     } else {
-                                        $token->set_expiry_month(date('m'));
-                                        $token->set_expiry_year(date('Y', strtotime('+5 years')));
+                                        $token->set_expiry_month(gmdate('m'));
+                                        $token->set_expiry_year(gmdate('Y', strtotime('+5 years')));
                                     }
                                 }
                                 if ($token->validate()) {
@@ -3237,8 +3279,10 @@ class Goopter_PayPal_PPCP_Payment {
                                 return $this->get_preferred_order_status($payment_status, $order_id);
                             }, 20, 2);
                             $order->payment_complete($transaction_id);
-                            $order->add_order_note(sprintf(__('Payment via %s: %s.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, ucfirst(strtolower($payment_status))));
+                            // Translators: %1$s is the payment method title, %2$s is the payment status.
+                            $order->add_order_note(sprintf(__('Payment via %1$s: %2$s.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, ucfirst(strtolower($payment_status))));
                         } elseif ($payment_status === 'DECLINED') {
+                            // Translators: %s is the payment method title.
                             $order->update_status('failed', sprintf(__('Payment via %s declined.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title));
                             if (function_exists('wc_add_notice')) {
                                 wc_add_notice(__('Unfortunately your order cannot be processed as the originating bank/merchant has declined your transaction. Please attempt your purchase again.', 'paypal-advanced-for-woocommerce'), 'error');
@@ -3250,7 +3294,8 @@ class Goopter_PayPal_PPCP_Payment {
                         }
                         $order->update_meta_data('_payment_status', $payment_status);
                         $order->save();
-                        $order->add_order_note(sprintf(__('%s Capture Transaction ID: %s', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $transaction_id));
+                        // Translators: %1$s is the payment method title, %2$s is the capture transaction ID.
+                        $order->add_order_note(sprintf(__('%1$s Capture Transaction ID: %2$s', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $transaction_id));
                         $order->add_order_note('Seller Protection Status: ' . goopter_ppcp_readable($seller_protection));
                         return true;
                     } else {
@@ -3305,8 +3350,10 @@ class Goopter_PayPal_PPCP_Payment {
                                 return $this->get_preferred_order_status($payment_status, $order_id);
                             }, 20, 2);
                             $order->payment_complete($transaction_id);
-                            $order->add_order_note(sprintf(__('Payment via %s: %s.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, ucfirst(strtolower($payment_status))));
+                            // Translators: %1$s is the payment method title, %2$s is the formatted payment status.
+                            $order->add_order_note(sprintf(__('Payment via %1$s: %2$s.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, ucfirst(strtolower($payment_status))));
                         } elseif ($payment_status === 'DECLINED') {
+                            // Translators: %s is the payment method title.
                             $order->update_status('failed', sprintf(__('Payment via %s declined.', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title));
                             if (function_exists('wc_add_notice')) {
                                 wc_add_notice(__('Unfortunately your order cannot be processed as the originating bank/merchant has declined your transaction. Please attempt your purchase again.', 'paypal-advanced-for-woocommerce'), 'error');
@@ -3320,7 +3367,8 @@ class Goopter_PayPal_PPCP_Payment {
                         $order->set_transaction_id($transaction_id);
                         $order->update_meta_data('_auth_transaction_id', $transaction_id);
                         $order->update_meta_data('_paymentaction', 'authorize');
-                        $order->add_order_note(sprintf(__('%s Authorization Transaction ID: %s', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $transaction_id));
+                        // Translators: %1$s is the payment method title, %2$s is the authorization transaction ID.
+                        $order->add_order_note(sprintf(__('%1$s Authorization Transaction ID: %2$s', 'paypal-advanced-for-woocommerce'), $goopter_ppcp_payment_method_title, $transaction_id));
                         $order->add_order_note('Seller Protection Status: ' . goopter_ppcp_readable($seller_protection));
                         if (class_exists('Goopter_PayPal_PPCP_Admin_Action')) {
                             Goopter_PayPal_PPCP_Admin_Action::instance()->removeAutoCaptureHooks();
@@ -3344,6 +3392,7 @@ class Goopter_PayPal_PPCP_Payment {
                 $order->add_order_note($readable_message);
                 return false;
             }
+            // phpcs:enable WordPress.Security.NonceVerification.Missing -- no security issue, paypal token is used to verify
         } catch (Exception $ex) {
             $this->api_log->log("The exception was created on line: " . $ex->getFile() . ' ' . $ex->getLine(), 'error');
             $this->api_log->log($ex->getMessage(), 'error');
@@ -3501,10 +3550,11 @@ class Goopter_PayPal_PPCP_Payment {
 
     public function goopter_ppcp_paypal_create_payment_token_free_signup_with_free_trial() {
         try {
+            // phpcs:disable WordPress.Security.NonceVerification.Recommended -- no security issue, paypal token is used to verify
             $body_request = array();
             if (isset($_GET[APPROVAL_TOKEN_ID_PARAM_NAME]) && isset($_GET['order_id'])) {
                 $body_request['payment_source']['token'] = array(
-                    'id' => wc_clean($_GET[APPROVAL_TOKEN_ID_PARAM_NAME]),
+                    'id' => wc_clean(sanitize_text_field(wp_unslash($_GET[APPROVAL_TOKEN_ID_PARAM_NAME]))),
                     'type' => 'SETUP_TOKEN'
                 );
                 $args = array(
@@ -3521,7 +3571,7 @@ class Goopter_PayPal_PPCP_Payment {
                     if (isset($customer_id) && !empty($customer_id)) {
                         $this->ppcp_payment_token->goopter_ppcp_add_paypal_generated_customer_id($customer_id, $this->is_sandbox);
                     }
-                    $order_id = wc_clean($_GET['order_id']);
+                    $order_id = wc_clean(sanitize_text_field(wp_unslash($_GET['order_id'])));
                     $order = wc_get_order($order_id);
                     $order->update_meta_data('_goopter_ppcp_used_payment_method', 'paypal');
                     $order->save();
@@ -3544,8 +3594,8 @@ class Goopter_PayPal_PPCP_Payment {
                         $token->set_gateway_id($order->get_payment_method());
                         $token->set_card_type($email_address);
                         $token->set_last4(substr($this->api_response['id'], -4));
-                        $token->set_expiry_month(date('m'));
-                        $token->set_expiry_year(date('Y', strtotime('+20 years')));
+                        $token->set_expiry_month(gmdate('m'));
+                        $token->set_expiry_year(gmdate('Y', strtotime('+20 years')));
                         $token->set_user_id($customer_id);
                         if ($token->validate()) {
                             $token->save();
@@ -3581,6 +3631,7 @@ class Goopter_PayPal_PPCP_Payment {
                     exit();
                 }
             }
+            // phpcs:enable WordPress.Security.NonceVerification.Recommended -- no security issue, paypal token is used to verify
         } catch (Exception $ex) {
             
         }
@@ -3588,6 +3639,7 @@ class Goopter_PayPal_PPCP_Payment {
 
     public function goopter_ppcp_paypal_create_payment_token() {
         try {
+            // phpcs:disable WordPress.Security.NonceVerification.Recommended -- no security issue, paypal token is used to verify
             $body_request = array();
             if (isset($_GET[APPROVAL_TOKEN_ID_PARAM_NAME])) {
                 // Clear the notices as WooCommerce PayPal Payments tries to handle the approval_token_id parameter
@@ -3595,7 +3647,7 @@ class Goopter_PayPal_PPCP_Payment {
                 // so clear those notices to show the clean notice to users
                 wc_clear_notices();
                 $body_request['payment_source']['token'] = array(
-                    'id' => wc_clean($_GET[APPROVAL_TOKEN_ID_PARAM_NAME]),
+                    'id' => wc_clean(sanitize_text_field(wp_unslash($_GET[APPROVAL_TOKEN_ID_PARAM_NAME]))),
                     'type' => 'SETUP_TOKEN'
                 );
                 $args = array(
@@ -3626,8 +3678,8 @@ class Goopter_PayPal_PPCP_Payment {
                         $token->set_gateway_id('goopter_ppcp');
                         $token->set_card_type($email_address);
                         $token->set_last4(substr($this->api_response['id'], -4));
-                        $token->set_expiry_month(date('m'));
-                        $token->set_expiry_year(date('Y', strtotime('+20 years')));
+                        $token->set_expiry_month(gmdate('m'));
+                        $token->set_expiry_year(gmdate('Y', strtotime('+20 years')));
                         $token->set_user_id($wc_customer_id);
                         if ($token->validate()) {
                             $token->save();
@@ -3652,6 +3704,7 @@ class Goopter_PayPal_PPCP_Payment {
                     exit();
                 }
             }
+            // phpcs:enable WordPress.Security.NonceVerification.Recommended -- no security issue, paypal token is used to verify
         } catch (Exception $ex) {
             
         }
@@ -3727,10 +3780,11 @@ class Goopter_PayPal_PPCP_Payment {
 
     public function goopter_ppcp_advanced_credit_card_create_payment_token() {
         try {
+            // phpcs:disable WordPress.Security.NonceVerification.Recommended -- no security issue, paypal token is used to verify
             $body_request = array();
             if (isset($_GET[APPROVAL_TOKEN_ID_PARAM_NAME])) {
                 $body_request['payment_source']['token'] = array(
-                    'id' => wc_clean($_GET[APPROVAL_TOKEN_ID_PARAM_NAME]),
+                    'id' => wc_clean(sanitize_text_field(wp_unslash($_GET[APPROVAL_TOKEN_ID_PARAM_NAME]))),
                     'type' => 'SETUP_TOKEN'
                 );
                 $args = array(
@@ -3769,8 +3823,8 @@ class Goopter_PayPal_PPCP_Payment {
                                 $token->set_expiry_month($card_exp_month);
                                 $token->set_expiry_year($card_exp_year);
                             } else {
-                                $token->set_expiry_month(date('m'));
-                                $token->set_expiry_year(date('Y', strtotime('+5 years')));
+                                $token->set_expiry_month(gmdate('m'));
+                                $token->set_expiry_year(gmdate('Y', strtotime('+5 years')));
                             }
                         }
                         $token->set_user_id($wc_customer_id);
@@ -3804,6 +3858,7 @@ class Goopter_PayPal_PPCP_Payment {
                     exit();
                 }
             }
+        // phpcs:enable WordPress.Security.NonceVerification.Recommended -- no security issue, paypal token is used to verify
         } catch (Exception $ex) {
             
         }
@@ -3811,10 +3866,11 @@ class Goopter_PayPal_PPCP_Payment {
 
     public function goopter_ppcp_advanced_credit_card_create_payment_token_free_signup_with_free_trial() {
         try {
+            // phpcs:disable WordPress.Security.NonceVerification.Recommended -- no security issue, paypal token is used to verify
             $body_request = array();
             if (isset($_GET[APPROVAL_TOKEN_ID_PARAM_NAME]) && isset($_GET['order_id'])) {
                 $body_request['payment_source']['token'] = array(
-                    'id' => wc_clean($_GET[APPROVAL_TOKEN_ID_PARAM_NAME]),
+                    'id' => wc_clean(sanitize_text_field(wp_unslash($_GET[APPROVAL_TOKEN_ID_PARAM_NAME]))),
                     'type' => 'SETUP_TOKEN'
                 );
                 $args = array(
@@ -3831,8 +3887,8 @@ class Goopter_PayPal_PPCP_Payment {
                     if (isset($customer_id) && !empty($customer_id)) {
                         $this->ppcp_payment_token->goopter_ppcp_add_paypal_generated_customer_id($customer_id, $this->is_sandbox);
                     }
-                    $order_id = wc_clean($_GET['order_id']);
-                    $order = wc_get_order(wc_clean($_GET['order_id']));
+                    $order_id = wc_clean(sanitize_text_field(wp_unslash($_GET['order_id'])));
+                    $order = wc_get_order(wc_clean(sanitize_text_field(wp_unslash($_GET['order_id']))));
                     $order->update_meta_data('_goopter_ppcp_used_payment_method', 'card');
                     $order->save();
                     $this->save_payment_token($order, $this->api_response['id']);
@@ -3862,8 +3918,8 @@ class Goopter_PayPal_PPCP_Payment {
                                 $token->set_expiry_month($card_exp_month);
                                 $token->set_expiry_year($card_exp_year);
                             } else {
-                                $token->set_expiry_month(date('m'));
-                                $token->set_expiry_year(date('Y', strtotime('+5 years')));
+                                $token->set_expiry_month(gmdate('m'));
+                                $token->set_expiry_year(gmdate('Y', strtotime('+5 years')));
                             }
                         }
                         $token->set_user_id($customer_id);
@@ -3896,6 +3952,7 @@ class Goopter_PayPal_PPCP_Payment {
                     exit();
                 }
             }
+            // phpcs:enable WordPress.Security.NonceVerification.Recommended -- no security issue, paypal token is used to verify
         } catch (Exception $ex) {
             
         }
@@ -4087,10 +4144,11 @@ class Goopter_PayPal_PPCP_Payment {
 
     public function goopter_ppcp_advanced_credit_card_create_payment_token_sub_change_payment() {
         try {
+            // phpcs:disable WordPress.Security.NonceVerification.Recommended -- no security issue, paypal token is used to verify
             $body_request = array();
             if (isset($_GET[APPROVAL_TOKEN_ID_PARAM_NAME]) && isset($_GET['order_id'])) {
                 $body_request['payment_source']['token'] = array(
-                    'id' => wc_clean($_GET[APPROVAL_TOKEN_ID_PARAM_NAME]),
+                    'id' => wc_clean(sanitize_text_field(wp_unslash($_GET[APPROVAL_TOKEN_ID_PARAM_NAME]))),
                     'type' => 'SETUP_TOKEN'
                 );
                 $args = array(
@@ -4102,8 +4160,8 @@ class Goopter_PayPal_PPCP_Payment {
                 if (ob_get_length()) {
                     ob_end_clean();
                 }
-                $order_id = wc_clean($_GET['order_id']);
-                $order = wc_get_order(wc_clean($_GET['order_id']));
+                $order_id = wc_clean(sanitize_text_field(wp_unslash($_GET['order_id'])));
+                $order = wc_get_order(wc_clean(sanitize_text_field(wp_unslash($_GET['order_id']))));
                 if (!empty($this->api_response['id'])) {
                     $customer_id = $this->api_response['customer']['id'] ?? '';
                     if (isset($customer_id) && !empty($customer_id)) {
@@ -4138,8 +4196,8 @@ class Goopter_PayPal_PPCP_Payment {
                                 $token->set_expiry_month($card_exp_month);
                                 $token->set_expiry_year($card_exp_year);
                             } else {
-                                $token->set_expiry_month(date('m'));
-                                $token->set_expiry_year(date('Y', strtotime('+5 years')));
+                                $token->set_expiry_month(gmdate('m'));
+                                $token->set_expiry_year(gmdate('Y', strtotime('+5 years')));
                             }
                         }
                         $token->set_user_id($customer_id);
@@ -4164,6 +4222,7 @@ class Goopter_PayPal_PPCP_Payment {
                     exit();
                 }
             }
+            // phpcs:enable WordPress.Security.NonceVerification.Recommended -- no security issue, paypal token is used to verify
         } catch (Exception $ex) {
             
         }
@@ -4231,10 +4290,11 @@ class Goopter_PayPal_PPCP_Payment {
 
     public function goopter_ppcp_paypal_create_payment_token_sub_change_payment() {
         try {
+            // phpcs:disable WordPress.Security.NonceVerification.Recommended -- no security issue, paypal token is used to verify
             $body_request = array();
             if (isset($_GET[APPROVAL_TOKEN_ID_PARAM_NAME]) && isset($_GET['order_id'])) {
                 $body_request['payment_source']['token'] = array(
-                    'id' => wc_clean($_GET[APPROVAL_TOKEN_ID_PARAM_NAME]),
+                    'id' => wc_clean(sanitize_text_field(wp_unslash($_GET[APPROVAL_TOKEN_ID_PARAM_NAME]))),
                     'type' => 'SETUP_TOKEN'
                 );
                 $args = array(
@@ -4246,8 +4306,8 @@ class Goopter_PayPal_PPCP_Payment {
                 if (ob_get_length()) {
                     ob_end_clean();
                 }
-                $order_id = wc_clean($_GET['order_id']);
-                $order = wc_get_order(wc_clean($_GET['order_id']));
+                $order_id = wc_clean(sanitize_text_field(wp_unslash($_GET['order_id'])));
+                $order = wc_get_order(wc_clean(sanitize_text_field(wp_unslash($_GET['order_id']))));
                 if (!empty($this->api_response['id'])) {
                     $customer_id = $this->api_response['customer']['id'] ?? '';
                     if (isset($customer_id) && !empty($customer_id)) {
@@ -4274,8 +4334,8 @@ class Goopter_PayPal_PPCP_Payment {
                         $token->set_gateway_id($order->get_payment_method());
                         $token->set_card_type('PayPal Vault');
                         $token->set_last4(substr($this->api_response['id'], -4));
-                        $token->set_expiry_month(date('m'));
-                        $token->set_expiry_year(date('Y', strtotime('+20 years')));
+                        $token->set_expiry_month(gmdate('m'));
+                        $token->set_expiry_year(gmdate('Y', strtotime('+20 years')));
                         $token->set_user_id($wc_customer_id);
                         if ($token->validate()) {
                             $token->save();
@@ -4298,6 +4358,7 @@ class Goopter_PayPal_PPCP_Payment {
                     exit();
                 }
             }
+            // phpcs:enable WordPress.Security.NonceVerification.Recommended -- no security issue, paypal token is used to verify
         } catch (Exception $ex) {
             
         }
@@ -4498,6 +4559,7 @@ class Goopter_PayPal_PPCP_Payment {
 
     public function goopter_ppcp_prepare_refund_request_data_for_capture($order, $amount) {
         try {
+            // phpcs:disable WordPress.Security.NonceVerification.Missing -- checked by woocommerce refund process
             $ppcp_refunded_amount = 0;
             $prepare_refund_data = [];
             $used_transaction_id = [];
@@ -4613,6 +4675,7 @@ class Goopter_PayPal_PPCP_Payment {
                     }
                 }
             }
+            // phpcs:enable WordPress.Security.NonceVerification.Missing -- checked by woocommerce refund process
             return $prepare_refund_data;
         } catch (Exception $ex) {
             
@@ -4700,9 +4763,10 @@ class Goopter_PayPal_PPCP_Payment {
                 $gross_amount = $this->api_response['seller_payable_breakdown']['gross_amount']['value'] ?? '';
                 $refund_transaction_id = $this->api_response['id'] ?? '';
                 $order->add_order_note(
+                    // Translators: %1$s is the refunded amount with currency, %2$s is the refund transaction ID.
                         sprintf(__('Refunded %1$s - Refund ID: %2$s', 'paypal-advanced-for-woocommerce'), wc_price($gross_amount, array('currency' => $currency_code)), $refund_transaction_id)
                 );
-                $refund_date = date('m/d/y H:i', strtotime($this->api_response['update_time']));
+                $refund_date = gmdate('m/d/y H:i', strtotime($this->api_response['update_time']));
                 $ppcp_refund_details[] = array(
                     '_ppcp_refund_id' => $refund_transaction_id,
                     '_ppcp_refund_date' => $refund_date,
@@ -4745,12 +4809,12 @@ class Goopter_PayPal_PPCP_Payment {
                 'cookies' => array()
             );
             $api_response = $this->api_request->request($this->paypal_refund_api . $capture_id, $args, 'get_capture');
-            $api_response = json_decode(json_encode($api_response), true);
+            $api_response = json_decode(wp_json_encode($api_response), true);
             if (isset($api_response['id'])) {
                 return $api_response;
             }
             $this->api_log->log("Unable to find the PayPal capture: " . $capture_id, 'error');
-            $this->api_log->log(print_r($api_response, true), 'error');
+            $this->api_log->log(wp_json_encode($api_response, true), 'error');
         } catch (Exception $ex) {
             $this->api_log->log("The exception was created on line: " . $ex->getFile() . ' ' . $ex->getLine(), 'error');
             $this->api_log->log($ex->getMessage(), 'error');

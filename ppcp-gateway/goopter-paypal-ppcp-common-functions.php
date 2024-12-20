@@ -19,6 +19,7 @@ if (!function_exists('goopter_ppcp_has_active_session')) {
         $goopter_ppcp_paypal_order_id = Goopter_Session_Manager::get('paypal_order_id');
         if (is_ajax() && !empty($checkout_details) && !empty($goopter_ppcp_paypal_order_id)) {
             return true;
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- no security issue
         } elseif (!empty($checkout_details) && !empty($goopter_ppcp_paypal_order_id) && isset($_GET['paypal_order_id'])) {
             return true;
         }
@@ -67,7 +68,16 @@ if (!function_exists('goopter_ppcp_is_local_server')) {
         if (!isset($_SERVER['HTTP_HOST'])) {
             return;
         }
-        if ($_SERVER['HTTP_HOST'] === 'localhost' || substr($_SERVER['REMOTE_ADDR'], 0, 3) === '10.' || substr($_SERVER['REMOTE_ADDR'], 0, 7) === '192.168') {
+        // if ($_SERVER['HTTP_HOST'] === 'localhost' || substr(sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR'])), 0, 3) === '10.' || substr(sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR'])), 0, 7) === '192.168') {
+        //     return true;
+        // }
+        if (
+            (isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] === 'localhost') ||
+            (isset($_SERVER['REMOTE_ADDR']) && (
+                substr(sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR'])), 0, 3) === '10.' ||
+                substr(sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR'])), 0, 7) === '192.168'
+            ))
+        ) {
             return true;
         }
         $live_sites = [
@@ -82,7 +92,10 @@ if (!function_exists('goopter_ppcp_is_local_server')) {
                 return false;
             }
         }
-        if (in_array($_SERVER['REMOTE_ADDR'], array('127.0.0.1', '::1'))) {
+        // if (in_array($_SERVER['REMOTE_ADDR'], array('127.0.0.1', '::1'))) {
+        //     return true;
+        // }
+        if (isset($_SERVER['REMOTE_ADDR']) && in_array($_SERVER['REMOTE_ADDR'], array('127.0.0.1', '::1'))) {
             return true;
         }
     }
@@ -181,9 +194,11 @@ if (!function_exists('goopter_ppcp_get_mapped_billing_address')) {
             $phone = '';
             if (!empty($checkout_details->payer->phone->phone_number->national_number)) {
                 $phone = $checkout_details->payer->phone->phone_number->national_number;
+            // phpcs:disable WordPress.Security.NonceVerification.Missing -- no security issue
             } elseif (!empty($_POST['billing_phone'])) {
-                $phone = wc_clean($_POST['billing_phone']);
+                $phone = wc_clean(sanitize_text_field(wp_unslash($_POST['billing_phone'])));
             }
+            // phpcs:enable WordPress.Security.NonceVerification.Missing -- no security issue
             $billing_address = array();
             $billing_address['first_name'] = !empty($checkout_details->payer->name->given_name) ? $checkout_details->payer->name->given_name : '';
             $billing_address['last_name'] = !empty($checkout_details->payer->name->surname) ? $checkout_details->payer->name->surname : '';
@@ -574,6 +589,7 @@ if (!function_exists('goopter_ppcp_is_cart_contains_subscription')) {
 if (!function_exists('goopter_ppcp_is_subs_change_payment')) {
 
     function goopter_ppcp_is_subs_change_payment() {
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- no security issue
         return ( isset($_GET['pay_for_order']) && ( isset($_GET['change_payment_method']) || isset($_GET['change_gateway_flag'])) );
     }
 
@@ -708,6 +724,7 @@ if (!function_exists('goopter_ppcp_is_save_payment_method')) {
             $is_enable = true;
         }
         foreach ($new_payment_methods_to_check as $item) {
+            // phpcs:ignore WordPress.Security.NonceVerification.Missing -- no security issue
             if (isset($_POST[$item]) && 'true' === $_POST[$item]) {
                 $is_enable = true;
                 break;
@@ -721,21 +738,41 @@ if (!function_exists('goopter_ppcp_is_save_payment_method')) {
 
 if (!function_exists('goopter_ppcp_get_token_id_by_token')) {
 
+    // function goopter_ppcp_get_token_id_by_token($token_id) {
+    //     try {
+    //         global $wpdb;
+    //         $tokens = $wpdb->get_row(
+    //                 $wpdb->prepare(
+    //                         "SELECT token_id FROM {$wpdb->prefix}woocommerce_payment_tokens WHERE token = %s",
+    //                         $token_id
+    //                 )
+    //         );
+    //         if (isset($tokens->token_id)) {
+    //             return $tokens->token_id;
+    //         }
+    //         return '';
+    //     } catch (Exception $ex) {
+
+    //     }
+    // }
+
     function goopter_ppcp_get_token_id_by_token($token_id) {
         try {
-            global $wpdb;
-            $tokens = $wpdb->get_row(
-                    $wpdb->prepare(
-                            "SELECT token_id FROM {$wpdb->prefix}woocommerce_payment_tokens WHERE token = %s",
-                            $token_id
-                    )
-            );
-            if (isset($tokens->token_id)) {
-                return $tokens->token_id;
+            // Get the WooCommerce payment token data store
+            $data_store = WC_Data_Store::load('payment-token');
+    
+            // Search for tokens matching the provided token string
+            $tokens = $data_store->search_tokens($token_id, 'token', 'payment_tokens', true);
+    
+            // If tokens are found, return the first token ID
+            if (!empty($tokens) && is_array($tokens)) {
+                return reset($tokens); // Return the first token ID
             }
+    
             return '';
         } catch (Exception $ex) {
-
+            // Handle exceptions if necessary
+            return '';
         }
     }
 
@@ -880,7 +917,7 @@ if (!function_exists('goopter_ppcp_display_notice')) {
         } else {
             $message .= '</div>';
         }
-        echo $message;
+        echo wp_kses_post($message);
     }
 
 }
@@ -926,7 +963,7 @@ if (!function_exists('goopter_session_expired_exception')) {
      * @throws Exception
      */
     function goopter_session_expired_exception($error = '') {
-        throw new Exception($error, 302);
+        throw new Exception(esc_html($error), 302);
     }
 
 }
@@ -962,6 +999,7 @@ if (!function_exists('is_used_save_payment_token')) {
         $saved_tokens = ['wc-goopter_ppcp_apple_pay-payment-token', 'wc-goopter_ppcp-payment-token', 'wc-goopter_ppcp_cc-payment-token'];
         $is_save_payment_used = false;
         foreach ($saved_tokens as $saved_token) {
+            // phpcs:ignore WordPress.Security.NonceVerification.Missing -- no security issue
             if (!empty($_POST[$saved_token]) && $_POST[$saved_token] !== 'new') {
                 return $is_save_payment_used;
             }
@@ -975,9 +1013,11 @@ if (!function_exists('ae_get_checkout_url')) {
 
     function ae_get_checkout_url(): string {
         $checkout_page_url = wc_get_checkout_url();
+        // phpcs:disable WordPress.Security.NonceVerification.Recommended -- from third party plugin
         if (isset($_REQUEST['wfacp_id'])) {
-            $checkout_page_url = get_permalink($_REQUEST['wfacp_id']);
+            $checkout_page_url = get_permalink(sanitize_text_field(wp_unslash($_REQUEST['wfacp_id'])));
         }
+        // phpcs:enable WordPress.Security.NonceVerification.Recommended -- from third party plugin
         return $checkout_page_url;
     }
 

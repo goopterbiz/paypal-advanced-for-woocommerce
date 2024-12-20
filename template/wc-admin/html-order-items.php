@@ -116,7 +116,17 @@ if ( wc_tax_enabled() ) {
 				<li><strong><?php esc_html_e( 'Coupon(s)', 'woocommerce' ); ?></strong></li>
 				<?php
 				foreach ( $coupons as $item_id => $item ) :
-					$post_id = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_title = %s AND post_type = 'shop_coupon' AND post_status = 'publish' LIMIT 1;", $item->get_code() ) ); // phpcs:disable WordPress.WP.GlobalVariablesOverride.Prohibited
+					// $post_id = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_title = %s AND post_type = 'shop_coupon' AND post_status = 'publish' LIMIT 1;", $item->get_code() ) ); // phpcs:disable WordPress.WP.GlobalVariablesOverride.Prohibited
+					$data_store = WC_Data_Store::load('coupon');
+					// Search for the coupon by code
+					$coupons = $data_store->search([
+    					'search'      => $item->get_code(),
+    					'search_type' => 'exact', // Ensures an exact match
+    					'limit'       => 1,       // Limit to one result
+					]);
+					// Get the post ID if a coupon is found
+					$post_id = !empty($coupons) ? $coupons[0] : null;
+
 					$class   = $order->is_editable() ? 'code editable' : 'code';
 					?>
 					<li class="<?php echo esc_attr( $class ); ?>">
@@ -289,7 +299,7 @@ if ( wc_tax_enabled() ) {
 				<button type="button" class="button add-coupon"><?php esc_html_e( 'Apply coupon', 'woocommerce' ); ?></button>
 			<?php endif; ?>
 		<?php else : ?>
-			<span class="description"><?php echo wc_help_tip( __( 'To edit this order change the status back to "Pending payment"', 'woocommerce' ) ); ?> <?php esc_html_e( 'This order is no longer editable.', 'woocommerce' ); ?></span>
+			<span class="description"><?php echo wp_kses_post(wc_help_tip( __( 'To edit this order change the status back to "Pending payment"', 'woocommerce' ) )); ?> <?php esc_html_e( 'This order is no longer editable.', 'woocommerce' ); ?></span>
 		<?php endif; ?>
 		<?php if ( $render_refunds ) : ?>
 			<button type="button" class="button refund-items"><?php esc_html_e( 'Refund', 'woocommerce' ); ?></button>
@@ -337,7 +347,7 @@ if ( wc_tax_enabled() ) {
 		<tr>
 			<td class="label">
 				<label for="refund_amount">
-					<?php echo wc_help_tip( __( 'Refund the line items above. This will show the total amount to be refunded', 'woocommerce' ) ); ?>
+					<?php echo wp_kses_post(wc_help_tip( __( 'Refund the line items above. This will show the total amount to be refunded', 'woocommerce' ) )); ?>
 					<?php esc_html_e( 'Refund amount', 'woocommerce' ); ?>:
 				</label>
 			</td>
@@ -357,7 +367,7 @@ if ( wc_tax_enabled() ) {
 		<tr>
 			<td class="label">
 				<label for="refund_reason">
-					<?php echo wc_help_tip( __( 'Note: the refund reason will be visible by the customer.', 'woocommerce' ) ); ?>
+					<?php echo wp_kses_post(wc_help_tip( __( 'Note: the refund reason will be visible by the customer.', 'woocommerce' ) )); ?>
 					<?php esc_html_e( 'Reason for refund (optional):', 'woocommerce' ); ?>
 				</label>
 			</td>
@@ -453,7 +463,11 @@ if ( wc_tax_enabled() ) {
 								</tr>
 							</thead>
 						<?php
-						$rates = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}woocommerce_tax_rates ORDER BY tax_rate_name LIMIT 100" );
+						$data_store = WC_Data_Store::load('tax-rate');
+						$rates = $data_store->search_tax_rates([
+    						'limit' => 100,           // Limit the number of results
+    						'orderby' => 'name',      // Order by tax rate name
+						]);
 						foreach ( $rates as $rate ) {
 							echo '
 									<tr>
@@ -467,12 +481,29 @@ if ( wc_tax_enabled() ) {
 						}
 						?>
 						</table>
-						<?php if ( absint( $wpdb->get_var( "SELECT COUNT(tax_rate_id) FROM {$wpdb->prefix}woocommerce_tax_rates;" ) ) > 100 ) : ?>
-							<p>
-								<label for="manual_tax_rate_id"><?php esc_html_e( 'Or, enter tax rate ID:', 'woocommerce' ); ?></label><br/>
-								<input type="number" name="manual_tax_rate_id" id="manual_tax_rate_id" step="1" placeholder="<?php esc_attr_e( 'Optional', 'woocommerce' ); ?>" />
-							</p>
-						<?php endif; ?>
+						<?php
+							// Define a unique cache key
+							$cache_key = 'woocommerce_tax_rate_count';
+
+							// Attempt to get the count from the cache
+							$tax_rate_count = wp_cache_get( $cache_key, 'woocommerce' );
+
+							if ( false === $tax_rate_count ) {
+    							// Use WooCommerce data store to retrieve the tax rate count
+    							$data_store = \WC_Data_Store::load( 'tax-rate' );
+    							$tax_rate_count = absint( $data_store->get_total_tax_rates() ); // Get the total tax rates
+
+    							// Store the result in cache with a 1-hour expiration (3600 seconds)
+    							wp_cache_set( $cache_key, $tax_rate_count, 'woocommerce', 3600 );
+							}
+
+							// Check the condition and display the HTML if tax rate count exceeds 100
+							if ( $tax_rate_count > 100 ) : ?>
+    							<p>
+        							<label for="manual_tax_rate_id"><?php esc_html_e( 'Or, enter tax rate ID:', 'woocommerce' ); ?></label><br/>
+        							<input type="number" name="manual_tax_rate_id" id="manual_tax_rate_id" step="1" placeholder="<?php esc_attr_e( 'Optional', 'woocommerce' ); ?>" />
+    							</p>
+							<?php endif; ?>
 					</form>
 				</article>
 				<footer>
