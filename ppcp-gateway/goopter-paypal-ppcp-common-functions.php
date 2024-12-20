@@ -917,7 +917,7 @@ if (!function_exists('goopter_ppcp_display_notice')) {
         } else {
             $message .= '</div>';
         }
-        echo esc_html($message);
+        echo wp_kses_post($message);
     }
 
 }

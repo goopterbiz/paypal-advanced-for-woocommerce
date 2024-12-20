@@ -123,7 +123,7 @@ class Goopter_Admin_Order_Payment_Process {
         }
         // echo '<div class="wrap goopter_admin_payment_process">' . $reason_message . '<input type="hidden" name="goopter_admin_order_payment_process_sec" value="' . wp_create_nonce('goopter_admin_order_payment_process_sec') . '" /><input type="submit" ' . $is_disable . ' id="goopter_admin_order_payment_process_submit_button" value="Process Reference Transaction" name="goopter_admin_order_payment_process_submit_button" class="button button-primary"></div>';
         echo '<div class="wrap goopter_admin_payment_process">' .
-            esc_html( $reason_message ) .
+            wp_kses_post( $reason_message ) .
             '<input type="hidden" name="goopter_admin_order_payment_process_sec" value="' . esc_attr( wp_create_nonce( 'goopter_admin_order_payment_process_sec' ) ) . '" />' .
             '<input type="submit" ' . esc_attr( $is_disable ) . ' id="goopter_admin_order_payment_process_submit_button" value="' . esc_attr( 'Process Reference Transaction' ) . '" name="goopter_admin_order_payment_process_submit_button" class="button button-primary">' .
             '</div>';
@@ -137,7 +137,7 @@ class Goopter_Admin_Order_Payment_Process {
         $checkbox = '<br><label><input type="checkbox" name="copy_items_to_new_invoice">Copy items to new order?</label><br>';
         // echo '<div class="wrap goopter_create_reference_order_section">' . $reason_message . '<input type="hidden" name="goopter_create_reference_order_sec" value="' . wp_create_nonce('goopter_create_reference_order_sec') . '" /><input type="submit" ' . $is_disable . ' id="goopter_create_reference_order_submit_button" value="Create Reference Transaction Order" name="goopter_create_reference_order_submit_button" class="button button-primary">' . $checkbox . '</div>';
         echo '<div class="wrap goopter_create_reference_order_section">' .
-            esc_html( $reason_message ) .
+            wp_kses_post( $reason_message ) .
             '<input type="hidden" name="goopter_create_reference_order_sec" value="' . esc_attr( wp_create_nonce( 'goopter_create_reference_order_sec' ) ) . '" />' .
             '<input type="submit" ' . esc_attr( $is_disable ) . ' id="goopter_create_reference_order_submit_button" value="' . esc_attr( 'Create Reference Transaction Order' ) . '" name="goopter_create_reference_order_submit_button" class="button button-primary">' .
             wp_kses_post( $checkbox ) .

@@ -165,7 +165,7 @@ $permalink = get_the_permalink();
                                 <?php
                                 $formatted_address = WC()->countries->get_formatted_address(WFACP_Core()->public->billing_details);
                                 $formatted_address = str_replace('<br/>-<br/>', '<br/>', $formatted_address);
-                                echo esc_html($formatted_address);
+                                echo wp_kses_post($formatted_address);
                                 $formatted_address = '';
                                 ?>
                             </address>
@@ -201,7 +201,7 @@ $permalink = get_the_permalink();
                             <?php
                             $formatted_address = WC()->countries->get_formatted_address(WFACP_Core()->public->shipping_details);
                             $formatted_address = str_replace('<br/>-<br/>', '<br/>', $formatted_address);
-                            echo esc_html($formatted_address);
+                            echo wp_kses_post($formatted_address);
                             $formatted_address = '';
                             ?>
                         </address>

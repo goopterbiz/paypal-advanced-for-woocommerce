@@ -866,7 +866,7 @@ class Goopter_PayPal_PPCP_Smart_Button {
             if ($is_shortcode === 'yes') {
                 echo '<div class="goopter_ppcp_smart_button_shortcode goopter_ppcp_cart_page"><div class="goopter_ppcp-button-container goopter_ppcp_' . esc_attr($this->style_layout) . '_' . esc_attr($this->style_size) . '"><div id="goopter_ppcp_cart_shortcode"></div>' . ($this->enable_apple_pay ? '<div id="goopter_ppcp_cart_shortcode_apple_pay"></div>' : '') . ($this->enable_google_pay ? '<div id="goopter_ppcp_cart_shortcode_google_pay"></div>' : '') . '</div></div>';
             } else {
-                echo '<div class="goopter_ppcp-button-container goopter_ppcp_' . esc_attr($this->style_layout) . '_' . esc_attr($this->style_size) . '"><div id="goopter_ppcp_cart"></div>' . ($this->enable_apple_pay ? '<div id="goopter_ppcp_cart_apple_pay"></div>' : '') . ($this->enable_google_pay ? '<div id="goopter_ppcp_cart_google_pay"></div>' : '') . esc_html($separator_html) . '</div>';
+                echo '<div class="goopter_ppcp-button-container goopter_ppcp_' . esc_attr($this->style_layout) . '_' . esc_attr($this->style_size) . '"><div id="goopter_ppcp_cart"></div>' . ($this->enable_apple_pay ? '<div id="goopter_ppcp_cart_apple_pay"></div>' : '') . ($this->enable_google_pay ? '<div id="goopter_ppcp_cart_google_pay"></div>' : '') . wp_kses_post($separator_html) . '</div>';
             }
         }
     }
@@ -1071,7 +1071,7 @@ class Goopter_PayPal_PPCP_Smart_Button {
                 <?php
                 esc_html_e('Billing details', 'paypal-advanced-for-woocommerce');
                 if ($this->set_billing_address) {
-                    echo esc_url($billing_edit_link);
+                    echo wp_kses_post($billing_edit_link);
                 }
                 ?>
                 </h3>
