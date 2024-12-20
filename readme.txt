@@ -1,9 +1,9 @@
 === PayPal Advanced for WooCommerce ===
 Contributors: goopter
-Tags: woocommerce, paypal, goopter, apple pay, google play, venmo, pay later, credit cards, credit card payments, payments, payment
+Tags: woocommerce, paypal, apple pay, google play, credit card
 Requires at least: 5.8
-Tested up to: 6.6.2
-Stable tag: 4.5.21
+Tested up to: 6.7.1
+Stable tag: 1.0.0
 Requires PHP: 5.6
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
