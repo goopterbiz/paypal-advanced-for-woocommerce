@@ -523,6 +523,10 @@ class WC_Gateway_PPCP_Goopter extends WC_Payment_Gateway {
     }
 
     public function process_refund($order_id, $amount = null, $reason = '') {
+        if ($amount <= 0) {
+            return new WP_Error('error', __('Invalid refund amount', 'paypal-advanced-for-woocommerce'));
+        }
+        
         $order = wc_get_order($order_id);
         if (apply_filters('goopter_is_ppcp_parallel_payment_not_used', true, $order_id)) {
             if($order && $this->can_refund_order($order) && goopter_ppcp_order_item_meta_key_exists($order, '_ppcp_capture_details')) {

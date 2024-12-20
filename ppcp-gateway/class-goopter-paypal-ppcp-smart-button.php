@@ -711,7 +711,8 @@ class Goopter_PayPal_PPCP_Smart_Button {
                     $smart_js_arg['enable-funding'] = implode(',', $this->vault_supported_payment_method);
                 }
                 if (!empty($this->vault_not_supported_payment_method) && count($this->vault_not_supported_payment_method) > 0) {
-                    $smart_js_arg['disable-funding'] = implode(',', $this->vault_not_supported_payment_method);
+                    // there is an issue when vault on, the paylater disapear in checkout page, to prevent this, don't add 'paylater' to disable-funding
+                    $smart_js_arg['disable-funding'] = implode(',', array_diff($this->vault_not_supported_payment_method, ['credit', 'paylater']));
                 }
             } else {
                 if (!empty($this->disable_funding) && count($this->disable_funding) > 0) {
