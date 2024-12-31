@@ -661,7 +661,7 @@ class Goopter_PayPal_PPCP_Admin_Action {
                                     $refund_details_html .= $ppcp_refund_key_replace[$key] . ': ' . wc_price($value, array('currency' => $order->get_currency()));
                                 } elseif ('_ppcp_refund_date' === $key) {
                                     // Translators: %1$s is the date, and %2$s is the time.
-                                    $refund_details_html .= esc_html(sprintf(__('%1$s at %2$s', 'woocommerce'), date_i18n(wc_date_format(), strtotime($value)), date_i18n(wc_time_format(), strtotime($value))));
+                                    $refund_details_html .= wp_kses_post(sprintf(__('%1$s at %2$s', 'woocommerce'), date_i18n(wc_date_format(), strtotime($value)), date_i18n(wc_time_format(), strtotime($value))));
                                 } elseif ($key === '_ppcp_refund_id') {
                                     $return_url = sprintf($this->view_transaction_url, $value);
                                     $refund_details_html .= $ppcp_refund_key_replace[$key] . ':  <a href="' . esc_url($return_url) . '" target="_blank">' . esc_html($value) . '</a>';
@@ -674,7 +674,7 @@ class Goopter_PayPal_PPCP_Admin_Action {
                                 $i = $i + 1;
                             }
                         }
-                        echo esc_html($refund_details_html);
+                        echo wp_kses_post($refund_details_html);
                         ?>
                     </td>
                 </tr>
