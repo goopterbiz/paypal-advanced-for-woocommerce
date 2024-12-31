@@ -620,7 +620,7 @@ class Goopter_PayPal_PPCP_Admin_Action {
                                 }
                             }
                         }
-                        echo esc_html($capture_details_html);
+                        echo wp_kses_post($capture_details_html);
                         ?>
                     </td>
                 </tr>
