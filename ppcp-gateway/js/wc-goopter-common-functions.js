@@ -528,6 +528,7 @@ const goopterOrder = {
                     errorLogId = goopterJsErrorLogger.generateErrorId();
                     goopterJsErrorLogger.addToLog(errorLogId, 'Advanced CC Payment Started');
                     jQuery(checkoutSelector).addClass('createOrder');
+                    goopterOrder.setPaymentMethodSelector(data.paymentSource);
                     return goopterOrder.createOrder({errorLogId}).then(function (data) {
                         return data.orderID;
                     }).catch((error) => {
