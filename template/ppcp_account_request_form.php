@@ -16,14 +16,14 @@
     <div class="ppcp_account_request-Modal-header">
         <div>
             <button class="ppcp_account_request-Modal-return ppcp_account_request-icon-chevron-left">
-                <?php esc_html_e( 'Return', 'paypal-advanced-for-woocommerce' ); ?>
+                <?php esc_html_e( 'Return', 'advanced-paypal-complete-payments-for-woocommerce' ); ?>
             </button>
             <h2>
-                <?php esc_html_e( 'PPCP Account Request', 'paypal-advanced-for-woocommerce' ); ?>
+                <?php esc_html_e( 'PPCP Account Request', 'advanced-paypal-complete-payments-for-woocommerce' ); ?>
             </h2>
         </div>
         <button class="ppcp_account_request-Modal-close ppcp_account_request-icon-close">
-            <?php esc_html_e( 'Close', 'paypal-advanced-for-woocommerce' ); ?>
+            <?php esc_html_e( 'Close', 'advanced-paypal-complete-payments-for-woocommerce' ); ?>
         </button>
     </div>
     <div class="ppcp_account_request-Modal-content">

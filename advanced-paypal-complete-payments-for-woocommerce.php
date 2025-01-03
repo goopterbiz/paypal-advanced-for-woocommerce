@@ -1,14 +1,14 @@
 <?php
 /**
  * @wordpress-plugin
- * Plugin Name:       PayPal Advanced for WooCommerce
+ * Plugin Name:       Advanced PayPal Complete Payments for WooCommerce
  * Description:       Integrate the PayPal Complete Payments Platform into your WooCommerce site, offering PayPal Checkout, Pay Later, Venmo, direct credit card processing, and various alternative payment options such as Apple Pay, Google Pay, and others!
  * Version:           1.0.0
  * Author:            Goopter
  * Author URI:        https://www.goopter.com/
  * License:           GNU General Public License v3.0
  * License URI:       http://www.gnu.org/licenses/gpl-3.0.html
- * Text Domain:       paypal-advanced-for-woocommerce
+ * Text Domain:       advanced-paypal-complete-payments-for-woocommerce
  * Domain Path:       /i18n/languages/
  * Requires at least: 5.8
  * Tested up to: 6.6.2
@@ -35,7 +35,7 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
     class Goopter_Gateway_Paypal {
 
         protected $plugin_screen_hook_suffix = null;
-        protected $plugin_slug = 'paypal-advanced-for-woocommerce';
+        protected $plugin_slug = 'advanced-paypal-complete-payments-for-woocommerce';
         private $subscription_support_enabled = false;
         public $minified_version;
         public $customer_id = '';
@@ -78,9 +78,9 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
                 'PAYPAL_FOR_WOOCOMMERCE_PPCP_AWS_WEB_SERVICE' => 'https://api-dev.goopter.com/api/v8/ppcpRequest',
                 'PAYPAL_FOR_WOOCOMMERCE_PPCP_GOOPTER_WEB_SERVICE' => 'https://api-dev.goopter.com/api/v8/ppcpRequest',
                 
-                'AE_FEE' => 'ae_p_f',
-                'AE_PPCP_NAME' => 'PayPal Complete Payments',
-                'AE_PPCP_CC' => 'Credit or Debit Card',
+                'GT_FEE' => 'gt_p_f',
+                'GT_PPCP_NAME' => 'PayPal Complete Payments',
+                'GT_PPCP_CC' => 'Credit or Debit Card',
             ];
 
             foreach ($constants as $key => $value) {
@@ -151,7 +151,7 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
         public function plugin_action_links($actions, $plugin_file, $plugin_data, $context) {
             global $woocommerce;
             $gateways = $woocommerce->payment_gateways->payment_gateways();
-            $base_url = admin_url('options-general.php?page=paypal-advanced-for-woocommerce');
+            $base_url = admin_url('options-general.php?page=advanced-paypal-complete-payments-for-woocommerce');
             $configure_url = $base_url;
             if (isset($gateways['goopter_ppcp']) && (
                     ($gateways['goopter_ppcp']->sandbox === true && $gateways['goopter_ppcp']->sandbox_merchant_id) ||
@@ -159,10 +159,10 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
                     )) {
                 $configure_url = admin_url('admin.php?page=wc-settings&tab=checkout&section=goopter_ppcp');
             }
-            $configure = sprintf('<a href="%s">%s</a>', $configure_url, __('Configure', 'paypal-advanced-for-woocommerce'));
+            $configure = sprintf('<a href="%s">%s</a>', $configure_url, __('Configure', 'advanced-paypal-complete-payments-for-woocommerce'));
             $custom_actions = array(
                 'configure' => $configure,
-                'contact' => sprintf('<a href="%s" target="_blank">%s</a>', 'https://www.goopter.com/contact-us/', __('Contact', 'paypal-advanced-for-woocommerce')),
+                'contact' => sprintf('<a href="%s" target="_blank">%s</a>', 'https://www.goopter.com/contact-us/', __('Contact', 'advanced-paypal-complete-payments-for-woocommerce')),
             );
             return array_merge($custom_actions, $actions);
         }
@@ -203,7 +203,7 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
             if (!class_exists("WC_Payment_Gateway"))
                 return;
 
-            include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/includes/ae-ppcp-constants.php');
+            include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/includes/gt-ppcp-constants.php');
             include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/includes/trait-goopter-ppcp-core.php');
             include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/pre-order/trait-wc-ppcp-pre-orders.php');
             include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/includes/class-goopter-session-manager.php');
@@ -248,7 +248,7 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
             wp_register_script('goopter_admin', plugins_url('/assets/js/goopter-admin-v2.js', __FILE__), array('jquery'), $script_versions);
             $translation_array = array(
                 'is_ssl' => is_ssl() ? "yes" : "no",
-                'choose_image' => __('Choose Image', 'paypal-advanced-for-woocommerce'),
+                'choose_image' => __('Choose Image', 'advanced-paypal-complete-payments-for-woocommerce'),
                 'payment_method' => $payment_method,
                 'payment_action' => $payment_action,
                 'is_paypal_credit_enable' => "yes",
@@ -334,10 +334,10 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
         public function goopter_admin_menu_own() {
             $this->plugin_screen_hook_suffix = add_submenu_page(
                     'options-general.php',
-                    __('PayPal for WooCommerce - Settings', 'paypal-advanced-for-woocommerce'),
-                    AE_PPCP_NAME,
+                    __('PayPal for WooCommerce - Settings', 'advanced-paypal-complete-payments-for-woocommerce'),
+                    GT_PPCP_NAME,
                     'manage_options',
-                    'paypal-advanced-for-woocommerce',
+                    'advanced-paypal-complete-payments-for-woocommerce',
                     array($this, 'display_plugin_admin_page')
             );
         }
@@ -471,7 +471,7 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
         }
 
         public function load_plugin_textdomain() {
-            load_plugin_textdomain('paypal-advanced-for-woocommerce', false, plugin_basename(dirname(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_FILE)) . '/i18n/languages');
+            load_plugin_textdomain('advanced-paypal-complete-payments-for-woocommerce', false, plugin_basename(dirname(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_FILE)) . '/i18n/languages');
         }
 
         public function goopter_dismiss_notice() {
@@ -499,7 +499,7 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
             $gateways = $woocommerce->payment_gateways->payment_gateways();
             if (isset($gateways['goopter_ppcp']) && 'yes' === $gateways['goopter_ppcp']->enabled) {
                 $product_data_tabs['goopter_paypal_for_woo_payment_action'] = array(
-                    'label' => __('Payment Action', 'paypal-advanced-for-woocommerce'),
+                    'label' => __('Payment Action', 'advanced-paypal-complete-payments-for-woocommerce'),
                     'target' => 'goopter_paypal_for_woo_payment_action',
                 );
             }
@@ -571,19 +571,19 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
         }
 
         public function goopter_wc_order_statuses($order_statuses) {
-            $order_statuses['wc-partial-payment'] = _x('Partially Paid', 'Order status', 'paypal-advanced-for-woocommerce');
+            $order_statuses['wc-partial-payment'] = _x('Partially Paid', 'Order status', 'advanced-paypal-complete-payments-for-woocommerce');
             return $order_statuses;
         }
 
         public function goopter_register_post_status() {
             register_post_status('wc-partial-payment', array(
-                'label' => _x('Partially Paid', 'Order status', 'paypal-advanced-for-woocommerce'),
+                'label' => _x('Partially Paid', 'Order status', 'advanced-paypal-complete-payments-for-woocommerce'),
                 'public' => false,
                 'exclude_from_search' => false,
                 'show_in_admin_all_list' => true,
                 'show_in_admin_status_list' => true,
                 // Translators: %s is the count of partially paid items.
-                'label_count' => _n_noop('Partially Paid <span class="count">(%s)</span>', 'Partially Paid <span class="count">(%s)</span>', 'paypal-advanced-for-woocommerce'),
+                'label_count' => _n_noop('Partially Paid <span class="count">(%s)</span>', 'Partially Paid <span class="count">(%s)</span>', 'advanced-paypal-complete-payments-for-woocommerce'),
             ));
         }
 
@@ -612,7 +612,7 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
                 if (!is_a($order, 'WC_Order')) {
                     return $classes;
                 }
-                if (ae_is_active_screen(ae_get_shop_order_screen_id())) {
+                if (gt_is_active_screen(gt_get_shop_order_screen_id())) {
                     $order = wc_get_order(absint($post->ID));
                     $payment_method = $order->get_payment_method();
                     if (!empty($payment_method)) {
@@ -630,7 +630,7 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
             $displayed_goopter_onboard_screen = get_option('displayed_goopter_onboard_screen', false);
             if ($woocommerce_goopter_ppcp_settings === false && $displayed_goopter_onboard_screen === false) {
                 update_option('displayed_goopter_onboard_screen', 'yes');
-                wp_safe_redirect(admin_url('options-general.php?page=paypal-advanced-for-woocommerce&tab=general_settings&gateway=paypal_payment_gateway_products'));
+                wp_safe_redirect(admin_url('options-general.php?page=advanced-paypal-complete-payments-for-woocommerce&tab=general_settings&gateway=paypal_payment_gateway_products'));
                 exit;
             }
         }
@@ -653,8 +653,8 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
         }
 
         public function add_meta_boxes() {
-            $screen = ae_get_shop_order_screen_id();
-            if (ae_is_active_screen($screen)) {
+            $screen = gt_get_shop_order_screen_id();
+            if (gt_is_active_screen($screen)) {
                 require_once plugin_dir_path(__FILE__) . 'ppcp-gateway/admin/class-wc-meta-box-order-items-ppcp.php';
                 remove_meta_box('woocommerce-order-items', $screen, 'normal');
                 add_meta_box('woocommerce-order-items', __('Items', 'woocommerce'), 'Custom_WC_Meta_Box_Order_Items::output', $screen, 'normal', 'high');

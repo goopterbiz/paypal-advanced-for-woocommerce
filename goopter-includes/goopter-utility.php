@@ -36,22 +36,22 @@ class Goopter_Utility {
 
         register_post_type('paypal_transaction', apply_filters('paypal_for_woocommerce_register_post_type_paypal_transaction_history', array(
             'labels' => array(
-                'name' => __('PayPal Transaction', 'paypal-advanced-for-woocommerce'),
-                'singular_name' => __('PayPal Transaction', 'paypal-advanced-for-woocommerce'),
-                'menu_name' => _x('PayPal Transaction', 'Admin menu name', 'paypal-advanced-for-woocommerce'),
-                'add_new' => __('Add PayPal Transaction', 'paypal-advanced-for-woocommerce'),
-                'add_new_item' => __('Add New PayPal Transaction', 'paypal-advanced-for-woocommerce'),
-                'edit' => __('Edit', 'paypal-advanced-for-woocommerce'),
-                'edit_item' => __('View PayPal Transaction', 'paypal-advanced-for-woocommerce'),
-                'new_item' => __('New PayPal Transaction', 'paypal-advanced-for-woocommerce'),
-                'view' => __('View PayPal Transaction', 'paypal-advanced-for-woocommerce'),
-                'view_item' => __('View PayPal Transaction', 'paypal-advanced-for-woocommerce'),
-                'search_items' => __('Search PayPal Transaction', 'paypal-advanced-for-woocommerce'),
-                'not_found' => __('No PayPal Transaction found', 'paypal-advanced-for-woocommerce'),
-                'not_found_in_trash' => __('No PayPal Transaction found in trash', 'paypal-advanced-for-woocommerce'),
-                'parent' => __('Parent PayPal Transaction', 'paypal-advanced-for-woocommerce')
+                'name' => __('PayPal Transaction', 'advanced-paypal-complete-payments-for-woocommerce'),
+                'singular_name' => __('PayPal Transaction', 'advanced-paypal-complete-payments-for-woocommerce'),
+                'menu_name' => _x('PayPal Transaction', 'Admin menu name', 'advanced-paypal-complete-payments-for-woocommerce'),
+                'add_new' => __('Add PayPal Transaction', 'advanced-paypal-complete-payments-for-woocommerce'),
+                'add_new_item' => __('Add New PayPal Transaction', 'advanced-paypal-complete-payments-for-woocommerce'),
+                'edit' => __('Edit', 'advanced-paypal-complete-payments-for-woocommerce'),
+                'edit_item' => __('View PayPal Transaction', 'advanced-paypal-complete-payments-for-woocommerce'),
+                'new_item' => __('New PayPal Transaction', 'advanced-paypal-complete-payments-for-woocommerce'),
+                'view' => __('View PayPal Transaction', 'advanced-paypal-complete-payments-for-woocommerce'),
+                'view_item' => __('View PayPal Transaction', 'advanced-paypal-complete-payments-for-woocommerce'),
+                'search_items' => __('Search PayPal Transaction', 'advanced-paypal-complete-payments-for-woocommerce'),
+                'not_found' => __('No PayPal Transaction found', 'advanced-paypal-complete-payments-for-woocommerce'),
+                'not_found_in_trash' => __('No PayPal Transaction found in trash', 'advanced-paypal-complete-payments-for-woocommerce'),
+                'parent' => __('Parent PayPal Transaction', 'advanced-paypal-complete-payments-for-woocommerce')
             ),
-            'description' => __('This is where you can add new PayPal Transaction to your store.', 'paypal-advanced-for-woocommerce'),
+            'description' => __('This is where you can add new PayPal Transaction to your store.', 'advanced-paypal-complete-payments-for-woocommerce'),
             'public' => false,
             'query_var' => false,
         )));
@@ -64,7 +64,7 @@ class Goopter_Utility {
             if (!is_a($order, 'WC_Order')) {
                 return;
             }
-            if (ae_is_active_screen(ae_get_shop_order_screen_id())) {
+            if (gt_is_active_screen(gt_get_shop_order_screen_id())) {
                 if (empty($this->payment_method)) {
                     $this->payment_method = $order->get_payment_method();
                 }
@@ -92,7 +92,7 @@ class Goopter_Utility {
             }
             ?>
         <h3>
-            <?php esc_html_e( 'Billing Agreement Details', 'paypal-advanced-for-woocommerce' ); ?>
+            <?php esc_html_e( 'Billing Agreement Details', 'advanced-paypal-complete-payments-for-woocommerce' ); ?>
         </h3>
         <p><?php echo esc_html( $billing_agreement_id ); ?></p> <?php
     }

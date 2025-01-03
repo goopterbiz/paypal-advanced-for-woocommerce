@@ -474,9 +474,9 @@ class WFOCU_Paypal_For_WC_Gateway_Goopter_PPCP_CC extends WFOCU_Gateway {
                     'value' => (string) $this->round($total_amount),
                     'breakdown' => $this->get_item_breakdown($order, $offer_package),
                 ),
-                // 'description' => __('One Time Offer - ' . $order->get_id(), 'paypal-advanced-for-woocommerce'),
+                // 'description' => __('One Time Offer - ' . $order->get_id(), 'advanced-paypal-complete-payments-for-woocommerce'),
                 // translators: %s is replaced with the order ID.
-                'description' => sprintf(__('One Time Offer - %s', 'paypal-advanced-for-woocommerce'), $order->get_id()),
+                'description' => sprintf(__('One Time Offer - %s', 'advanced-paypal-complete-payments-for-woocommerce'), $order->get_id()),
                 'items' => $this->add_offer_item_data($order, $offer_package),
                 'payee' => array(
                     'merchant_id' => $args['merchant_id']

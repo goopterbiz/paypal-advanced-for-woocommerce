@@ -27,7 +27,7 @@ final class Goopter_PPCP_CC_Block extends AbstractPaymentMethodType {
         wp_register_style('goopter_ppcp', PAYPAL_FOR_WOOCOMMERCE_ASSET_URL . 'ppcp-gateway/css/wc-gateway-ppcp-goopter-public.css', array(), $this->version, 'all');
         wp_register_script('goopter_ppcp_cc-blocks-integration', PAYPAL_FOR_WOOCOMMERCE_ASSET_URL . 'ppcp-gateway/checkout-block/ppcp-cc.js', array(), VERSION_PFW, true);
         if (goopter_ppcp_has_active_session()) {
-            $order_button_text = apply_filters('goopter_ppcp_cc_order_review_page_place_order_button_text', __('Confirm Your PayPal Order', 'paypal-advanced-for-woocommerce'));
+            $order_button_text = apply_filters('goopter_ppcp_cc_order_review_page_place_order_button_text', __('Confirm Your PayPal Order', 'advanced-paypal-complete-payments-for-woocommerce'));
         } else {
             $order_button_text = 'Proceed to PayPal';
         }
@@ -58,7 +58,7 @@ final class Goopter_PPCP_CC_Block extends AbstractPaymentMethodType {
         ));
         
         if (function_exists('wp_set_script_translations')) {
-            wp_set_script_translations('goopter_ppcp_cc-blocks-integration', 'paypal-advanced-for-woocommerce');
+            wp_set_script_translations('goopter_ppcp_cc-blocks-integration', 'advanced-paypal-complete-payments-for-woocommerce');
         }
         wp_enqueue_script('goopter_ppcp_cc');
         if (goopter_ppcp_has_active_session() === false && $page === 'cart') {

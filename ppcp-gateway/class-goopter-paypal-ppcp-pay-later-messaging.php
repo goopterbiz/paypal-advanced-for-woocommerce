@@ -60,7 +60,7 @@ class Goopter_PayPal_PPCP_Pay_Later {
     }
 
     public function goopter_ppcp_get_properties() {
-        $this->title = $this->setting_obj->get('title', AE_PPCP_NAME . ' - Built by Goopter');
+        $this->title = $this->setting_obj->get('title', GT_PPCP_NAME . ' - Built by Goopter');
         $this->enabled = 'yes' === $this->setting_obj->get('enabled', 'no');
         $this->is_sandbox = 'yes' === $this->setting_obj->get('testmode', 'no');
         $this->sandbox_client_id = $this->setting_obj->get('sandbox_client_id', '');
@@ -114,7 +114,7 @@ class Goopter_PayPal_PPCP_Pay_Later {
             if ($this->is_paypal_pay_later_messaging_enable_for_page($page = 'payment') && $this->pay_later_messaging_payment_shortcode === false) {
                 add_action('goopter_ppcp_display_paypal_button_checkout_page', array($this, 'goopter_ppcp_pay_later_messaging_payment_page'), 9);
             }
-            add_shortcode('aepfw_bnpl_message', array($this, 'aepfw_bnpl_message_shortcode'), 10);
+            add_shortcode('gtpfw_bnpl_message', array($this, 'gtpfw_bnpl_message_shortcode'), 10);
             add_action('woocommerce_review_order_before_submit', array($this, 'ppcp_payment_fields'));
         }
     }
@@ -360,7 +360,7 @@ class Goopter_PayPal_PPCP_Pay_Later {
         }
     }
 
-    public function aepfw_bnpl_message_shortcode($atts) {
+    public function gtpfw_bnpl_message_shortcode($atts) {
         if (empty($atts['placement'])) {
             return '';
         }

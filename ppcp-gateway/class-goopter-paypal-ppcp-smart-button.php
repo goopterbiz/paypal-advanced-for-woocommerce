@@ -125,14 +125,14 @@ class Goopter_PayPal_PPCP_Smart_Button {
     }
 
     public function goopter_ppcp_get_properties() {
-        $this->title = $this->setting_obj->get('title', sprintf('%s - Built by Goopter', AE_PPCP_NAME));
+        $this->title = $this->setting_obj->get('title', sprintf('%s - Built by Goopter', GT_PPCP_NAME));
         $this->enabled = 'yes' === $this->setting_obj->get('enabled', 'no');
         $this->enable_paypal_checkout_page = 'yes' === $this->setting_obj->get('enable_paypal_checkout_page', 'yes');
         $this->checkout_page_display_option = $this->setting_obj->get('checkout_page_display_option', 'regular');
         $this->is_sandbox = 'yes' === $this->setting_obj->get('testmode', 'no');
         $this->order_review_page_enable_coupons = 'yes' === $this->setting_obj->get('order_review_page_enable_coupons', 'yes');
-        $this->order_review_page_title = apply_filters('goopter_ppcp_order_review_page_title', __('Complete Order Payment', 'paypal-advanced-for-woocommerce'));
-        $this->order_review_page_description = apply_filters('goopter_ppcp_order_review_page_description', __("<strong>You're almost done!</strong><br>Review your information before you place your order.", 'paypal-advanced-for-woocommerce'));
+        $this->order_review_page_title = apply_filters('goopter_ppcp_order_review_page_title', __('Complete Order Payment', 'advanced-paypal-complete-payments-for-woocommerce'));
+        $this->order_review_page_description = apply_filters('goopter_ppcp_order_review_page_description', __("<strong>You're almost done!</strong><br>Review your information before you place your order.", 'advanced-paypal-complete-payments-for-woocommerce'));
         $this->paymentaction = $this->setting_obj->get('paymentaction', 'capture');
         $this->advanced_card_payments = 'yes' === $this->setting_obj->get('enable_advanced_card_payments', 'no');
         $this->cart_button_position = $this->setting_obj->get('cart_button_position', 'bottom');
@@ -473,7 +473,7 @@ class Goopter_PayPal_PPCP_Smart_Button {
             wp_enqueue_script($this->goopter_ppcp_plugin_name . '-order-capture', PAYPAL_FOR_WOOCOMMERCE_ASSET_URL . 'ppcp-gateway/js/wc-gateway-ppcp-goopter-order-capture.js', array('jquery'), $this->version, false);
         }
 
-        $ae_script_loader_handle = 'goopter-paypal-checkout-sdk';
+        $gt_script_loader_handle = 'goopter-paypal-checkout-sdk';
         $enable_funding = [];
         $smart_js_arg = array();
         $active_currency = get_woocommerce_currency();
@@ -493,7 +493,7 @@ class Goopter_PayPal_PPCP_Smart_Button {
         if (in_array($active_currency, $this->goopter_ppcp_currency_list)) {
             $this->goopter_ppcp_currency = $active_currency;
         } else {
-            // wc_add_notice($active_currency . ' ' . __('currency is not supported.', 'paypal-advanced-for-woocommerce'));
+            // wc_add_notice($active_currency . ' ' . __('currency is not supported.', 'advanced-paypal-complete-payments-for-woocommerce'));
             $this->goopter_ppcp_currency = 'USD';
         }
         $smart_js_arg['currency'] = $this->goopter_ppcp_currency;
@@ -502,14 +502,14 @@ class Goopter_PayPal_PPCP_Smart_Button {
         $script_versions = empty($this->minified_version) ? time() : VERSION_PFW;
         wp_register_script($this->goopter_ppcp_plugin_name . '-common-functions', PAYPAL_FOR_WOOCOMMERCE_ASSET_URL . 'ppcp-gateway/js/wc-goopter-common-functions' . $this->minified_version . '.js', array('jquery', 'wp-i18n'), $script_versions, false);
         $dir_path = dirname(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_FILE) . '/i18n/languages';
-        wp_set_script_translations($this->goopter_ppcp_plugin_name . '-common-functions', 'paypal-advanced-for-woocommerce', $dir_path);
+        wp_set_script_translations($this->goopter_ppcp_plugin_name . '-common-functions', 'advanced-paypal-complete-payments-for-woocommerce', $dir_path);
         // wp_register_script('goopter-paypal-checkout-sdk', $js_url, array(), null, false);
-        wp_register_script($ae_script_loader_handle, PAYPAL_FOR_WOOCOMMERCE_ASSET_URL . 'assets/js/goopter-script-loader' . $this->minified_version . '.js', array('jquery', 'goopter_ppcp-common-functions'), $script_versions, true);
+        wp_register_script($gt_script_loader_handle, PAYPAL_FOR_WOOCOMMERCE_ASSET_URL . 'assets/js/goopter-script-loader' . $this->minified_version . '.js', array('jquery', 'goopter_ppcp-common-functions'), $script_versions, true);
         if ($this->enable_apple_pay) {
-            wp_register_script($this->goopter_ppcp_plugin_name . '-apple-pay', PAYPAL_FOR_WOOCOMMERCE_ASSET_URL . 'ppcp-gateway/js/wc-gateway-ppcp-goopter-apple-pay' . $this->minified_version . '.js', array($ae_script_loader_handle), $script_versions, false);
+            wp_register_script($this->goopter_ppcp_plugin_name . '-apple-pay', PAYPAL_FOR_WOOCOMMERCE_ASSET_URL . 'ppcp-gateway/js/wc-gateway-ppcp-goopter-apple-pay' . $this->minified_version . '.js', array($gt_script_loader_handle), $script_versions, false);
         }
         if ($this->enable_google_pay) {
-            wp_register_script($this->goopter_ppcp_plugin_name . '-google-pay', PAYPAL_FOR_WOOCOMMERCE_ASSET_URL . 'ppcp-gateway/js/wc-gateway-ppcp-goopter-google-pay' . $this->minified_version . '.js', array($ae_script_loader_handle), $script_versions, false);
+            wp_register_script($this->goopter_ppcp_plugin_name . '-google-pay', PAYPAL_FOR_WOOCOMMERCE_ASSET_URL . 'ppcp-gateway/js/wc-gateway-ppcp-goopter-google-pay' . $this->minified_version . '.js', array($gt_script_loader_handle), $script_versions, false);
         }
         $components = ["buttons"];
 
@@ -552,7 +552,7 @@ class Goopter_PayPal_PPCP_Smart_Button {
                     $smart_js_arg['buyer-country'] = WC()->customer->get_billing_country();
                 }
             }
-            $product_cart_amounts = $this->payment_request->ae_get_updated_checkout_payment_data();
+            $product_cart_amounts = $this->payment_request->gt_get_updated_checkout_payment_data();
 
             $this->paymentaction = apply_filters('goopter_ppcp_paymentaction', $this->paymentaction, null);
 
@@ -730,10 +730,10 @@ class Goopter_PayPal_PPCP_Smart_Button {
             }
 
             // This script is only required for the payment processing
-            wp_register_script($this->goopter_ppcp_plugin_name, PAYPAL_FOR_WOOCOMMERCE_ASSET_URL . 'ppcp-gateway/js/wc-gateway-ppcp-goopter-public' . $this->minified_version . '.js', array($ae_script_loader_handle, 'goopter_ppcp-common-functions'), $script_versions, true);
+            wp_register_script($this->goopter_ppcp_plugin_name, PAYPAL_FOR_WOOCOMMERCE_ASSET_URL . 'ppcp-gateway/js/wc-gateway-ppcp-goopter-public' . $this->minified_version . '.js', array($gt_script_loader_handle, 'goopter_ppcp-common-functions'), $script_versions, true);
         }
         if (is_add_payment_method_page()) {
-            wp_register_script($this->goopter_ppcp_plugin_name . '-add-payment-method', PAYPAL_FOR_WOOCOMMERCE_ASSET_URL . 'ppcp-gateway/js/wc-gateway-ppcp-add-payment-method' . $this->minified_version . '.js', [$ae_script_loader_handle], $script_versions, true);
+            wp_register_script($this->goopter_ppcp_plugin_name . '-add-payment-method', PAYPAL_FOR_WOOCOMMERCE_ASSET_URL . 'ppcp-gateway/js/wc-gateway-ppcp-add-payment-method' . $this->minified_version . '.js', [$gt_script_loader_handle], $script_versions, true);
         }
 
         // Remove google pay option for the subscription products on product, cart and checkout page
@@ -759,7 +759,7 @@ class Goopter_PayPal_PPCP_Smart_Button {
         }
         $js_url = add_query_arg($smart_js_arg, 'https://www.paypal.com/sdk/js');
 
-        wp_localize_script($ae_script_loader_handle, 'goopter_ppcp_manager', array(
+        wp_localize_script($gt_script_loader_handle, 'goopter_ppcp_manager', array(
             'sandbox_mode' => (bool) $this->is_sandbox,
             'paypal_sdk_url' => $js_url,
             'paypal_sdk_attributes' => $this->get_paypal_sdk_attributes(),
@@ -855,7 +855,7 @@ class Goopter_PayPal_PPCP_Smart_Button {
             goopter_ppcp_add_css_js();
             $available_gateways = WC()->payment_gateways->get_available_payment_gateways();
             if (!empty($available_gateways)) {
-                $separator_html = '<div class="goopter_ppcp-proceed-to-checkout-button-separator">&mdash; ' . __('OR', 'paypal-advanced-for-woocommerce') . ' &mdash;</div>';
+                $separator_html = '<div class="goopter_ppcp-proceed-to-checkout-button-separator">&mdash; ' . __('OR', 'advanced-paypal-complete-payments-for-woocommerce') . ' &mdash;</div>';
             } else {
                 $separator_html = '';
                 $custom_css = "
@@ -932,7 +932,7 @@ class Goopter_PayPal_PPCP_Smart_Button {
                         'goopter_ppcp_checkout_top_html',
                         '<div class="goopter_ppcp top_checkout_container_from_pfw">
                             <fieldset>
-                                <legend class="express-title">' . esc_html__('PayPal Checkout', 'paypal-advanced-for-woocommerce') . '</legend>
+                                <legend class="express-title">' . esc_html__('PayPal Checkout', 'advanced-paypal-complete-payments-for-woocommerce') . '</legend>
                                 <div class="wc_ppcp_express_checkout_gateways">
                                     <div class="goopter_ppcp-gateway express_payment_method_ppcp">
                                         <div class="goopter_ppcp-button-container goopter_ppcp_' . esc_attr($this->style_layout) . '_' . esc_attr($this->style_size) . '">
@@ -1062,15 +1062,15 @@ class Goopter_PayPal_PPCP_Smart_Button {
         if (empty($this->checkout_details)) {
             return false;
         }
-        $billing_edit_link = "&nbsp;&nbsp;&nbsp;<a class='goopter_ppcp_edit_billing_address'>" . __('Edit', 'paypal-advanced-for-woocommerce') . "</a>";
+        $billing_edit_link = "&nbsp;&nbsp;&nbsp;<a class='goopter_ppcp_edit_billing_address'>" . __('Edit', 'advanced-paypal-complete-payments-for-woocommerce') . "</a>";
         ?>
         <div class="goopter_ppcp_billing_details">
         <?php if (wc_ship_to_billing_address_only() && WC()->cart->needs_shipping()) { ?>
-                <h3><?php esc_html_e('Billing &amp; Shipping', 'paypal-advanced-for-woocommerce'); ?> <?php echo esc_url($billing_edit_link); ?></h3>
+                <h3><?php esc_html_e('Billing &amp; Shipping', 'advanced-paypal-complete-payments-for-woocommerce'); ?> <?php echo esc_url($billing_edit_link); ?></h3>
             <?php } else { ?>
                 <h3>
                 <?php
-                esc_html_e('Billing details', 'paypal-advanced-for-woocommerce');
+                esc_html_e('Billing details', 'advanced-paypal-complete-payments-for-woocommerce');
                 if ($this->set_billing_address) {
                     echo wp_kses_post($billing_edit_link);
                 }
@@ -1098,9 +1098,9 @@ class Goopter_PayPal_PPCP_Smart_Button {
             ?>
         <div class="goopter_ppcp_shipping_details">
             <h3>
-                <?php esc_html_e( 'Shipping details', 'paypal-advanced-for-woocommerce' ); ?>&nbsp;&nbsp;&nbsp;
+                <?php esc_html_e( 'Shipping details', 'advanced-paypal-complete-payments-for-woocommerce' ); ?>&nbsp;&nbsp;&nbsp;
                     <a class="goopter_ppcp_edit_shipping_address">
-                        <?php esc_html_e( 'Edit', 'paypal-advanced-for-woocommerce' ); ?>
+                        <?php esc_html_e( 'Edit', 'advanced-paypal-complete-payments-for-woocommerce' ); ?>
                     </a>
             </h3>
             <?php echo wp_kses_post(WC()->countries->get_formatted_address(goopter_ppcp_get_mapped_shipping_address($this->checkout_details))); ?>
@@ -1116,7 +1116,7 @@ class Goopter_PayPal_PPCP_Smart_Button {
                 <p class="form-row form-row-wide create-account">
                     <input class="input-checkbox" id="createaccount" <?php checked(( true === $checkout->get_value('createaccount') || ( true === apply_filters('woocommerce_create_account_default_checked', false) )), true) ?> type="checkbox" name="createaccount" value="1" /> 
                     <label for="createaccount" class="checkbox">
-                        <?php esc_html_e( 'Create an account?', 'paypal-advanced-for-woocommerce' ); ?>
+                        <?php esc_html_e( 'Create an account?', 'advanced-paypal-complete-payments-for-woocommerce' ); ?>
                     </label>
                 </p>
                 <?php
@@ -1125,7 +1125,7 @@ class Goopter_PayPal_PPCP_Smart_Button {
                 ?>
                 <div class="create-account">
                     <p>
-                        <?php esc_html_e( 'Create an account by entering the information below. If you are a returning customer please login at the top of the page.', 'paypal-advanced-for-woocommerce' ); ?>
+                        <?php esc_html_e( 'Create an account by entering the information below. If you are a returning customer please login at the top of the page.', 'advanced-paypal-complete-payments-for-woocommerce' ); ?>
                     </p>
                 <?php foreach ($checkout->checkout_fields['account'] as $key => $field) : ?>
                         <?php woocommerce_form_field($key, $field, $checkout->get_value($key)); ?>
@@ -1344,8 +1344,8 @@ class Goopter_PayPal_PPCP_Smart_Button {
         $attributes = ['data-namespace' => 'goopter_paypal_sdk'];
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- no security issue
         if (!isset($_GET['paypal_order_id'])) {
-            $ae_ppcp_account_reconnect_notice = get_option('ae_ppcp_account_reconnect_notice');
-            if (empty($ae_ppcp_account_reconnect_notice) && $this->advanced_card_payments) {
+            $gt_ppcp_account_reconnect_notice = get_option('gt_ppcp_account_reconnect_notice');
+            if (empty($gt_ppcp_account_reconnect_notice) && $this->advanced_card_payments) {
                 if (is_checkout() || is_checkout_pay_page() || ($this->enable_tokenized_payments && is_user_logged_in() && is_add_payment_method_page())) {
                     $this->client_token = $this->payment_request->goopter_ppcp_get_generate_token();
                     if (!empty($this->client_token)) {
@@ -1466,7 +1466,7 @@ class Goopter_PayPal_PPCP_Smart_Button {
 
     public function goopter_ppcp_cancel_button() {
         if (goopter_ppcp_has_active_session()) {
-            $order_button_text = __('Cancel order', 'paypal-advanced-for-woocommerce');
+            $order_button_text = __('Cancel order', 'advanced-paypal-complete-payments-for-woocommerce');
             $cancel_order_url = add_query_arg(array('goopter_ppcp_action' => 'cancel_order', 'utm_nooverride' => '1', 'from' => 'checkout'), untrailingslashit(WC()->api_request_url('Goopter_PayPal_PPCP_Front_Action')));
             echo wp_kses_post(
                 apply_filters(
@@ -1730,7 +1730,7 @@ class Goopter_PayPal_PPCP_Smart_Button {
         if (!empty($goopter_ppcp_payment_method_title)) {
             ?>
             <tr id="goopter_order_review_payment_method">
-                <th><?php esc_html_e('Payment method:', 'paypal-advanced-for-woocommerce'); ?></th>
+                <th><?php esc_html_e('Payment method:', 'advanced-paypal-complete-payments-for-woocommerce'); ?></th>
                 <td><strong><?php echo wp_kses_post($goopter_ppcp_payment_method_title); ?></strong></td>
             </tr>
             <?php
@@ -2070,7 +2070,7 @@ class Goopter_PayPal_PPCP_Smart_Button {
     }
 
     public function add_order_checkout_data_for_direct_checkouts($fragments) {
-        $paymentData = $this->payment_request->ae_get_updated_checkout_payment_data();
+        $paymentData = $this->payment_request->gt_get_updated_checkout_payment_data();
         $fragments['goopter_payments_data'] = wp_json_encode($paymentData);
         return $fragments;
     }

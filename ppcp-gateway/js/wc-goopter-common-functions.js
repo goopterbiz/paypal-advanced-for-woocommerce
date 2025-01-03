@@ -362,14 +362,14 @@ const goopterOrder = {
     hideShowPlaceOrderButton: () => {
         let selectedPaymentMethod = goopterOrder.getSelectedPaymentMethod();
         console.log('hideShowPlaceOrderButton', selectedPaymentMethod)
-        let isAePpcpMethodSelected = goopterOrder.isGoopterPpcpPaymentMethodSelected();
-        if (isAePpcpMethodSelected === true) {
+        let isGtPpcpMethodSelected = goopterOrder.isGoopterPpcpPaymentMethodSelected();
+        if (isGtPpcpMethodSelected === true) {
             jQuery('.wcf-pre-checkout-offer-action').val('');
         }
         if (goopterOrder.isCardFieldEligible() === false) {
             jQuery('.payment_method_goopter_ppcp_cc').hide();
         }
-        if ((isAePpcpMethodSelected === true && goopter_ppcp_manager.is_checkout_disable_smart_button === 'no') ||
+        if ((isGtPpcpMethodSelected === true && goopter_ppcp_manager.is_checkout_disable_smart_button === 'no') ||
                 goopterOrder.isGoopterPpcpAdditionalPaymentMethodSelected()) {
             showHidePlaceOrderBtn();
             goopterOrder.showPpcpPaymentMethods();
@@ -809,21 +809,21 @@ const goopterOrder = {
 
 __ = wp.i18n.__;
 const localizedMessages = {
-    card_not_supported: __('Unfortunately, we do not support this credit card type. Please try another card type.', 'paypal-advanced-for-woocommerce'),
-    fields_not_valid: __('Unfortunately, your credit card details are not valid. Please review the card details and try again.', 'paypal-advanced-for-woocommerce'),
-    error_message_checkout_validation: __('Unable to create the order due to the following errors.', 'paypal-advanced-for-woocommerce'),
-    expiry_date_placeholder: __('MM / YY', 'paypal-advanced-for-woocommerce'),
-    cvc_placeholder: __('CVC', 'paypal-advanced-for-woocommerce', 'paypal-advanced-for-woocommerce'),
-    empty_cart_message: __('Your shopping cart seems to be empty.', 'paypal-advanced-for-woocommerce'),
-    total_amount_placeholder: __('Total Amount', 'paypal-advanced-for-woocommerce'),
-    apple_pay_pay_error: __('An error occurred while initiating the ApplePay payment.', 'paypal-advanced-for-woocommerce'),
-    error_validating_merchant: __('This merchant is not enabled to process requested payment method. please contact website owner.', 'paypal-advanced-for-woocommerce'),
-    general_error_message: __('We are unable to process your request at the moment, please contact website owner.', 'paypal-advanced-for-woocommerce'),
-    shipping_amount_update_error: __('Unable to update the shipping amount.', 'paypal-advanced-for-woocommerce'),
-    shipping_amount_pull_error: __('Unable to pull the shipping amount details based on selected address', 'paypal-advanced-for-woocommerce'),
-    currency_change_js_load_error: __('We encountered an issue loading the updated currency. Please refresh the page or contact support for assistance.', 'paypal-advanced-for-woocommerce'),
-    create_order_error: __('Unable to create the order, please contact the support.', 'paypal-advanced-for-woocommerce'),
-    create_order_error_with_content: __('Unable to create the order, please contact the support with following error message.', 'paypal-advanced-for-woocommerce')
+    card_not_supported: __('Unfortunately, we do not support this credit card type. Please try another card type.', 'advanced-paypal-complete-payments-for-woocommerce'),
+    fields_not_valid: __('Unfortunately, your credit card details are not valid. Please review the card details and try again.', 'advanced-paypal-complete-payments-for-woocommerce'),
+    error_message_checkout_validation: __('Unable to create the order due to the following errors.', 'advanced-paypal-complete-payments-for-woocommerce'),
+    expiry_date_placeholder: __('MM / YY', 'advanced-paypal-complete-payments-for-woocommerce'),
+    cvc_placeholder: __('CVC', 'advanced-paypal-complete-payments-for-woocommerce', 'advanced-paypal-complete-payments-for-woocommerce'),
+    empty_cart_message: __('Your shopping cart seems to be empty.', 'advanced-paypal-complete-payments-for-woocommerce'),
+    total_amount_placeholder: __('Total Amount', 'advanced-paypal-complete-payments-for-woocommerce'),
+    apple_pay_pay_error: __('An error occurred while initiating the ApplePay payment.', 'advanced-paypal-complete-payments-for-woocommerce'),
+    error_validating_merchant: __('This merchant is not enabled to process requested payment method. please contact website owner.', 'advanced-paypal-complete-payments-for-woocommerce'),
+    general_error_message: __('We are unable to process your request at the moment, please contact website owner.', 'advanced-paypal-complete-payments-for-woocommerce'),
+    shipping_amount_update_error: __('Unable to update the shipping amount.', 'advanced-paypal-complete-payments-for-woocommerce'),
+    shipping_amount_pull_error: __('Unable to pull the shipping amount details based on selected address', 'advanced-paypal-complete-payments-for-woocommerce'),
+    currency_change_js_load_error: __('We encountered an issue loading the updated currency. Please refresh the page or contact support for assistance.', 'advanced-paypal-complete-payments-for-woocommerce'),
+    create_order_error: __('Unable to create the order, please contact the support.', 'advanced-paypal-complete-payments-for-woocommerce'),
+    create_order_error_with_content: __('Unable to create the order, please contact the support with following error message.', 'advanced-paypal-complete-payments-for-woocommerce')
 };
 
 const pfwUrlHelper = {

@@ -9,10 +9,10 @@ do_action('woocommerce_email_header', $email_heading, $email);
 
 <?php ?>
 <p><?php // Translators: %s is the billing first name of the customer.
-printf(esc_html__('Hi %s,', 'paypal-advanced-for-woocommerce'), esc_html($order->get_billing_first_name())); ?></p>
+printf(esc_html__('Hi %s,', 'advanced-paypal-complete-payments-for-woocommerce'), esc_html($order->get_billing_first_name())); ?></p>
 <?php ?>
 <p><?php // Translators: %s is the order number.
-printf(esc_html__('Just to let you know &mdash; we\'ve received your order #%s, and it is now being processed:', 'paypal-advanced-for-woocommerce'), esc_html($order->get_order_number())); ?></p>
+printf(esc_html__('Just to let you know &mdash; we\'ve received your order #%s, and it is now being processed:', 'advanced-paypal-complete-payments-for-woocommerce'), esc_html($order->get_order_number())); ?></p>
 
 <?php
 do_action('woocommerce_email_order_details', $order, $sent_to_admin, $plain_text, $email);

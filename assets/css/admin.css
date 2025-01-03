@@ -27,7 +27,7 @@
 .ppcp_email_confirm p {
     margin: 15px 0;
 }
-.goopter-paypal-advanced-for-woocommerce-shipping-tools-wrap {
+.goopter-advanced-paypal-complete-payments-for-woocommerce-shipping-tools-wrap {
     background: #fff none repeat scroll 0 0;
     float: left;
     margin: 10px 0;
@@ -38,24 +38,24 @@
     border-radius: 3px;
 }
 
-.goopter-paypal-advanced-for-woocommerce-shipping-tools-wrap .goopter-paypal-advanced-for-woocommerce-shipping-tools-bulk-action-section {
+.goopter-advanced-paypal-complete-payments-for-woocommerce-shipping-tools-wrap .goopter-advanced-paypal-complete-payments-for-woocommerce-shipping-tools-bulk-action-section {
     float: left;
     margin: 10px 10px 10px 0;
 }
-.goopter-paypal-advanced-for-woocommerce-shipping-tools-wrap h3 {
+.goopter-advanced-paypal-complete-payments-for-woocommerce-shipping-tools-wrap h3 {
     margin-bottom: 5px;
     padding-top: 15px;
 }
 .goopter-hidden {
     display: none;
 }
-.goopter-paypal-advanced-for-woocommerce-shipping-tools-wrap .goopter-paypal-advanced-for-woocommerce-shipping-tools-bulk-action-section label {
+.goopter-advanced-paypal-complete-payments-for-woocommerce-shipping-tools-wrap .goopter-advanced-paypal-complete-payments-for-woocommerce-shipping-tools-bulk-action-section label {
     font-weight: bold;
     line-height: 24px;
     margin: 0 0 0 4px !important;
 }
-#plugin-icon-paypal-advanced-for-woocommerce {
-    background-image: url("//ps.w.org/paypal-advanced-for-woocommerce/assets/icon-128x128.png?rev=1145851");
+#plugin-icon-advanced-paypal-complete-payments-for-woocommerce {
+    background-image: url("//ps.w.org/advanced-paypal-complete-payments-for-woocommerce/assets/icon-128x128.png?rev=1145851");
     background-size: 128px 128px;
     height: 128px;
     width: 128px;

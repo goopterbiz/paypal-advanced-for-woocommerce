@@ -1,4 +1,4 @@
-=== PayPal Advanced for WooCommerce ===
+=== Advanced PayPal Complete Payments for WooCommerce ===
 Contributors: goopter
 Tags: woocommerce, paypal, apple pay, google play, credit card
 Requires at least: 5.8

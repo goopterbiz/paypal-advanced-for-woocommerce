@@ -456,23 +456,23 @@ if (!function_exists('goopter_ppcp_get_payment_method_title')) {
     function goopter_ppcp_get_payment_method_title($payment_name = '') {
         $final_payment_method_name = '';
         $list_payment_method = array(
-            'card' => __('Credit or Debit Card', 'paypal-advanced-for-woocommerce'),
-            'credit' => __('PayPal Credit', 'paypal-advanced-for-woocommerce'),
-            'bancontact' => __('Bancontact', 'paypal-advanced-for-woocommerce'),
-            'blik' => __('BLIK', 'paypal-advanced-for-woocommerce'),
-            'eps' => __('eps', 'paypal-advanced-for-woocommerce'),
-            'giropay' => __('giropay', 'paypal-advanced-for-woocommerce'),
-            'ideal' => __('iDEAL', 'paypal-advanced-for-woocommerce'),
-            'mercadopago' => __('Mercado Pago', 'paypal-advanced-for-woocommerce'),
-            'mybank' => __('MyBank', 'paypal-advanced-for-woocommerce'),
-            'p24' => __('Przelewy24', 'paypal-advanced-for-woocommerce'),
-            'sepa' => __('SEPA-Lastschrift', 'paypal-advanced-for-woocommerce'),
-            'sofort' => __('Sofort', 'paypal-advanced-for-woocommerce'),
-            'venmo' => __('Venmo', 'paypal-advanced-for-woocommerce'),
-            'paylater' => __('PayPal Pay Later', 'paypal-advanced-for-woocommerce'),
-            'paypal' => __('PayPal Checkout', 'paypal-advanced-for-woocommerce'),
-            'apple_pay' => __('Apple Pay', 'paypal-advanced-for-woocommerce'),
-            'google_pay' => __('Google Pay', 'paypal-advanced-for-woocommerce'),
+            'card' => __('Credit or Debit Card', 'advanced-paypal-complete-payments-for-woocommerce'),
+            'credit' => __('PayPal Credit', 'advanced-paypal-complete-payments-for-woocommerce'),
+            'bancontact' => __('Bancontact', 'advanced-paypal-complete-payments-for-woocommerce'),
+            'blik' => __('BLIK', 'advanced-paypal-complete-payments-for-woocommerce'),
+            'eps' => __('eps', 'advanced-paypal-complete-payments-for-woocommerce'),
+            'giropay' => __('giropay', 'advanced-paypal-complete-payments-for-woocommerce'),
+            'ideal' => __('iDEAL', 'advanced-paypal-complete-payments-for-woocommerce'),
+            'mercadopago' => __('Mercado Pago', 'advanced-paypal-complete-payments-for-woocommerce'),
+            'mybank' => __('MyBank', 'advanced-paypal-complete-payments-for-woocommerce'),
+            'p24' => __('Przelewy24', 'advanced-paypal-complete-payments-for-woocommerce'),
+            'sepa' => __('SEPA-Lastschrift', 'advanced-paypal-complete-payments-for-woocommerce'),
+            'sofort' => __('Sofort', 'advanced-paypal-complete-payments-for-woocommerce'),
+            'venmo' => __('Venmo', 'advanced-paypal-complete-payments-for-woocommerce'),
+            'paylater' => __('PayPal Pay Later', 'advanced-paypal-complete-payments-for-woocommerce'),
+            'paypal' => __('PayPal Checkout', 'advanced-paypal-complete-payments-for-woocommerce'),
+            'apple_pay' => __('Apple Pay', 'advanced-paypal-complete-payments-for-woocommerce'),
+            'google_pay' => __('Google Pay', 'advanced-paypal-complete-payments-for-woocommerce'),
         );
         if (!empty($payment_name)) {
             $final_payment_method_name = $list_payment_method[$payment_name] ?? $payment_name;
@@ -1009,9 +1009,9 @@ if (!function_exists('is_used_save_payment_token')) {
 
 }
 
-if (!function_exists('ae_get_checkout_url')) {
+if (!function_exists('gt_get_checkout_url')) {
 
-    function ae_get_checkout_url(): string {
+    function gt_get_checkout_url(): string {
         $checkout_page_url = wc_get_checkout_url();
         // phpcs:disable WordPress.Security.NonceVerification.Recommended -- from third party plugin
         if (isset($_REQUEST['wfacp_id'])) {

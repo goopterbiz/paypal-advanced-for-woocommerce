@@ -37,7 +37,7 @@ class Goopter_PayPal_PPCP_Front_Action {
         $this->goopter_ppcp_plugin_name = 'goopter_ppcp';
         $this->goopter_ppcp_load_class();
         $this->paymentaction = $this->setting_obj->get('paymentaction', 'capture');
-        $this->title = $this->setting_obj->get('title', AE_PPCP_NAME . ' - Built by Goopter');
+        $this->title = $this->setting_obj->get('title', GT_PPCP_NAME . ' - Built by Goopter');
         $this->advanced_card_payments = 'yes' === $this->setting_obj->get('enable_advanced_card_payments', 'no');
         $this->is_sandbox = 'yes' === $this->setting_obj->get('testmode', 'no');
         if ($this->dcc_applies->for_country_currency() === false) {
@@ -263,7 +263,7 @@ class Goopter_PayPal_PPCP_Front_Action {
                                 $this->product::goopter_ppcp_add_to_cart_action();
                             }
                             if (goopter_ppcp_get_order_total() === 0) {
-                                $wc_notice = __('Sorry, your session has expired.', 'paypal-advanced-for-woocommerce');
+                                $wc_notice = __('Sorry, your session has expired.', 'advanced-paypal-complete-payments-for-woocommerce');
                                 $all_notices = WC()->session->get('wc_notices', []);
                                 if (wc_notice_count('error')) {
                                     wc_clear_notices();
@@ -365,7 +365,7 @@ class Goopter_PayPal_PPCP_Front_Action {
                     if (!empty($woo_order_id)) {
                         $order = wc_get_order($woo_order_id);
                         if (is_a($order, 'WC_Order')) {
-                            $response = $this->payment_request->ae_get_updated_checkout_payment_data($order);
+                            $response = $this->payment_request->gt_get_updated_checkout_payment_data($order);
                         } else {
                             $response = [
                                 'status' => false,
@@ -373,7 +373,7 @@ class Goopter_PayPal_PPCP_Front_Action {
                             ];
                         }
                     } else {
-                        $response = $this->payment_request->ae_get_updated_checkout_payment_data();
+                        $response = $this->payment_request->gt_get_updated_checkout_payment_data();
                     }
                     wp_send_json($response);
                     break;
@@ -588,7 +588,7 @@ class Goopter_PayPal_PPCP_Front_Action {
                         }
                         wp_send_json_success(array(
                             'result' => 'failure',
-                            'redirect' => ae_get_checkout_url()
+                            'redirect' => gt_get_checkout_url()
                         ));
                         exit();
                     }
@@ -612,10 +612,10 @@ class Goopter_PayPal_PPCP_Front_Action {
                     $order->save_meta_data();
                 } elseif ($liability_shift_result === 2) {
                     $is_success = false;
-                    wc_add_notice(__('We cannot process your order with the payment information that you provided. Please use an alternate payment method.', 'paypal-advanced-for-woocommerce'), 'error');
+                    wc_add_notice(__('We cannot process your order with the payment information that you provided. Please use an alternate payment method.', 'advanced-paypal-complete-payments-for-woocommerce'), 'error');
                 } elseif ($liability_shift_result === 3) {
                     $is_success = false;
-                    wc_add_notice(__('Something went wrong. Please try again.', 'paypal-advanced-for-woocommerce'), 'error');
+                    wc_add_notice(__('Something went wrong. Please try again.', 'advanced-paypal-complete-payments-for-woocommerce'), 'error');
                 }
                 if ($is_success) {
                     WC()->cart->empty_cart();
@@ -643,7 +643,7 @@ class Goopter_PayPal_PPCP_Front_Action {
                         remove_filter('woocommerce_get_checkout_url', [$this->smart_button, 'goopter_ppcp_woocommerce_get_checkout_url']);
                         wp_send_json_success(array(
                             'result' => 'failure',
-                            'redirect' => ae_get_checkout_url()
+                            'redirect' => gt_get_checkout_url()
                         ));
                     }
                 }
@@ -795,7 +795,7 @@ class Goopter_PayPal_PPCP_Front_Action {
                 $LiabilityShift = isset($response['payment_source']['card']['authentication_result']['liability_shift']) ? strtoupper($response['payment_source']['card']['authentication_result']['liability_shift']) : '';
                 $EnrollmentStatus = isset($response['payment_source']['card']['authentication_result']['three_d_secure']['enrollment_status']) ? strtoupper($response['payment_source']['card']['authentication_result']['three_d_secure']['enrollment_status']) : '';
                 $AuthenticationResult = isset($response['payment_source']['card']['authentication_result']['three_d_secure']['authentication_status']) ? strtoupper($response['payment_source']['card']['authentication_result']['three_d_secure']['authentication_status']) : '';
-                $liability_shift_order_note = __('3D Secure response', 'paypal-advanced-for-woocommerce');
+                $liability_shift_order_note = __('3D Secure response', 'advanced-paypal-complete-payments-for-woocommerce');
                 $liability_shift_order_note .= "\n";
                 $liability_shift_order_note .= 'Liability Shift : ' . goopter_ppcp_readable($LiabilityShift);
                 $liability_shift_order_note .= "\n";

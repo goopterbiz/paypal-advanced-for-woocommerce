@@ -144,7 +144,7 @@ class Goopter_PayPal_PPCP_Seller_Onboarding {
                     'admin.php?page=wc-settings&tab=checkout&section=goopter_ppcp&testmode=' . $testmode
             ),
             'return_url_description' => __(
-                    'Return to your shop.', 'paypal-advanced-for-woocommerce'
+                    'Return to your shop.', 'advanced-paypal-complete-payments-for-woocommerce'
             ),
             'products' => array(
                 $this->dcc_applies->for_country_currency() ? 'PPCP' : 'EXPRESS_CHECKOUT'
@@ -173,7 +173,7 @@ class Goopter_PayPal_PPCP_Seller_Onboarding {
                     'admin.php?page=wc-settings&tab=checkout&section=goopter_ppcp&feature_activated=applepay&testmode=' . $testmode
             ),
             'return_url_description' => __(
-                    'Return to your shop.', 'paypal-advanced-for-woocommerce'
+                    'Return to your shop.', 'advanced-paypal-complete-payments-for-woocommerce'
             ),
             'capabilities' => array(
                 'APPLE_PAY'
@@ -193,7 +193,7 @@ class Goopter_PayPal_PPCP_Seller_Onboarding {
                     'admin.php?page=wc-settings&tab=checkout&section=goopter_ppcp&feature_activated=googlepay&testmode=' . $testmode
             ),
             'return_url_description' => __(
-                    'Return to your shop.', 'paypal-advanced-for-woocommerce'
+                    'Return to your shop.', 'advanced-paypal-complete-payments-for-woocommerce'
             ),
             'capabilities' => array(
                 'GOOGLE_PAY'
@@ -213,7 +213,7 @@ class Goopter_PayPal_PPCP_Seller_Onboarding {
                     'admin.php?page=wc-settings&tab=checkout&section=goopter_ppcp&testmode=' . $testmode
             ),
             'return_url_description' => __(
-                    'Return to your shop.', 'paypal-advanced-for-woocommerce'
+                    'Return to your shop.', 'advanced-paypal-complete-payments-for-woocommerce'
             ),
             'capabilities' => array(
                 'PAYPAL_WALLET_VAULTING_ADVANCED'
@@ -294,8 +294,8 @@ class Goopter_PayPal_PPCP_Seller_Onboarding {
             }
 
             // Delete the transient so that system fetches the latest status after connecting the account
-            delete_transient('ae_seller_onboarding_status');
-            delete_option('ae_ppcp_account_reconnect_notice');
+            delete_transient('gt_seller_onboarding_status');
+            delete_option('gt_ppcp_account_reconnect_notice');
 
             $move_to_location = 'tokenization_subscriptions';
             if (isset($_GET['feature_activated'])) {
@@ -325,7 +325,7 @@ class Goopter_PayPal_PPCP_Seller_Onboarding {
             if (isset($_GET['place']) && $_GET['place'] === 'gateway_settings') {
                 $redirect_url = admin_url('admin.php?page=wc-settings&tab=checkout&section=goopter_ppcp&move=' . $move_to_location);
             } else {
-                $redirect_url = admin_url('options-general.php?page=paypal-advanced-for-woocommerce');
+                $redirect_url = admin_url('options-general.php?page=advanced-paypal-complete-payments-for-woocommerce');
             }
             unset($_GET);
             wp_safe_redirect($redirect_url, 302);
@@ -340,7 +340,7 @@ class Goopter_PayPal_PPCP_Seller_Onboarding {
     public function goopter_track_seller_onboarding_status_from_cache($merchant_id, $force_refresh = false) {
         $seller_onboarding_status_transient = false;
         if (!$force_refresh) {
-            $seller_onboarding_status_transient = get_transient('ae_seller_onboarding_status');
+            $seller_onboarding_status_transient = get_transient('gt_seller_onboarding_status');
         }
         if (!$seller_onboarding_status_transient) {
             $this->is_sandbox = 'yes' === $this->setting_obj->get('testmode', 'no');
@@ -375,7 +375,7 @@ class Goopter_PayPal_PPCP_Seller_Onboarding {
                 $seller_onboarding_status_transient = [];
             }
         }
-        set_transient('ae_seller_onboarding_status', $seller_onboarding_status_transient, DAY_IN_SECONDS);
+        set_transient('gt_seller_onboarding_status', $seller_onboarding_status_transient, DAY_IN_SECONDS);
         return $seller_onboarding_status_transient;
     }
 
