@@ -394,7 +394,21 @@ class Goopter_PayPal_PPCP_Payment {
                         Goopter_Session_Manager::set('is_shipping_added', 'yes');
                     }
                 }
+            } elseif ($this->goopter_ppcp_used_payment_method === 'card') {
+                if ($this->advanced_card_payments) {
+                    $three_d_secure_contingency = $this->setting_obj->get('3d_secure_contingency', 'SCA_WHEN_REQUIRED');
+                    $body_request['payment_source'] = [
+                        "card" => [
+                            "attributes" => [
+                                "verification" => [
+                                    "method" => $three_d_secure_contingency,
+                                ]
+                            ]
+                        ]
+                    ];
+                }
             }
+            
             $body_request = $this->goopter_ppcp_set_payer_details($woo_order_id, $body_request);
             if (goopter_ppcp_is_save_payment_method($this->enable_tokenized_payments)) {
                 $body_request = $this->goopter_ppcp_add_payment_source_parameter($body_request);
