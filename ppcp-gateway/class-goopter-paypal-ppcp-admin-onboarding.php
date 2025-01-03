@@ -241,7 +241,7 @@ class Goopter_PayPal_PPCP_Admin_Onboarding {
                             <br><br>
                             <div class="paypal_woocommerce_product_onboard_content">
                                 <p><?php // Translators: %s is the name of the PayPal solution (e.g., PayPal Advanced).
-                                echo sprintf(esc_html__('Welcome to the %s solution for WooCommerce. <br> Built by Goopter Commerce Solutions.', 'paypal-advanced-for-woocommerce'), esc_html(AE_PPCP_NAME)); ?></p>
+                                echo sprintf(wp_kses_post(__('Welcome to the %s solution for WooCommerce. <br> Built by Goopter Commerce Solutions.', 'paypal-advanced-for-woocommerce')), esc_html(AE_PPCP_NAME)); ?></p>
                                 <?php
                                 // phpcs:disable WordPress.Security.NonceVerification.Recommended -- no security issue
                                 if (isset($_GET['testmode'])) {
@@ -426,7 +426,7 @@ class Goopter_PayPal_PPCP_Admin_Onboarding {
                                 <br>
                                 <span><img class="green_checkmark" src="<?php echo esc_url(PAYPAL_FOR_WOOCOMMERCE_ASSET_URL . 'ppcp-gateway/images/admin/green_checkmark.png'); ?>"></span>
                                 <p><?php // Translators: %s is the name of the PayPal solution (e.g., PayPal Advanced).
-                                echo sprintf(esc_html__('You’re currently set up and enjoying the benefits of %s. <br> Built by Goopter.', 'paypal-advanced-for-woocommerce'), esc_html(AE_PPCP_NAME)); ?></p>
+                                echo sprintf(wp_kses_post(__('You’re currently set up and enjoying the benefits of %s. <br> Built by Goopter.', 'paypal-advanced-for-woocommerce')), esc_html(AE_PPCP_NAME)); ?></p>
                                 <p><?php echo wp_kses_post(__('To modify your setup or learn more about additional options, <br> please use the buttons below.', 'paypal-advanced-for-woocommerce')); ?></p>
                                 <?php if ($this->is_paypal_vault_approved === false && in_array($this->ppcp_paypal_country, $paypal_vault_supported_country)) { ?>
                                     <p>
