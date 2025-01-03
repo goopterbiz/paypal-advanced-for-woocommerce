@@ -208,13 +208,6 @@ const goopterOrder = {
                 status: res.status,
                 time: new Date()
             });
-            console.log('createOrder response', {
-                res,
-                apiUrl,
-                redirected: res.redirected,
-                url: res.url,
-                status: res.status
-            });
             if (res.redirected) {
                 window.location.href = res.url;
             } else {
@@ -314,7 +307,6 @@ const goopterOrder = {
 
     },
     handleCreateOrderError: (error, errorLogId) => {
-        console.log('create_order_error', error, goopterOrder.lastApiResponse);
         goopterOrder.hideProcessingSpinner();
         jQuery(document.body).trigger('goopter_paypal_onerror');
         let errorMessage = error.message ? error.message : error;
@@ -361,7 +353,6 @@ const goopterOrder = {
     },
     hideShowPlaceOrderButton: () => {
         let selectedPaymentMethod = goopterOrder.getSelectedPaymentMethod();
-        console.log('hideShowPlaceOrderButton', selectedPaymentMethod)
         let isGtPpcpMethodSelected = goopterOrder.isGoopterPpcpPaymentMethodSelected();
         if (isGtPpcpMethodSelected === true) {
             jQuery('.wcf-pre-checkout-offer-action').val('');
@@ -401,7 +392,6 @@ const goopterOrder = {
         if (jQuery(payment_method_element_selector).length === 0) {
             payment_method_element_selector = 'form.wc-block-checkout__form';
         }
-        console.log(payment_method_element_selector);
         return payment_method_element_selector;
     },
     setPaymentMethodSelector: (paymentMethod) => {
@@ -501,7 +491,6 @@ const goopterOrder = {
         }).then(function (data) {
             window.location.href = data.data.redirect;
         }).catch((error) => {
-            console.log('capture error', error);
             jQuery(checkoutSelector).removeClass('processing paypal_cc_submiting CardFields createOrder');
             goopterOrder.handleCreateOrderError(error, errorLogId);
             goopterOrder.hideProcessingSpinner('#customer_details, .woocommerce-checkout-review-order');
@@ -543,7 +532,6 @@ const goopterOrder = {
                 }
             },
             onError: function (err) {
-                console.log('Error occurred:', err);
                 if (typeof err === 'object' && err !== null) {
                     console.log('Error message:', err.message || 'No error message available');
                     if (err.stack) {
@@ -640,13 +628,11 @@ const goopterOrder = {
         if (cartTotals) {
             // Check if the currency changed then reload the JS SDK with latest currency
             const updateCartTotal = () => {
-                console.log('goopter_cart_total_updated', cartTotals);
                 goopter_ppcp_manager.goopter_cart_totals = cartTotals;
                 jQuery(document.body).trigger('goopter_cart_total_updated');
             };
             const cartDetails = goopterOrder.getCartDetails();
             if (cartDetails.currencyCode !== cartTotals.currencyCode) {
-                console.log(`Currency changed, refreshing PayPal Lib SDK: ${cartDetails.currencyCode} => ${cartTotals.currencyCode}`);
                 let checkoutSelector = goopterOrder.getCheckoutSelectorCss();
                 goopterOrder.showProcessingSpinner(checkoutSelector);
                 goopter_ppcp_manager.paypal_sdk_url = pfwUrlHelper.setQueryParam('currency', cartTotals.currencyCode, goopter_ppcp_manager.paypal_sdk_url);
@@ -716,7 +702,6 @@ const goopterOrder = {
                 if (goopterOrder.isCCPaymentMethodSelected() === true) {
                     event.preventDefault();
                     cardFields.submit().then((hf) => {
-                        console.log("add_payment_method_submit_success");
                     }).catch((error) => {
                         goopterOrder.hideProcessingSpinner(addPaymentMethodForm);
                         goopterOrder.showError(error);
@@ -744,7 +729,6 @@ const goopterOrder = {
             } else {
                 jQuery(document.body).trigger(event);
             }
-            console.log(event);
         }
     },
     renderPaymentButtons: () => {
@@ -760,7 +744,6 @@ const goopterOrder = {
     hooks: {
         handleWooEvents: () => {
             jQuery(document.body).on('updated_cart_totals payment_method_selected updated_checkout', function (event, data) {
-                console.log(`hook_received => ${event.type}`, data, goopterOrder.getCartDetails());
                 goopterOrder.dequeueEvent(event.type);
 
                 let response;

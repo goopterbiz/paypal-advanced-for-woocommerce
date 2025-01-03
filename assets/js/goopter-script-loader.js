@@ -58,7 +58,6 @@ function canShowPlaceOrderBtn() {
     // For logged in user we see the payment method that's why on checkout page we keep seeing the place order button
     // that we need to fix by using a way to identify if its checkout or order review page
     let isOrderCompletePage = goopterOrder.isOrderCompletePage();
-    // console.log('canShowPlaceOrderBtn', isOrderCompletePage, goopterOrder.isGoopterPaymentMethodSelected());
     if (goopterOrder.isPpcpPaymentMethodSelected() && goopter_ppcp_manager.is_checkout_disable_smart_button === 'yes') {
         return true;
     }

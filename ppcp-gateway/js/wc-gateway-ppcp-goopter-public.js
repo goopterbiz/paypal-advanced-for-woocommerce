@@ -1,5 +1,4 @@
 function initSmartButtons() {
-    console.log('initSmartButtons');
     let $ = jQuery;
     if (typeof goopter_ppcp_manager === 'undefined') {
         return false;

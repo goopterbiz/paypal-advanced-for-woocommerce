@@ -111,7 +111,6 @@ class GooglePayCheckoutButton {
     }
 
     parseErrorMessage(errorObject) {
-        console.log(errorObject, JSON.stringify(errorObject));
         if (errorObject.name === 'PayPalGooglePayError') {
             let debugID = errorObject.paypalDebugId;
             switch (errorObject.errorName) {
@@ -128,7 +127,6 @@ class GooglePayCheckoutButton {
 
     onPaymentAuthorized(additionalData, paymentData) {
         // let thisObj = this;
-        console.log('onPaymentAuthorized', additionalData, paymentData);
 
         return new Promise( (resolve, reject) => {
             goopterOrder.showProcessingSpinner();
@@ -147,7 +145,6 @@ class GooglePayCheckoutButton {
 
     onPaymentDataChanged(additionalData, intermediatePaymentData) {
         return new Promise(async function(resolve, reject) {
-            console.log('on shipping changed', intermediatePaymentData);
             let shippingAddress = intermediatePaymentData.shippingAddress;
             let paymentDataRequestUpdate = {};
 
@@ -168,7 +165,6 @@ class GooglePayCheckoutButton {
                         throw new Error(localizedMessages.shipping_amount_update_error);
                     }
                 } catch (error) {
-                    console.log('shipping change error');
                     goopterOrder.handleCreateOrderError(additionalData.thisObject.parseErrorMessage(error), additionalData.thisObject.errorLogId);
                     paymentDataRequestUpdate.error = localizedMessages.shipping_amount_pull_error;
                     reject(localizedMessages.shipping_amount_pull_error);
@@ -181,7 +177,6 @@ class GooglePayCheckoutButton {
 
     async processPayment(additionalData, paymentData) {
         try {
-            console.log('processPayment', additionalData, JSON.stringify(paymentData));
             let thisObject = additionalData.thisObject;
             goopterOrder.showProcessingSpinner();
             /* Create Order */
@@ -189,7 +184,6 @@ class GooglePayCheckoutButton {
                 goopter_ppcp_button_selector: thisObject.containerSelector,
                 errorLogId: additionalData.thisObject.errorLogId
             }).then((orderData) => {
-                console.log('orderCreated', orderData);
                 goopterOrder.updateCartTotalsInEnvironment(orderData);
                 return orderData.orderID;
             });
@@ -310,7 +304,6 @@ class GooglePayCheckoutButton {
     }
 
     async handleClickEvent(event, thisObject) {
-        console.log('click event', event, thisObject.containerSelector);
         thisObject.errorLogId = goopterJsErrorLogger.generateErrorId();
         const cartDetails = goopterOrder.getCartDetails();
         if (cartDetails.totalAmount <= 0) {
@@ -322,7 +315,6 @@ class GooglePayCheckoutButton {
         const paymentsClient = thisObject.getGooglePaymentsClient({});
 
         paymentsClient.loadPaymentData(paymentDataRequest).then((success) => {
-            console.log('success', success);
         }, (e) => {
             goopterOrder.triggerPaymentCancelEvent();
             goopterOrder.hideProcessingSpinner(thisObject.containerSelector);

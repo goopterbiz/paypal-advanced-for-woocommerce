@@ -11,7 +11,6 @@ const payLaterMessaging = {
             console.log('PayLaterMessaging is not enabled for this merchant account.')
             return;
         }
-        // console.log('Init PayLater');
         let amount = goopter_pay_later_messaging.amount;
         let currencyCode = goopter_pay_later_messaging.currencyCode;
         let placementsConfig = goopter_pay_later_messaging.placements;
@@ -99,7 +98,6 @@ const payLaterMessaging = {
         if (goopterOrder.isCartPage() || goopterOrder.isCheckoutPage()) {
             jQuery(document.body).on('goopter_cart_total_updated ppcp_block_ready', async function () {
                 const cartDetails = goopterOrder.getCartDetails();
-                // console.log('PayLater amount update', cartDetails.totalAmount);
                 goopter_pay_later_messaging.amount = cartDetails.totalAmount;
                 goopter_pay_later_messaging.currencyCode = cartDetails.currencyCode;
                 payLaterMessaging.init();
