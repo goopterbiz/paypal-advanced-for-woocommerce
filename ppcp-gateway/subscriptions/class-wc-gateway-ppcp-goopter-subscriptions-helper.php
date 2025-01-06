@@ -108,7 +108,7 @@ class WC_Gateway_PPCP_Goopter_Subscriptions_Helper {
                     $token->save();
                     update_metadata('payment_token', $token->get_id(), '_goopter_ppcp_used_payment_method', $payment_method);
                 } else {
-                    $order->add_order_note('ERROR MESSAGE: ' . __('Invalid or missing payment token fields.', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'));
+                    $order->add_order_note('ERROR MESSAGE: ' . __('Invalid or missing payment token fields.', 'goopter-advanced-paypal-complete-payments-for-woocommerce'));
                 }
             } elseif (!empty($api_response['payment_source']['paypal']['attributes']['vault']['id'])) {
                 $token = new WC_Payment_Token_CC();
@@ -136,7 +136,7 @@ class WC_Gateway_PPCP_Goopter_Subscriptions_Helper {
                     $token->save();
                     update_metadata('payment_token', $token->get_id(), '_goopter_ppcp_used_payment_method', 'paypal');
                 } else {
-                    $order->add_order_note('ERROR MESSAGE: ' . __('Invalid or missing payment token fields.', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'));
+                    $order->add_order_note('ERROR MESSAGE: ' . __('Invalid or missing payment token fields.', 'goopter-advanced-paypal-complete-payments-for-woocommerce'));
                 }
             } elseif (!empty($api_response['payment_source']['venmo']['attributes']['vault']['id'])) {
                 $token = new WC_Payment_Token_CC();
@@ -164,7 +164,7 @@ class WC_Gateway_PPCP_Goopter_Subscriptions_Helper {
                     $token->save();
                     update_metadata('payment_token', $token->get_id(), '_goopter_ppcp_used_payment_method', 'venmo');
                 } else {
-                    $order->add_order_note('ERROR MESSAGE: ' . __('Invalid or missing payment token fields.', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'));
+                    $order->add_order_note('ERROR MESSAGE: ' . __('Invalid or missing payment token fields.', 'goopter-advanced-paypal-complete-payments-for-woocommerce'));
                 }
             }
         }

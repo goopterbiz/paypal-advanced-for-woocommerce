@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
 do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 
 <?php /* translators: %s: Customer billing full name */ ?>
-<p><?php printf( esc_html__( 'You’ve received the following order from %s:', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce' ), $order->get_formatted_billing_full_name() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></p>
+<p><?php printf( esc_html__( 'You’ve received the following order from %s:', 'goopter-advanced-paypal-complete-payments-for-woocommerce' ), $order->get_formatted_billing_full_name() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></p>
 <?php
 
 /*

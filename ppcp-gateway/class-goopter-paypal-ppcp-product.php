@@ -92,7 +92,7 @@ class Goopter_PayPal_PPCP_Product extends WC_Form_Handler {
                     add_action('woocommerce_add_to_cart', array(WC()->cart, 'calculate_totals'), 20, 0);
                 }
                 if (!$was_added_to_cart && !$quantity_set) {
-                    wc_add_notice(__('Please choose the quantity of items you wish to add to your cart&hellip;', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'), 'error');
+                    wc_add_notice(__('Please choose the quantity of items you wish to add to your cart&hellip;', 'goopter-advanced-paypal-complete-payments-for-woocommerce'), 'error');
                 } elseif ($was_added_to_cart) {
                     wc_add_to_cart_message($added_to_cart);
                     WC()->cart->calculate_totals();
@@ -100,7 +100,7 @@ class Goopter_PayPal_PPCP_Product extends WC_Form_Handler {
                 }
             // phpcs:enable WordPress.Security.NonceVerification.Recommended -- no security issue
             } elseif ($product_id) {
-                wc_add_notice(__('Please choose a product to add to your cart&hellip;', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'), 'error');
+                wc_add_notice(__('Please choose a product to add to your cart&hellip;', 'goopter-advanced-paypal-complete-payments-for-woocommerce'), 'error');
             }
             return false;
         } catch (Exception $ex) {
@@ -153,7 +153,7 @@ class Goopter_PayPal_PPCP_Product extends WC_Form_Handler {
                 $variation_id = $data_store->find_matching_product_variation($adding_to_cart, $posted_attributes);
             }
             if (empty($variation_id)) {
-                throw new Exception(__('Please choose product options&hellip;', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'));
+                throw new Exception(__('Please choose product options&hellip;', 'goopter-advanced-paypal-complete-payments-for-woocommerce'));
             }
             $variation_data = wc_get_product_variation_attributes($variation_id);
             foreach ($adding_to_cart->get_attributes() as $attribute) {
@@ -170,7 +170,7 @@ class Goopter_PayPal_PPCP_Product extends WC_Form_Handler {
                         $variations[$attribute_key] = $value;
                     } else {
                         // Translators: %s is the attribute label.
-                        throw new Exception(sprintf(__('Invalid value posted for %s', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'), wc_attribute_label($attribute['name'])));
+                        throw new Exception(sprintf(__('Invalid value posted for %s', 'goopter-advanced-paypal-complete-payments-for-woocommerce'), wc_attribute_label($attribute['name'])));
                     }
                 } elseif ('' === $valid_value) {
                     $missing_attributes[] = wc_attribute_label($attribute['name']);
@@ -178,7 +178,7 @@ class Goopter_PayPal_PPCP_Product extends WC_Form_Handler {
             }
             if (!empty($missing_attributes)) {
                 // Translators: %s is the list of missing required fields.
-                throw new Exception(sprintf(_n('%s is a required field', '%s are required fields', count($missing_attributes), 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'), wc_format_list_of_items($missing_attributes)));
+                throw new Exception(sprintf(_n('%s is a required field', '%s are required fields', count($missing_attributes), 'goopter-advanced-paypal-complete-payments-for-woocommerce'), wc_format_list_of_items($missing_attributes)));
             }
         } catch (Exception $e) {
             wc_add_notice($e->getMessage(), 'error');

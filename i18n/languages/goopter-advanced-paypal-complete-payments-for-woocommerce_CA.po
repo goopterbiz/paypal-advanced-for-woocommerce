@@ -2,7 +2,7 @@
 # This file is distributed under the GNU General Public License v3.0.
 msgid ""
 msgstr ""
-"Project-Id-Version: Goopter advanced integration for PayPal Complete Payments and WooCommerce 1.0.0\n"
+"Project-Id-Version: Goopter Advanced PayPal Complete Payments for WooCommerce 1.0.0\n"
 "for-woocommerce\n"
 "Language-Team: English\n"
 "MIME-Version: 1.0\n"
@@ -11,17 +11,17 @@ msgstr ""
 "POT-Creation-Date: 2024-12-11T01:00:38+00:00\n"
 "PO-Revision-Date: 2024-12-10 17:01-0800\n"
 "X-Generator: WP-CLI 2.11.0\n"
-"X-Domain: goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce\n"
+"X-Domain: goopter-advanced-paypal-complete-payments-for-woocommerce\n"
 "Language: en_CA\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. Plugin Name of the plugin
-#: goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce.php
-msgid "Goopter advanced integration for PayPal Complete Payments and WooCommerce"
-msgstr "Goopter advanced integration for PayPal Complete Payments and WooCommerce"
+#: goopter-advanced-paypal-complete-payments-for-woocommerce.php
+msgid "Goopter Advanced PayPal Complete Payments for WooCommerce"
+msgstr "Goopter Advanced PayPal Complete Payments for WooCommerce"
 
 #. Description of the plugin
-#: goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce.php
+#: goopter-advanced-paypal-complete-payments-for-woocommerce.php
 msgid ""
 "Integrate the PayPal Complete Payments Platform into your WooCommerce site, "
 "offering PayPal Checkout, Pay Later, Venmo, direct credit card processing, "
@@ -34,12 +34,12 @@ msgstr ""
 "others!"
 
 #. Author of the plugin
-#: goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce.php
+#: goopter-advanced-paypal-complete-payments-for-woocommerce.php
 msgid "Goopter"
 msgstr "Goopter"
 
 #. Author URI of the plugin
-#: goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce.php
+#: goopter-advanced-paypal-complete-payments-for-woocommerce.php
 msgid "https://www.goopter.com/"
 msgstr "https://www.goopter.com/"
 
@@ -273,34 +273,34 @@ msgstr "This is where you can add new PayPal Transaction to your store."
 msgid "Billing Agreement Details"
 msgstr "Billing Agreement Details"
 
-#: goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce.php:163
+#: goopter-advanced-paypal-complete-payments-for-woocommerce.php:163
 msgid "Configure"
 msgstr "Configure"
 
-#: goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce.php:166
+#: goopter-advanced-paypal-complete-payments-for-woocommerce.php:166
 msgid "Contact"
 msgstr "Contact"
 
-#: goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce.php:246
+#: goopter-advanced-paypal-complete-payments-for-woocommerce.php:246
 msgid "Choose Image"
 msgstr "Choose Image"
 
-#: goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce.php:330
+#: goopter-advanced-paypal-complete-payments-for-woocommerce.php:330
 msgid "PayPal for WooCommerce - Settings"
 msgstr "PayPal for WooCommerce - Settings"
 
-#: goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce.php:648
+#: goopter-advanced-paypal-complete-payments-for-woocommerce.php:648
 #: ppcp-gateway/class-wc-gateway-ppcp-goopter-settings.php:1866
 msgid "Payment Action"
 msgstr "Payment Action"
 
-#: goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce.php:718
-#: goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce.php:724
+#: goopter-advanced-paypal-complete-payments-for-woocommerce.php:718
+#: goopter-advanced-paypal-complete-payments-for-woocommerce.php:724
 msgctxt "Order status"
 msgid "Partially Paid"
 msgstr "Partially Paid"
 
-#: goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce.php:729
+#: goopter-advanced-paypal-complete-payments-for-woocommerce.php:729
 msgid "Partially Paid <span class=\"count\">(%s)</span>"
 msgid_plural "Partially Paid <span class=\"count\">(%s)</span>"
 msgstr[0] "Partially Paid <span class=\"count\">(%s)</span>"

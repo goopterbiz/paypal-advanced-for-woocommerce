@@ -81,7 +81,7 @@ trait WC_PPCP_Pre_Orders_Trait {
             $this->validate_minimum_order_amount($order);
             $prepared_source = $this->prepare_source(get_current_user_id(), true);
             if (empty($prepared_source->customer) || empty($prepared_source->source)) {
-                throw new WC_PPCP_Exception(__('Unable to store payment details. Please try again.', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'));
+                throw new WC_PPCP_Exception(__('Unable to store payment details. Please try again.', 'goopter-advanced-paypal-complete-payments-for-woocommerce'));
             }
             $response = [
                 'result' => 'success',

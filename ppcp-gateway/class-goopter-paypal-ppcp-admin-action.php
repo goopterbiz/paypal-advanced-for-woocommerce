@@ -168,9 +168,9 @@ class Goopter_PayPal_PPCP_Admin_Action {
             if ($this->goopter_ppcp_is_authorized_only($trans_details)) {
                 $response = $this->payment_request->goopter_ppcp_void_authorized_payment($transaction_id);
                 if (!is_wp_error($response)) {
-                    $note = __("Authorization Voided", 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce');
+                    $note = __("Authorization Voided", 'goopter-advanced-paypal-complete-payments-for-woocommerce');
                 } else {
-                    $note = __("Void Authorization Failed:", 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce') . ': ' . $response->get_error_message();
+                    $note = __("Void Authorization Failed:", 'goopter-advanced-paypal-complete-payments-for-woocommerce') . ': ' . $response->get_error_message();
                 }
                 $order->add_order_note($note);
             }
@@ -234,7 +234,7 @@ class Goopter_PayPal_PPCP_Admin_Action {
     public function admin_notices() {
         try {
             // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- no security issue
-            if (isset($_GET['page']) && 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce' === $_GET['page']) {
+            if (isset($_GET['page']) && 'goopter-advanced-paypal-complete-payments-for-woocommerce' === $_GET['page']) {
                 return;
             }
 
@@ -289,7 +289,7 @@ class Goopter_PayPal_PPCP_Admin_Action {
                     'ans_company_logo' => PAYPAL_FOR_WOOCOMMERCE_ASSET_URL . 'ppcp-gateway/images/admin/goopter-icon.png',
                     'ans_message_title' => 'Action Required: Reconnect Your PayPal Account',
                     'ans_message_description' => "We're experiencing permission issues preventing us from making certain PayPal API calls on your behalf. To fix this, please reconnect your PayPal account from the settings page. Click the button below to go to settings and select 'Reconnect PayPal Account'.",
-                    'ans_button_url' => admin_url('options-general.php?page=goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'),
+                    'ans_button_url' => admin_url('options-general.php?page=goopter-advanced-paypal-complete-payments-for-woocommerce'),
                     'ans_button_label' => 'Settings',
                     'is_dismiss' => false
                 );
@@ -319,7 +319,7 @@ class Goopter_PayPal_PPCP_Admin_Action {
         try {
             $order = wc_get_order($order_id);
             if (!is_a($order, 'WC_Order')) {
-                echo esc_html(__('Error: Unable to detect the order, please refresh again to retry or Contact PayPal For WooCommerce support.', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'));
+                echo esc_html(__('Error: Unable to detect the order, please refresh again to retry or Contact PayPal For WooCommerce support.', 'goopter-advanced-paypal-complete-payments-for-woocommerce'));
                 return;
             }
             $this->order = $order;
@@ -328,7 +328,7 @@ class Goopter_PayPal_PPCP_Admin_Action {
             $this->goopter_ppcp_order_actions = array();
             $paypal_order_id = goopter_ppcp_get_post_meta($order, '_paypal_order_id');
             if (empty($paypal_order_id)) {
-                //echo __('PayPal order id does not exist for this order.', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce');
+                //echo __('PayPal order id does not exist for this order.', 'goopter-advanced-paypal-complete-payments-for-woocommerce');
                 return;
             }
             $this->payment_response = $this->payment_request->goopter_ppcp_get_paypal_order_details($paypal_order_id);
@@ -357,7 +357,7 @@ class Goopter_PayPal_PPCP_Admin_Action {
                             $line_item['amount'] = isset($refunds['amount']['value']) ? wc_price($refunds['amount']['value'], array('currency' => $refunds['amount']['currency_code'])) : 'N/A';
                             $line_item['payment_status'] = isset($refunds['status']) ? ucwords(str_replace('_', ' ', strtolower($refunds['status']))) : 'N/A';
                             $line_item['expired_date'] = isset($refunds['expiration_time']) ? $refunds['expiration_time'] : 'N/A';
-                            $line_item['payment_action'] = __('Refund', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce');
+                            $line_item['payment_action'] = __('Refund', 'goopter-advanced-paypal-complete-payments-for-woocommerce');
                             $this->gt_refund_amount = $this->gt_refund_amount + $refunds['amount']['value'];
                         }
                     }
@@ -369,7 +369,7 @@ class Goopter_PayPal_PPCP_Admin_Action {
                             $line_item['amount'] = isset($captures['amount']['value']) ? wc_price($captures['amount']['value'], array('currency' => $captures['amount']['currency_code'])) : 'N/A';
                             $line_item['payment_status'] = isset($captures['status']) ? ucwords(str_replace('_', ' ', strtolower($captures['status']))) : 'N/A';
                             $line_item['expired_date'] = isset($captures['expiration_time']) ? $captures['expiration_time'] : 'N/A';
-                            $line_item['payment_action'] = __('Capture', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce');
+                            $line_item['payment_action'] = __('Capture', 'goopter-advanced-paypal-complete-payments-for-woocommerce');
                             if ('COMPLETED' === $captures['status'] || 'PARTIALLY_REFUNDED' === $captures['status']) {
                                 $this->goopter_ppcp_order_status_data['refund'][$line_item['transaction_id']] = $line_item['amount'];
                             }
@@ -392,22 +392,22 @@ class Goopter_PayPal_PPCP_Admin_Action {
                         }
                     }
                     if (isset($this->payment_response['purchase_units']['0']['payments']['authorizations']['0']['status']) && 'CREATED' === $this->payment_response['purchase_units']['0']['payments']['authorizations']['0']['status']) {
-                        $this->goopter_ppcp_order_actions['void'] = __('Void Authorization', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce');
-                        $this->goopter_ppcp_order_actions['capture'] = __('Capture Funds', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce');
+                        $this->goopter_ppcp_order_actions['void'] = __('Void Authorization', 'goopter-advanced-paypal-complete-payments-for-woocommerce');
+                        $this->goopter_ppcp_order_actions['capture'] = __('Capture Funds', 'goopter-advanced-paypal-complete-payments-for-woocommerce');
                     }
                     if (isset($this->payment_response['purchase_units']['0']['payments']['authorizations']['0']['status']) && 'PARTIALLY_CAPTURED' === $this->payment_response['purchase_units']['0']['payments']['authorizations']['0']['status']) {
                         if ($this->gt_refund_amount < $this->gt_capture_amount) {
-                            $this->goopter_ppcp_order_actions['refund'] = __('Refund', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce');
-                            $this->goopter_ppcp_order_actions['void'] = __('Void Authorization', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce');
-                            $this->goopter_ppcp_order_actions['capture'] = __('Capture Funds', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce');
+                            $this->goopter_ppcp_order_actions['refund'] = __('Refund', 'goopter-advanced-paypal-complete-payments-for-woocommerce');
+                            $this->goopter_ppcp_order_actions['void'] = __('Void Authorization', 'goopter-advanced-paypal-complete-payments-for-woocommerce');
+                            $this->goopter_ppcp_order_actions['capture'] = __('Capture Funds', 'goopter-advanced-paypal-complete-payments-for-woocommerce');
                         }
                         if ($order_total_amount > $this->gt_capture_amount) {
-                            $this->goopter_ppcp_order_actions['capture'] = __('Capture Funds', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce');
+                            $this->goopter_ppcp_order_actions['capture'] = __('Capture Funds', 'goopter-advanced-paypal-complete-payments-for-woocommerce');
                         }
                     }
                     if (isset($this->payment_response['purchase_units']['0']['payments']['authorizations']['0']['status']) && 'CAPTURED' === $this->payment_response['purchase_units']['0']['payments']['authorizations']['0']['status']) {
                         if ($this->gt_refund_amount < $this->gt_capture_amount) {
-                            $this->goopter_ppcp_order_actions['refund'] = __('Refund', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce');
+                            $this->goopter_ppcp_order_actions['refund'] = __('Refund', 'goopter-advanced-paypal-complete-payments-for-woocommerce');
                         }
                     }
                     if (isset($this->payment_response['purchase_units']['0']['payments']['authorizations']['0']['status']) && 'VOIDED' === $this->payment_response['purchase_units']['0']['payments']['authorizations']['0']['status']) {
@@ -433,9 +433,9 @@ class Goopter_PayPal_PPCP_Admin_Action {
                         }</style>
                 <?php } ?>
                 <button type="button"
-                        class="button goopter-ppcp-order-capture" <?php echo (isset($this->goopter_ppcp_order_actions['capture']) && !empty($this->goopter_ppcp_order_actions)) ? '' : 'disabled'; ?>> <?php esc_html_e('Capture', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'); ?><?php echo wp_kses_post(wc_help_tip(__('Capture payment for the authorized order.', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'))); ?></button>
+                        class="button goopter-ppcp-order-capture" <?php echo (isset($this->goopter_ppcp_order_actions['capture']) && !empty($this->goopter_ppcp_order_actions)) ? '' : 'disabled'; ?>> <?php esc_html_e('Capture', 'goopter-advanced-paypal-complete-payments-for-woocommerce'); ?><?php echo wp_kses_post(wc_help_tip(__('Capture payment for the authorized order.', 'goopter-advanced-paypal-complete-payments-for-woocommerce'))); ?></button>
                 <button type="button"
-                        class="button goopter-ppcp-order-void" <?php echo (isset($this->goopter_ppcp_order_actions['void']) && !empty($this->goopter_ppcp_order_actions)) ? '' : 'disabled'; ?>><?php esc_html_e('Void Authorization', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'); ?><?php echo wp_kses_post(wc_help_tip(__('Void the authorized order to release the hold on the buyer\'s payment source.', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'))); ?></button>
+                        class="button goopter-ppcp-order-void" <?php echo (isset($this->goopter_ppcp_order_actions['void']) && !empty($this->goopter_ppcp_order_actions)) ? '' : 'disabled'; ?>><?php esc_html_e('Void Authorization', 'goopter-advanced-paypal-complete-payments-for-woocommerce'); ?><?php echo wp_kses_post(wc_help_tip(__('Void the authorized order to release the hold on the buyer\'s payment source.', 'goopter-advanced-paypal-complete-payments-for-woocommerce'))); ?></button>
             <?php }
             ?>
             <?php
@@ -466,19 +466,19 @@ class Goopter_PayPal_PPCP_Admin_Action {
         <?php } ?>
         <?php if (isset($this->goopter_ppcp_order_status_data['capture']) && isset($this->goopter_ppcp_order_actions['capture'])) { ?>
             <tr class="goopter_ppcp_capture_box" style="display: none;">
-                <td class="label"><?php echo esc_html(__('Additional Capture Possible', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce')); ?></td>
+                <td class="label"><?php echo esc_html(__('Additional Capture Possible', 'goopter-advanced-paypal-complete-payments-for-woocommerce')); ?></td>
                 <td width="1%"></td>
                 <td class="total">
                     <fieldset>
                         <label for="additional_capture_yes">
                             <input checked type="radio" name="additionalCapture" value="yes" id="additional_capture_yes">
                             Yes
-                            <?php echo wp_kses_post(wc_help_tip(__('Yes (option to capture additional funds on this authorization if need)', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'))); ?>
+                            <?php echo wp_kses_post(wc_help_tip(__('Yes (option to capture additional funds on this authorization if need)', 'goopter-advanced-paypal-complete-payments-for-woocommerce'))); ?>
                         </label>
                         <label for="additional_capture_no">
                             <input type="radio" name="additionalCapture" value="no" id="additional_capture_no">
                             No
-                            <?php echo wp_kses_post(wc_help_tip(__('No (no additional capture needed; close authorization after this capture)', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'))); ?>
+                            <?php echo wp_kses_post(wc_help_tip(__('No (no additional capture needed; close authorization after this capture)', 'goopter-advanced-paypal-complete-payments-for-woocommerce'))); ?>
                         </label>
                     </fieldset>
                 </td>
@@ -487,7 +487,7 @@ class Goopter_PayPal_PPCP_Admin_Action {
                 <td class="label">
                     <label for="refund_amount">
                         <?php echo wp_kses_post(wc_help_tip(__('This will show the total amount to be captured/voided', 'woocommerce'))); ?>
-                        <?php esc_html_e('Amount', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'); ?>:
+                        <?php esc_html_e('Amount', 'goopter-advanced-paypal-complete-payments-for-woocommerce'); ?>:
                     </label>
                 </td>
                 <td width="1%"></td>
@@ -498,8 +498,8 @@ class Goopter_PayPal_PPCP_Admin_Action {
             </tr>
             <tr class="goopter_ppcp_capture_box" style="display: none;">
                 <td class="label"><?php
-                    echo esc_html(__('Note To Buyer (Optional)', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'));
-                    echo wp_kses_post(wc_help_tip(__('PayPal strongly recommends that you explain any unique circumstances (e.g. multiple captures, changes in item availability) to your buyer in detail below. Your buyer will see this note in the Transaction Details.', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce')));
+                    echo esc_html(__('Note To Buyer (Optional)', 'goopter-advanced-paypal-complete-payments-for-woocommerce'));
+                    echo wp_kses_post(wc_help_tip(__('PayPal strongly recommends that you explain any unique circumstances (e.g. multiple captures, changes in item availability) to your buyer in detail below. Your buyer will see this note in the Transaction Details.', 'goopter-advanced-paypal-complete-payments-for-woocommerce')));
                     ?></td>
                 <td width="1%"></td>
                 <td class="total">
@@ -509,7 +509,7 @@ class Goopter_PayPal_PPCP_Admin_Action {
         <?php } ?>
         <?php if (isset($this->goopter_ppcp_order_status_data['refund']) && isset($this->goopter_ppcp_order_actions['refund'])) { ?>
             <tr class="goopter_ppcp_refund_box" style="display: none;">
-                <td class="label"><?php echo esc_html(__('Transaction Id', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce')); ?></td>
+                <td class="label"><?php echo esc_html(__('Transaction Id', 'goopter-advanced-paypal-complete-payments-for-woocommerce')); ?></td>
                 <td width="1%"></td>
                 <td class="total">
                     <select name="goopter_ppcp_refund_data" id="goopter_ppcp_refund_data" style="width: 250px;">
@@ -517,7 +517,7 @@ class Goopter_PayPal_PPCP_Admin_Action {
                         $i = 0;
                         foreach ($this->goopter_ppcp_order_status_data['refund'] as $k => $v) :
                             if ($i == 0) {
-                                echo "<option value=''>" . esc_html(__('Select Transaction Id', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce')) . "</option>";
+                                echo "<option value=''>" . esc_html(__('Select Transaction Id', 'goopter-advanced-paypal-complete-payments-for-woocommerce')) . "</option>";
                             }
                             ?>
                             <option value="<?php echo esc_attr($k); ?>" ><?php echo esc_html($k) . ' - ' . esc_html($v); ?></option>
@@ -529,7 +529,7 @@ class Goopter_PayPal_PPCP_Admin_Action {
                 </td>
             </tr>
             <tr class="goopter_ppcp_refund_box" style="display: none;">
-                <td class="label"><?php echo esc_html(__('Refund Amount', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce')); ?></td>
+                <td class="label"><?php echo esc_html(__('Refund Amount', 'goopter-advanced-paypal-complete-payments-for-woocommerce')); ?></td>
                 <td width="1%"></td>
                 <td class="total">
                     <fieldset>
@@ -539,8 +539,8 @@ class Goopter_PayPal_PPCP_Admin_Action {
             </tr>
             <tr class="goopter_ppcp_refund_box" style="display: none;">
                 <td class="label"><?php
-                    echo esc_html(__('Note To Buyer (Optional)', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'));
-                    echo wp_kses_post(wc_help_tip(__('PayPal strongly recommends that you explain any unique circumstances (e.g. multiple captures, changes in item availability) to your buyer in detail below. Your buyer will see this note in the Transaction Details.', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce')));
+                    echo esc_html(__('Note To Buyer (Optional)', 'goopter-advanced-paypal-complete-payments-for-woocommerce'));
+                    echo wp_kses_post(wc_help_tip(__('PayPal strongly recommends that you explain any unique circumstances (e.g. multiple captures, changes in item availability) to your buyer in detail below. Your buyer will see this note in the Transaction Details.', 'goopter-advanced-paypal-complete-payments-for-woocommerce')));
                     ?> </td>
                 <td width="1%"></td>
                 <td class="total">
@@ -552,7 +552,7 @@ class Goopter_PayPal_PPCP_Admin_Action {
         ?></div>
         <?php if (isset($this->goopter_ppcp_order_status_data['void']) && isset($this->goopter_ppcp_order_actions['void'])) { ?>
             <tr class="goopter_ppcp_void_box" style="display: none;">
-                <td class="label">Note To Buyer (Optional)<?php echo wp_kses_post(wc_help_tip(esc_html__('PayPal strongly recommends that you explain any unique circumstances (e.g. multiple captures, changes in item availability) to your buyer in detail below. Your buyer will see this note in the Transaction Details.', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'))); ?></td>
+                <td class="label">Note To Buyer (Optional)<?php echo wp_kses_post(wc_help_tip(esc_html__('PayPal strongly recommends that you explain any unique circumstances (e.g. multiple captures, changes in item availability) to your buyer in detail below. Your buyer will see this note in the Transaction Details.', 'goopter-advanced-paypal-complete-payments-for-woocommerce'))); ?></td>
                 <td width="1%"></td>
                 <td class="total">
                     <textarea maxlength="150" rows="4" cols="50" class="wide-input" type="textarea" name="goopter_ppcp_note_to_buyer_void" id="goopter_ppcp_note_to_buyer_void" style="width: 250px;"></textarea>
@@ -566,7 +566,7 @@ class Goopter_PayPal_PPCP_Admin_Action {
     }
 
     public function goopter_ppcp_capture_void_refund_submit() {
-        ?><input type="hidden" value="no" name="is_ppcp_submited" id="is_ppcp_submited"><input type="hidden" name="order_metabox_goopter_ppcp_payment_action" id="order_metabox_goopter_ppcp_payment_action"><button type="button" class="button goopter-ppcp-order-action-submit button-primary"><?php esc_html_e('Submit', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'); ?></button><?php
+        ?><input type="hidden" value="no" name="is_ppcp_submited" id="is_ppcp_submited"><input type="hidden" name="order_metabox_goopter_ppcp_payment_action" id="order_metabox_goopter_ppcp_payment_action"><button type="button" class="button goopter-ppcp-order-action-submit button-primary"><?php esc_html_e('Submit', 'goopter-advanced-paypal-complete-payments-for-woocommerce'); ?></button><?php
     }
 
     public function goopter_ppcp_display_capture_details($item_id, $item, $product) {
@@ -591,7 +591,7 @@ class Goopter_PayPal_PPCP_Admin_Action {
                     <td>
                         <?php
                         $ppcp_Capture_key_replace = array('_ppcp_transaction_id' => 'Transaction ID', '_ppcp_transaction_date' => 'Date', '_ppcp_transaction_amount' => 'Amount', 'total_refund_amount' => 'Total Refund Amount');
-                        echo '<b>' . esc_html(__('Capture Details', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce')) . '</b>: ';
+                        echo '<b>' . esc_html(__('Capture Details', 'goopter-advanced-paypal-complete-payments-for-woocommerce')) . '</b>: ';
                         $capture_details_html = '';
                         if (is_array($meta_array) && !empty($meta_array)) {
                             if (isset($meta_array['refund'])) {
@@ -651,7 +651,7 @@ class Goopter_PayPal_PPCP_Admin_Action {
                     <td>
                         <?php
                         $ppcp_refund_key_replace = array('_ppcp_refund_id' => 'Refund ID', '_ppcp_refund_date' => 'Date', '_ppcp_refund_amount' => 'Amount');
-                        echo '<b>' . esc_html(__('Refund Details', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce')) . '</b>: ';
+                        echo '<b>' . esc_html(__('Refund Details', 'goopter-advanced-paypal-complete-payments-for-woocommerce')) . '</b>: ';
                         $refund_details_html = '';
                         if (is_array($meta_array) && !empty($meta_array)) {
                             $total_element = count($meta_array);
@@ -714,7 +714,7 @@ class Goopter_PayPal_PPCP_Admin_Action {
         ?>
         <tr>
             <td class="label">
-                <?php esc_html_e('Total Capture:', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'); ?>
+                <?php esc_html_e('Total Capture:', 'goopter-advanced-paypal-complete-payments-for-woocommerce'); ?>
             </td>
             <td width="1%"></td>
             <td class="total">
@@ -735,7 +735,7 @@ class Goopter_PayPal_PPCP_Admin_Action {
         }
         $screen = gt_is_active_screen(gt_get_shop_order_screen_id());
         if ($screen && $this->goopter_ppcp_is_display_paypal_transaction_details($order->get_id())) {
-            echo wp_kses_post('<div class="updated woocommerce-message"><p>' . esc_html__('Capture the authorized order to receive funds in your PayPal account.', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce') . '</p></div>');
+            echo wp_kses_post('<div class="updated woocommerce-message"><p>' . esc_html__('Capture the authorized order to receive funds in your PayPal account.', 'goopter-advanced-paypal-complete-payments-for-woocommerce') . '</p></div>');
         }
     }
     

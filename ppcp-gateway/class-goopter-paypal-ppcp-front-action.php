@@ -263,7 +263,7 @@ class Goopter_PayPal_PPCP_Front_Action {
                                 $this->product::goopter_ppcp_add_to_cart_action();
                             }
                             if (goopter_ppcp_get_order_total() === 0) {
-                                $wc_notice = __('Sorry, your session has expired.', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce');
+                                $wc_notice = __('Sorry, your session has expired.', 'goopter-advanced-paypal-complete-payments-for-woocommerce');
                                 $all_notices = WC()->session->get('wc_notices', []);
                                 if (wc_notice_count('error')) {
                                     wc_clear_notices();
@@ -612,10 +612,10 @@ class Goopter_PayPal_PPCP_Front_Action {
                     $order->save_meta_data();
                 } elseif ($liability_shift_result === 2) {
                     $is_success = false;
-                    wc_add_notice(__('We cannot process your order with the payment information that you provided. Please use an alternate payment method.', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'), 'error');
+                    wc_add_notice(__('We cannot process your order with the payment information that you provided. Please use an alternate payment method.', 'goopter-advanced-paypal-complete-payments-for-woocommerce'), 'error');
                 } elseif ($liability_shift_result === 3) {
                     $is_success = false;
-                    wc_add_notice(__('Something went wrong. Please try again.', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'), 'error');
+                    wc_add_notice(__('Something went wrong. Please try again.', 'goopter-advanced-paypal-complete-payments-for-woocommerce'), 'error');
                 }
                 if ($is_success) {
                     WC()->cart->empty_cart();
@@ -795,7 +795,7 @@ class Goopter_PayPal_PPCP_Front_Action {
                 $LiabilityShift = isset($response['payment_source']['card']['authentication_result']['liability_shift']) ? strtoupper($response['payment_source']['card']['authentication_result']['liability_shift']) : '';
                 $EnrollmentStatus = isset($response['payment_source']['card']['authentication_result']['three_d_secure']['enrollment_status']) ? strtoupper($response['payment_source']['card']['authentication_result']['three_d_secure']['enrollment_status']) : '';
                 $AuthenticationResult = isset($response['payment_source']['card']['authentication_result']['three_d_secure']['authentication_status']) ? strtoupper($response['payment_source']['card']['authentication_result']['three_d_secure']['authentication_status']) : '';
-                $liability_shift_order_note = __('3D Secure response', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce');
+                $liability_shift_order_note = __('3D Secure response', 'goopter-advanced-paypal-complete-payments-for-woocommerce');
                 $liability_shift_order_note .= "\n";
                 $liability_shift_order_note .= 'Liability Shift : ' . goopter_ppcp_readable($LiabilityShift);
                 $liability_shift_order_note .= "\n";

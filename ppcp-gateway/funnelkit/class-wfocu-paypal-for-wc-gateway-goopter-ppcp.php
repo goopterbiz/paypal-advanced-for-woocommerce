@@ -544,9 +544,9 @@ class WFOCU_Paypal_For_WC_Gateway_Goopter_PPCP extends WFOCU_Gateway {
                     'value' => (string) $this->round($total_amount),
                     'breakdown' => $this->get_item_breakdown($order, $offer_package),
                 ),
-                // 'description' => __('One Time Offer - ' . $order->get_id(), 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'),
+                // 'description' => __('One Time Offer - ' . $order->get_id(), 'goopter-advanced-paypal-complete-payments-for-woocommerce'),
                 // translators: %s will be replaced with the order ID.
-                'description' => sprintf(__('One Time Offer - %s', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'), $order->get_id()),
+                'description' => sprintf(__('One Time Offer - %s', 'goopter-advanced-paypal-complete-payments-for-woocommerce'), $order->get_id()),
                 'items' => $this->add_offer_item_data($order, $offer_package),
                 'payee' => array(
                     'merchant_id' => $args['merchant_id']

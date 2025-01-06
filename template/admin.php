@@ -19,7 +19,7 @@ $gateway = isset($_GET['gateway']) ? wc_clean(sanitize_text_field(wp_unslash($_G
                 <?php 
                 // phpcs:disable WordPress.WP.I18n.NoEmptyStrings
                 // Translators: %s is the name of the PayPal solution (e.g., PayPal Advanced).
-                echo sprintf(esc_html__('%s', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'), esc_html(GT_PPCP_NAME));
+                echo sprintf(esc_html__('%s', 'goopter-advanced-paypal-complete-payments-for-woocommerce'), esc_html(GT_PPCP_NAME));
                 // phpcs:enable WordPress.WP.I18n.NoEmptyStrings
                 ?></a>
             <?php do_action('goopter_paypal_for_woocommerce_general_settings_tab'); ?>
