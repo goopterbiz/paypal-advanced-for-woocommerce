@@ -152,14 +152,14 @@ $permalink = get_the_permalink();
             <div class="wfacp_express_formatted_address clearfix">
                 <div class="wfacp_express_formatted_billing_address">
                 <h3>
-                    <?php esc_html_e( 'Billing details', 'advanced-paypal-complete-payments-for-woocommerce' ); ?>
+                    <?php esc_html_e( 'Billing details', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce' ); ?>
                 </h3>
                     <?php
                     if (WFACP_Core()->public->paypal_billing_address) {
                         ?>
                         <div>
                             <strong>
-                                <?php esc_html_e( 'Address', 'advanced-paypal-complete-payments-for-woocommerce' ); ?>
+                                <?php esc_html_e( 'Address', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce' ); ?>
                             </strong>
                             <address>
                                 <?php
@@ -183,7 +183,7 @@ $permalink = get_the_permalink();
                     if ($instance->have_billing_address()) {
                         ?>
                         <a href="#" class="wfacp_edit_address" data-type="billing">
-                            <?php esc_html_e( 'Edit', 'advanced-paypal-complete-payments-for-woocommerce' ); ?>
+                            <?php esc_html_e( 'Edit', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce' ); ?>
                         </a>
                         <?php
                     }
@@ -191,11 +191,11 @@ $permalink = get_the_permalink();
                 </div>
                 <div class="wfacp_express_formatted_shipping_address">
                     <h3>
-                        <?php esc_html_e( 'Shipping details', 'advanced-paypal-complete-payments-for-woocommerce' ); ?>
+                        <?php esc_html_e( 'Shipping details', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce' ); ?>
                     </h3>
                     <div>
                         <strong>
-                            <?php esc_html_e( 'Address', 'advanced-paypal-complete-payments-for-woocommerce' ); ?>
+                            <?php esc_html_e( 'Address', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce' ); ?>
                         </strong>
                         <address>
                             <?php
@@ -211,7 +211,7 @@ $permalink = get_the_permalink();
                         if ($instance->have_shipping_address()) {
                             ?>
                             <a href="#" class="wfacp_edit_address" data-type="shipping">
-                                <?php esc_html_e( 'Edit', 'advanced-paypal-complete-payments-for-woocommerce' ); ?>
+                                <?php esc_html_e( 'Edit', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce' ); ?>
                             </a>
                             <?php
                         }
@@ -226,7 +226,7 @@ $permalink = get_the_permalink();
                         ?>
                         <div class="wfacp_express_billing_address clearfix">
                             <h3>
-                                <?php esc_html_e( 'Billing Address', 'advanced-paypal-complete-payments-for-woocommerce' ); ?>
+                                <?php esc_html_e( 'Billing Address', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce' ); ?>
                             </h3>
                             <?php
                             $fields = $checkout->get_checkout_fields('billing');
@@ -258,7 +258,7 @@ $permalink = get_the_permalink();
                         ?>
                         <div class="wfacp_express_shipping_address clearfix">
                             <h3>
-                                <?php esc_html_e( 'Shipping Address', 'advanced-paypal-complete-payments-for-woocommerce' ); ?>
+                                <?php esc_html_e( 'Shipping Address', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce' ); ?>
                             </h3>
                             <?php
                             $fields = $checkout->get_checkout_fields('shipping');

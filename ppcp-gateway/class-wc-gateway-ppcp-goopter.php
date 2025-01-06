@@ -40,7 +40,7 @@ class WC_Gateway_PPCP_Goopter extends WC_Payment_Gateway {
             $this->goopter_get_settings();
             $this->goopter_defined_hooks();
             if (goopter_ppcp_has_active_session()) {
-                $this->order_button_text = apply_filters('goopter_ppcp_order_review_page_place_order_button_text', __('Complete Order Payment', 'advanced-paypal-complete-payments-for-woocommerce'));
+                $this->order_button_text = apply_filters('goopter_ppcp_order_review_page_place_order_button_text', __('Complete Order Payment', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'));
             }
 
             $this->setGatewaySupports();
@@ -54,7 +54,7 @@ class WC_Gateway_PPCP_Goopter extends WC_Payment_Gateway {
         $this->icon = apply_filters('woocommerce_goopter_paypal_checkout_icon', 'https://www.paypalobjects.com/webstatic/mktg/Logo/pp-logo-100px.png');
         $this->has_fields = true;
         $this->method_title = apply_filters('goopter_ppcp_gateway_method_title', sprintf('%s - Built by Goopter', GT_PPCP_NAME));
-        $this->method_description = __('The easiest one-stop solution for accepting PayPal, Venmo, Debit/Credit Cards with cheaper fees than other processors!', 'advanced-paypal-complete-payments-for-woocommerce');
+        $this->method_description = __('The easiest one-stop solution for accepting PayPal, Venmo, Debit/Credit Cards with cheaper fees than other processors!', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce');
     }
 
     public function goopter_get_settings() {
@@ -211,16 +211,16 @@ class WC_Gateway_PPCP_Goopter extends WC_Payment_Gateway {
         wp_enqueue_script('wc-credit-card-form');
         $fields = array();
         $cvc_field = '<div class="form-row form-row-last">
-                        <label for="' . esc_attr($this->id) . '-card-cvc">' . apply_filters('cc_form_label_card_code', __('Card Security Code', 'advanced-paypal-complete-payments-for-woocommerce'), $this->id) . ' </label>
+                        <label for="' . esc_attr($this->id) . '-card-cvc">' . apply_filters('cc_form_label_card_code', __('Card Security Code', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'), $this->id) . ' </label>
                         <div id="' . esc_attr($this->id) . '-card-cvc" class="input-text wc-credit-card-form-card-cvc hosted-field-braintree"></div>
                     </div>';
         $default_fields = array(
             'card-number-field' => '<div class="form-row form-row-wide">
-                        <label for="' . esc_attr($this->id) . '-card-number">' . apply_filters('cc_form_label_card_number', __('Card number', 'advanced-paypal-complete-payments-for-woocommerce'), $this->id) . '</label>
+                        <label for="' . esc_attr($this->id) . '-card-number">' . apply_filters('cc_form_label_card_number', __('Card number', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'), $this->id) . '</label>
                         <div id="' . esc_attr($this->id) . '-card-number"  class="input-text wc-credit-card-form-card-number hosted-field-braintree"></div>
                     </div>',
             'card-expiry-field' => '<div class="form-row form-row-first">
-                        <label for="' . esc_attr($this->id) . '-card-expiry">' . apply_filters('cc_form_label_expiry', __('Expiration Date', 'advanced-paypal-complete-payments-for-woocommerce'), $this->id) . ' </label>
+                        <label for="' . esc_attr($this->id) . '-card-expiry">' . apply_filters('cc_form_label_expiry', __('Expiration Date', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'), $this->id) . ' </label>
                         <div id="' . esc_attr($this->id) . '-card-expiry" class="input-text wc-credit-card-form-card-expiry hosted-field-braintree"></div>
                     </div>',
         );
@@ -296,10 +296,10 @@ class WC_Gateway_PPCP_Goopter extends WC_Payment_Gateway {
                     <div class="ppcp_paypal_connection">
                         <div class="ppcp_paypal_connection_status">
                             <h3><?php // Translators: %s is the name of the PayPal service (e.g., PayPal Advanced).
-                            echo sprintf(esc_html__('Congratulations, %s is Connected!', 'advanced-paypal-complete-payments-for-woocommerce'), esc_html(GT_PPCP_NAME)); ?></h3>
+                            echo sprintf(esc_html__('Congratulations, %s is Connected!', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'), esc_html(GT_PPCP_NAME)); ?></h3>
                         </div>
                     </div>
-                    <button type="button" class="button goopter-ppcp-disconnect"><?php echo esc_html__('Disconnect', 'advanced-paypal-complete-payments-for-woocommerce'); ?></button>
+                    <button type="button" class="button goopter-ppcp-disconnect"><?php echo esc_html__('Disconnect', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'); ?></button>
                     <p class="description"><?php echo wp_kses_post($data['description']); ?></p>
                 </td>
             </tr>
@@ -321,9 +321,9 @@ class WC_Gateway_PPCP_Goopter extends WC_Payment_Gateway {
                 <td class="forminp" id="<?php echo esc_attr($field_key); ?>">
                     <?php
                     if (($this->is_live_first_party_used !== 'yes' && $this->is_live_third_party_used !== 'yes' && $testmode === 'no') || ($this->is_sandbox_first_party_used !== 'yes' && $this->is_sandbox_third_party_used !== 'yes' && $testmode === 'yes')) {
-                        $setup_url = add_query_arg(array('testmode' => $testmode, 'utm_nooverride' => '1'), untrailingslashit(admin_url('options-general.php?page=advanced-paypal-complete-payments-for-woocommerce&tab=general_settings&gateway=paypal_payment_gateway_products')));
+                        $setup_url = add_query_arg(array('testmode' => $testmode, 'utm_nooverride' => '1'), untrailingslashit(admin_url('options-general.php?page=goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce&tab=general_settings&gateway=paypal_payment_gateway_products')));
                         ?>
-                        <a class="button-primary" href="<?php echo esc_url($setup_url); ?>"><?php echo esc_html__('Go To Setup', 'advanced-paypal-complete-payments-for-woocommerce'); ?></a>
+                        <a class="button-primary" href="<?php echo esc_url($setup_url); ?>"><?php echo esc_html__('Go To Setup', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'); ?></a>
                         <?php
                     }
                     ?>
@@ -524,7 +524,7 @@ class WC_Gateway_PPCP_Goopter extends WC_Payment_Gateway {
 
     public function process_refund($order_id, $amount = null, $reason = '') {
         if ($amount <= 0) {
-            return new WP_Error('error', __('Invalid refund amount', 'advanced-paypal-complete-payments-for-woocommerce'));
+            return new WP_Error('error', __('Invalid refund amount', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'));
         }
         
         $order = wc_get_order($order_id);
@@ -551,7 +551,7 @@ class WC_Gateway_PPCP_Goopter extends WC_Payment_Gateway {
                 return true;
             } else {
                 if (!$this->can_refund_order($order)) {
-                    return new WP_Error('error', __('Refund failed.', 'advanced-paypal-complete-payments-for-woocommerce'));
+                    return new WP_Error('error', __('Refund failed.', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'));
                 }
                 $transaction_id = $order->get_transaction_id();
                 $bool = $this->payment_request->goopter_ppcp_refund_order($order_id, $amount, $reason, $transaction_id);
@@ -584,8 +584,8 @@ class WC_Gateway_PPCP_Goopter extends WC_Payment_Gateway {
         ?>
         <tr class="paypal-fee-tr">
             <td class="label paypal-fee">
-                <?php echo wp_kses_post(wc_help_tip(__('This represents the fee PayPal collects for the transaction.', 'advanced-paypal-complete-payments-for-woocommerce'))); ?>
-                <?php esc_html_e('PayPal Fee:', 'advanced-paypal-complete-payments-for-woocommerce'); ?>
+                <?php echo wp_kses_post(wc_help_tip(__('This represents the fee PayPal collects for the transaction.', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'))); ?>
+                <?php esc_html_e('PayPal Fee:', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'); ?>
             </td>
             <td width="1%"></td>
             <td class="total">
@@ -603,7 +603,7 @@ class WC_Gateway_PPCP_Goopter extends WC_Payment_Gateway {
     public function goopter_ppcp_admin_notices() {
         $is_saller_onboarding_done = false;
         $is_saller_onboarding_failed = false;
-        $onboarding_success_message = sprintf(esc_html__('Your PayPal account has been connected successfully and you are ready to rock!', 'advanced-paypal-complete-payments-for-woocommerce'), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES));
+        $onboarding_success_message = sprintf(esc_html__('Your PayPal account has been connected successfully and you are ready to rock!', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'), wp_specialchars_decode(get_option('blogname'), ENT_QUOTES));
         if (false !== get_transient('goopter_ppcp_sandbox_seller_onboarding_process_done')) {
             $is_saller_onboarding_done = true;
             delete_transient('goopter_ppcp_sandbox_seller_onboarding_process_done');
@@ -652,11 +652,11 @@ class WC_Gateway_PPCP_Goopter extends WC_Payment_Gateway {
         }
         $message = sprintf(
             // Translators: %1$s is the PayPal service name, %2$s is the URL to connect the account.
-            __('%1$s is almost ready. To get started, <a href="%2$s">connect your account</a>.', 'advanced-paypal-complete-payments-for-woocommerce'),
+            __('%1$s is almost ready. To get started, <a href="%2$s">connect your account</a>.', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'),
             esc_html(GT_PPCP_NAME),
-            esc_url(admin_url('options-general.php?page=advanced-paypal-complete-payments-for-woocommerce&tab=general_settings&gateway=paypal_payment_gateway_products'))
+            esc_url(admin_url('options-general.php?page=goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce&tab=general_settings&gateway=paypal_payment_gateway_products'))
         );
-        // $message = sprintf(__('%s is almost ready. To get started, <a href="%1$s">connect your account</a>.','advanced-paypal-complete-payments-for-woocommerce'),GT_PPCP_NAME,admin_url('options-general.php?page=advanced-paypal-complete-payments-for-woocommerce&tab=general_settings&gateway=paypal_payment_gateway_products'));
+        // $message = sprintf(__('%s is almost ready. To get started, <a href="%1$s">connect your account</a>.','goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'),GT_PPCP_NAME,admin_url('options-general.php?page=goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce&tab=general_settings&gateway=paypal_payment_gateway_products'));
         ?>
         <div class="notice notice-warning is-dismissible">
             <p><?php echo esc_html($message); ?></p>
@@ -741,7 +741,7 @@ class WC_Gateway_PPCP_Goopter extends WC_Payment_Gateway {
 				<label for="wc-%1$s-new-payment-method" style="display:inline;">%2$s</label>
 			</p>',
                 esc_attr($this->id),
-                esc_html__('Save payment method to my account.', 'advanced-paypal-complete-payments-for-woocommerce')
+                esc_html__('Save payment method to my account.', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce')
         );
 
         echo apply_filters('woocommerce_payment_gateway_save_new_payment_method_option_html', $html, $this); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -811,7 +811,7 @@ class WC_Gateway_PPCP_Goopter extends WC_Payment_Gateway {
                             if (isset($data['is_paypal_vault_enable']) && true === $data['is_paypal_vault_enable']) {
                                 ?>
                                 <img src="<?php echo esc_url(PAYPAL_FOR_WOOCOMMERCE_ASSET_URL . 'assets/images/ppcp_check_mark_status.png'); ?>" width="25" height="25" style="display: inline-block;margin: 0 5px -10px 10px;">
-                                <b><?php echo esc_html__('Vault is Connected!', 'advanced-paypal-complete-payments-for-woocommerce'); ?></b>
+                                <b><?php echo esc_html__('Vault is Connected!', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'); ?></b>
                             <?php } ?>
                         </label>
                         <?php
@@ -825,7 +825,7 @@ class WC_Gateway_PPCP_Goopter extends WC_Payment_Gateway {
                                 $url = add_query_arg($args, $signup_link);
                                 ?>
                                 <br>
-                                <a target="_blank" class="wplk-button button-primary" id="<?php echo esc_attr('wplk-button'); ?>" data-paypal-onboard-complete="onboardingCallback" href="<?php echo esc_url($url); ?>" data-paypal-button="true"><?php echo esc_html__('Activate PayPal Vault', 'advanced-paypal-complete-payments-for-woocommerce'); ?></a>
+                                <a target="_blank" class="wplk-button button-primary" id="<?php echo esc_attr('wplk-button'); ?>" data-paypal-onboard-complete="onboardingCallback" href="<?php echo esc_url($url); ?>" data-paypal-button="true"><?php echo esc_html__('Activate PayPal Vault', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'); ?></a>
                                 <?php
                                 $script_url = 'https://www.paypal.com/webapps/merchantboarding/js/lib/lightbox/partner.js';
                                 ?>
@@ -840,7 +840,7 @@ class WC_Gateway_PPCP_Goopter extends WC_Payment_Gateway {
                                     });</script>
                                 <script id="paypal-js" src="<?php echo esc_url($script_url); ?>"></script> <?php
                             } else {
-                                echo esc_html__('We could not properly connect to PayPal', 'advanced-paypal-complete-payments-for-woocommerce');
+                                echo esc_html__('We could not properly connect to PayPal', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce');
                             }
                         }
                         ?>
@@ -910,14 +910,14 @@ class WC_Gateway_PPCP_Goopter extends WC_Payment_Gateway {
                                 
                                 <?php 
                                     $message = $is_domain_added 
-                                        ? __('Apple Pay is connected!', 'advanced-paypal-complete-payments-for-woocommerce') 
-                                        : __('Register your domain to activate Apple Pay.', 'advanced-paypal-complete-payments-for-woocommerce');
+                                        ? __('Apple Pay is connected!', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce') 
+                                        : __('Register your domain to activate Apple Pay.', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce');
                                     echo '<b>' . esc_html($message) . '</b>';
                                 ?>
                                 
                             <?php } else if ($is_ppcp_connected && !$is_apple_pay_approved && !$need_to_display_apple_pay_button) {
                                 ?>
-                                <br><br><b style="color:red"><?php echo esc_html__('Apple Pay is currently available in the following countries: AU, AT, BE, BG, CA, CY, CZ, DK, EE, FI, FR, DE, GR, HU, IE, IT, LV, LI, LT, LU, MT, NL, NO, PL, PT, RO, SK, SI, ES, SE, US, GB. PayPal is working to expand this availability to additional countries as quickly as possible.', 'advanced-paypal-complete-payments-for-woocommerce'); ?></b>
+                                <br><br><b style="color:red"><?php echo esc_html__('Apple Pay is currently available in the following countries: AU, AT, BE, BG, CA, CY, CZ, DK, EE, FI, FR, DE, GR, HU, IE, IT, LV, LI, LT, LU, MT, NL, NO, PL, PT, RO, SK, SI, ES, SE, US, GB. PayPal is working to expand this availability to additional countries as quickly as possible.', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'); ?></b>
                                 <?php
                             }?>
                         </label>
@@ -926,7 +926,7 @@ class WC_Gateway_PPCP_Goopter extends WC_Payment_Gateway {
                         if ($is_apple_pay_approved && $is_apple_pay_enabled && !$is_domain_added) {
                             add_thickbox();
                             ?>
-                            <div style="margin-top: 10px"><a title="Apple Pay Domains" href="<?php echo esc_url(add_query_arg(['action' => 'goopter_list_apple_pay_domain'], admin_url('admin-ajax.php'))) ?>" class="thickbox wplk-button button-primary"><?php echo esc_html__('Manage Apple Pay Domains', 'advanced-paypal-complete-payments-for-woocommerce'); ?></a></div>
+                            <div style="margin-top: 10px"><a title="Apple Pay Domains" href="<?php echo esc_url(add_query_arg(['action' => 'goopter_list_apple_pay_domain'], admin_url('admin-ajax.php'))) ?>" class="thickbox wplk-button button-primary"><?php echo esc_html__('Manage Apple Pay Domains', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'); ?></a></div>
                             <?php
                         }
                         ?>
@@ -940,7 +940,7 @@ class WC_Gateway_PPCP_Goopter extends WC_Payment_Gateway {
                                 $url = add_query_arg($args, $signup_link);
                                 ?>
                                 <br>
-                                <a target="_blank" class="wplk-button button-primary" id="<?php echo esc_attr('wplk-button'); ?>" data-paypal-onboard-complete="onboardingCallback" href="<?php echo esc_url($url); ?>" data-paypal-button="true"><?php echo esc_html__('Activate Apple Pay', 'advanced-paypal-complete-payments-for-woocommerce'); ?></a>
+                                <a target="_blank" class="wplk-button button-primary" id="<?php echo esc_attr('wplk-button'); ?>" data-paypal-onboard-complete="onboardingCallback" href="<?php echo esc_url($url); ?>" data-paypal-button="true"><?php echo esc_html__('Activate Apple Pay', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'); ?></a>
                             <?php
                             $script_url = 'https://www.paypal.com/webapps/merchantboarding/js/lib/lightbox/partner.js';
                             ?>
@@ -955,7 +955,7 @@ class WC_Gateway_PPCP_Goopter extends WC_Payment_Gateway {
 									});</script>
                                 <script id="paypal-js" src="<?php echo esc_url($script_url); ?>"></script> <?php
                             } else {
-                                echo esc_html__('We could not properly connect to PayPal', 'advanced-paypal-complete-payments-for-woocommerce');
+                                echo esc_html__('We could not properly connect to PayPal', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce');
                             }
                         }
                         ?>
@@ -1006,10 +1006,10 @@ class WC_Gateway_PPCP_Goopter extends WC_Payment_Gateway {
                             if ($is_google_pay_enabled && $is_google_pay_approved) {
                                 ?>
                                 <img src="<?php echo esc_url(PAYPAL_FOR_WOOCOMMERCE_ASSET_URL . 'assets/images/ppcp_check_mark_status.png'); ?>" width="25" height="25" style="display: inline-block;margin: 0 5px -10px 10px;">
-                                <b><?php echo esc_html__('Google Pay is connected!', 'advanced-paypal-complete-payments-for-woocommerce'); ?></b>
+                                <b><?php echo esc_html__('Google Pay is connected!', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'); ?></b>
                             <?php } else if ($is_ppcp_connected && !$is_google_pay_approved && !$need_to_display_google_pay_button) {
                                 ?>
-                                <br><br><b style="color:red"><?php echo esc_html__('Google Pay is currently available in the following countries: AU, AT, BE, BG, CA, CY, CZ, DK, EE, FI, FR, DE, GR, HU, IE, IT, LV, LI, LT, LU, MT, NL, NO, PL, PT, RO, SK, SI, ES, SE, US, GB. PayPal is working to expand this availability to additional countries as quickly as possible.', 'advanced-paypal-complete-payments-for-woocommerce'); ?></b>
+                                <br><br><b style="color:red"><?php echo esc_html__('Google Pay is currently available in the following countries: AU, AT, BE, BG, CA, CY, CZ, DK, EE, FI, FR, DE, GR, HU, IE, IT, LV, LI, LT, LU, MT, NL, NO, PL, PT, RO, SK, SI, ES, SE, US, GB. PayPal is working to expand this availability to additional countries as quickly as possible.', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'); ?></b>
                                 <?php
                             }?>
                         </label>
@@ -1026,7 +1026,7 @@ class WC_Gateway_PPCP_Goopter extends WC_Payment_Gateway {
                                 $url = add_query_arg($args, $signup_link);
                                 ?>
                                 <br>
-                                <a target="_blank" class="wplk-button button-primary" id="<?php echo esc_attr('wplk-button'); ?>" data-paypal-onboard-complete="onboardingCallback" href="<?php echo esc_url($url); ?>" data-paypal-button="true"><?php echo esc_html__('Activate Google Pay', 'advanced-paypal-complete-payments-for-woocommerce'); ?></a>
+                                <a target="_blank" class="wplk-button button-primary" id="<?php echo esc_attr('wplk-button'); ?>" data-paypal-onboard-complete="onboardingCallback" href="<?php echo esc_url($url); ?>" data-paypal-button="true"><?php echo esc_html__('Activate Google Pay', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'); ?></a>
                             <?php
                             $script_url = 'https://www.paypal.com/webapps/merchantboarding/js/lib/lightbox/partner.js';
                             ?>
@@ -1041,7 +1041,7 @@ class WC_Gateway_PPCP_Goopter extends WC_Payment_Gateway {
 									});</script>
                                 <script id="paypal-js" src="<?php echo esc_url($script_url); ?>"></script> <?php
                             } else {
-                                echo esc_html__('We could not properly connect to PayPal', 'advanced-paypal-complete-payments-for-woocommerce');
+                                echo esc_html__('We could not properly connect to PayPal', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce');
                             }
                         }
                         ?>

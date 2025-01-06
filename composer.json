@@ -1,5 +1,5 @@
 {
-    "name": "goopter/advanced-paypal-complete-payments-for-woocommerce",
+    "name": "goopter/goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce",
     "description": "PayPal payment gateway extension for WooCommerce.",
     "type": "wordpress-plugin",
     "license": "GPL-3.0",

@@ -78,7 +78,7 @@ class Goopter_PayPal_PPCP_Apple_Pay_Configurations
                 }
             }
             $jsonResponse['domains'] = $allDomains;
-            $jsonResponse['message'] = __('Domain listing retrieved successfully.', 'advanced-paypal-complete-payments-for-woocommerce');
+            $jsonResponse['message'] = __('Domain listing retrieved successfully.', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce');
         } else {
             $this->payment_request->error_email_notification = false;
             $jsonResponse['message'] = $this->payment_request->goopter_ppcp_get_readable_message($response);
@@ -99,7 +99,7 @@ class Goopter_PayPal_PPCP_Apple_Pay_Configurations
         try {
             $checkIsDomainAdded = self::isApplePayDomainAdded($jsonResponse);
             if ($checkIsDomainAdded) {
-                $successMessage = __('Your domain has been registered successfully, Close the popup and refresh the page to update the status.', 'advanced-paypal-complete-payments-for-woocommerce');
+                $successMessage = __('Your domain has been registered successfully, Close the popup and refresh the page to update the status.', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce');
                 $applePayGateway = WC_Gateway_Apple_Pay_Goopter::instance();
                 $applePayGateway->update_option('apple_pay_domain_added', 'yes');
             }
@@ -190,7 +190,7 @@ class Goopter_PayPal_PPCP_Apple_Pay_Configurations
     public function registerDomain($domainNameToRegister)
     {
         if (!filter_var($domainNameToRegister, FILTER_VALIDATE_DOMAIN)) {
-            throw new Exception(esc_html__('Please enter a valid domain name to register.', 'advanced-paypal-complete-payments-for-woocommerce'));
+            throw new Exception(esc_html__('Please enter a valid domain name to register.', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'));
         }
         $domainParams = [
             "provider_type" => "APPLE_PAY",
@@ -215,18 +215,18 @@ class Goopter_PayPal_PPCP_Apple_Pay_Configurations
             return [
                 'status' => true,
                 'domain' => $domainNameToRegister,
-                'message' => __('Domain has been added successfully.', 'advanced-paypal-complete-payments-for-woocommerce'),
+                'message' => __('Domain has been added successfully.', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce'),
                 'remove_url' => add_query_arg(['domain' => $domainNameToRegister, 'action' => 'goopter_remove_apple_pay_domain'], admin_url('admin-ajax.php'))
             ];
         } else {
             $this->payment_request->error_email_notification = false;
             $message = $this->payment_request->goopter_ppcp_get_readable_message($response);
             if (str_contains($message, 'DOMAIN_ALREADY_REGISTERED')) {
-                $message = __('Domain is already registered.', 'advanced-paypal-complete-payments-for-woocommerce');
+                $message = __('Domain is already registered.', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce');
             } elseif (str_contains($message, 'DOMAIN_REGISTERED_WITH_ANOTHER_MERCHANT')) {
-                $message = __('Domain is registered with another merchant.', 'advanced-paypal-complete-payments-for-woocommerce');
+                $message = __('Domain is registered with another merchant.', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce');
             }
-            return ['status' => false, 'message' => __('An error occurred.', 'advanced-paypal-complete-payments-for-woocommerce') . "\n\n" . $message];
+            return ['status' => false, 'message' => __('An error occurred.', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce') . "\n\n" . $message];
         }
     }
 
@@ -255,7 +255,7 @@ class Goopter_PayPal_PPCP_Apple_Pay_Configurations
             delete_transient('goopter_apple_pay_domain_list_cache');
             return [
                 'status' => true,
-                'message' => __('Domain has been removed successfully.', 'advanced-paypal-complete-payments-for-woocommerce')
+                'message' => __('Domain has been removed successfully.', 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce')
             ];
         } else {
             $this->payment_request->error_email_notification = false;
@@ -331,7 +331,7 @@ class Goopter_PayPal_PPCP_Apple_Pay_Configurations
                 $this->updateDomainVerificationFileContent($localFileLoc);
             }
         } catch (Exception $exception) {
-            throw new Exception(esc_html__("Unable to update the verification file content. Error: ", 'advanced-paypal-complete-payments-for-woocommerce') . esc_html($exception->getMessage()));
+            throw new Exception(esc_html__("Unable to update the verification file content. Error: ", 'goopter-advanced-integration-for-paypal-complete-payments-and-woocommerce') . esc_html($exception->getMessage()));
         }
         if (file_exists($targetLocation)) {
             wp_delete_file($targetLocation);
