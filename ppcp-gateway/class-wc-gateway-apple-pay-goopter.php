@@ -37,7 +37,7 @@ class WC_Gateway_Apple_Pay_Goopter extends WC_Gateway_PPCP_Goopter {
         try {
             $this->id = 'goopter_ppcp_apple_pay';
             $this->icon = apply_filters('woocommerce_goopter_ppcp_apple_pay_icon', plugins_url('/ppcp-gateway/images/icon/apple_pay.png', plugin_basename(dirname(__FILE__))));
-            $this->method_description = __('Accept payments using Apple Pay.', 'goopter-advanced-paypal-complete-payments-for-woocommerce');
+            $this->method_description = __('Accept payments using Apple Pay.', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce');
             $this->has_fields = true;
             $this->goopter_ppcp_load_class();
             // disable temp $this->setGatewaySupports();
@@ -115,7 +115,7 @@ class WC_Gateway_Apple_Pay_Goopter extends WC_Gateway_PPCP_Goopter {
         try {
             ?>
             <?php 
-                $description = $this->apple_pay_payments_description ?: __('Default Apple Pay description', 'goopter-advanced-paypal-complete-payments-for-woocommerce');
+                $description = $this->apple_pay_payments_description ?: __('Default Apple Pay description', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce');
                 echo '<p>' . esc_html($description) . '</p>';
             ?>
             <fieldset id="wc-<?php echo esc_attr($this->id); ?>-form" class='wc-apple-pay-form wc-payment-form'>

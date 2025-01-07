@@ -135,7 +135,7 @@ class Cartflows_Pro_Gateway_PayPal_PPCP_Goopter extends Cartflows_Pro_Paypal_Gat
             wp_send_json(
                 array(
                     'result' => 'fail',
-                    'message' => __('Cannot create orders with empty product.', 'goopter-advanced-paypal-complete-payments-for-woocommerce'),
+                    'message' => __('Cannot create orders with empty product.', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce'),
                 )
             );
         }
@@ -146,7 +146,7 @@ class Cartflows_Pro_Gateway_PayPal_PPCP_Goopter extends Cartflows_Pro_Paypal_Gat
             wp_send_json(
                     array(
                         'result' => 'fail',
-                        'message' => __('Cannot make the Payment for Zero value product', 'goopter-advanced-paypal-complete-payments-for-woocommerce'),
+                        'message' => __('Cannot make the Payment for Zero value product', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce'),
                     )
             );
         } else {
@@ -194,7 +194,7 @@ class Cartflows_Pro_Gateway_PayPal_PPCP_Goopter extends Cartflows_Pro_Paypal_Gat
             } else {
                 $json_response = array(
                     'result' => false,
-                    'message' => __('PayPal order is not created', 'goopter-advanced-paypal-complete-payments-for-woocommerce'),
+                    'message' => __('PayPal order is not created', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce'),
                     'paypal_order_id' => '',
                     'redirect_url' => '',
                     'response' => $response,
@@ -208,7 +208,7 @@ class Cartflows_Pro_Gateway_PayPal_PPCP_Goopter extends Cartflows_Pro_Paypal_Gat
                     );
                     $json_response = array(
                         'status' => 'success',
-                        'message' => __('Order created successfully', 'goopter-advanced-paypal-complete-payments-for-woocommerce'),
+                        'message' => __('Order created successfully', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce'),
                         'paypal_order_id' => $response['id'],
                         'redirect' => $approve_link,
                         'response' => $response,
@@ -254,7 +254,7 @@ class Cartflows_Pro_Gateway_PayPal_PPCP_Goopter extends Cartflows_Pro_Paypal_Gat
         } else {
             $json_response = array(
                 'result' => false,
-                'message' => __('PayPal order is not created', 'goopter-advanced-paypal-complete-payments-for-woocommerce'),
+                'message' => __('PayPal order is not created', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce'),
                 'paypal_order_id' => '',
                 'redirect_url' => '',
                 'response' => $resp_body,
@@ -268,7 +268,7 @@ class Cartflows_Pro_Gateway_PayPal_PPCP_Goopter extends Cartflows_Pro_Paypal_Gat
                 );
                 $json_response = array(
                     'status' => 'success',
-                    'message' => __('Order Captured successfully', 'goopter-advanced-paypal-complete-payments-for-woocommerce'),
+                    'message' => __('Order Captured successfully', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce'),
                     'paypal_order_id' => $resp_body['id'],
                     'response' => $resp_body,
                 );
@@ -286,7 +286,7 @@ class Cartflows_Pro_Gateway_PayPal_PPCP_Goopter extends Cartflows_Pro_Paypal_Gat
                 'value' => $offer_product['price'],
                 'breakdown' => $this->get_item_breakdown($order, $offer_product),
             ),
-            'description' => __('One Time Offer - ' . $order->get_id(), 'goopter-advanced-paypal-complete-payments-for-woocommerce'), // phpcs:ignore
+            'description' => __('One Time Offer - ' . $order->get_id(), 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce'), // phpcs:ignore
             'items' => array(
                 $this->add_offer_item_data($order, $offer_product),
             ),

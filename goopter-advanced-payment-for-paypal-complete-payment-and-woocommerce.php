@@ -1,14 +1,14 @@
 <?php
 /**
  * @wordpress-plugin
- * Plugin Name:       Goopter Advanced PayPal Complete Payments for WooCommerce
+ * Plugin Name:       Goopter Advanced Payment for PayPal Complete Payment & WooCommerce
  * Description:       Integrate the PayPal Complete Payments Platform into your WooCommerce site, offering PayPal Checkout, Pay Later, Venmo, direct credit card processing, and various alternative payment options such as Apple Pay, Google Pay, and others!
  * Version:           1.0.0
  * Author:            Goopter
  * Author URI:        https://www.goopter.com/
  * License:           GNU General Public License v3.0
  * License URI:       http://www.gnu.org/licenses/gpl-3.0.html
- * Text Domain:       goopter-advanced-paypal-complete-payments-for-woocommerce
+ * Text Domain:       goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce
  * Domain Path:       /i18n/languages/
  * Requires at least: 5.8
  * Tested up to: 6.6.2
@@ -35,7 +35,7 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
     class Goopter_Gateway_Paypal {
 
         protected $plugin_screen_hook_suffix = null;
-        protected $plugin_slug = 'goopter-advanced-paypal-complete-payments-for-woocommerce';
+        protected $plugin_slug = 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce';
         private $subscription_support_enabled = false;
         public $minified_version;
         public $customer_id = '';
@@ -151,7 +151,7 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
         public function plugin_action_links($actions, $plugin_file, $plugin_data, $context) {
             global $woocommerce;
             $gateways = $woocommerce->payment_gateways->payment_gateways();
-            $base_url = admin_url('options-general.php?page=goopter-advanced-paypal-complete-payments-for-woocommerce');
+            $base_url = admin_url('options-general.php?page=goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce');
             $configure_url = $base_url;
             if (isset($gateways['goopter_ppcp']) && (
                     ($gateways['goopter_ppcp']->sandbox === true && $gateways['goopter_ppcp']->sandbox_merchant_id) ||
@@ -159,10 +159,10 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
                     )) {
                 $configure_url = admin_url('admin.php?page=wc-settings&tab=checkout&section=goopter_ppcp');
             }
-            $configure = sprintf('<a href="%s">%s</a>', $configure_url, __('Configure', 'goopter-advanced-paypal-complete-payments-for-woocommerce'));
+            $configure = sprintf('<a href="%s">%s</a>', $configure_url, __('Configure', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce'));
             $custom_actions = array(
                 'configure' => $configure,
-                'contact' => sprintf('<a href="%s" target="_blank">%s</a>', 'https://www.goopter.com/contact-us/', __('Contact', 'goopter-advanced-paypal-complete-payments-for-woocommerce')),
+                'contact' => sprintf('<a href="%s" target="_blank">%s</a>', 'https://www.goopter.com/contact-us/', __('Contact', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce')),
             );
             return array_merge($custom_actions, $actions);
         }
@@ -248,7 +248,7 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
             wp_register_script('goopter_admin', plugins_url('/assets/js/goopter-admin-v2.js', __FILE__), array('jquery'), $script_versions);
             $translation_array = array(
                 'is_ssl' => is_ssl() ? "yes" : "no",
-                'choose_image' => __('Choose Image', 'goopter-advanced-paypal-complete-payments-for-woocommerce'),
+                'choose_image' => __('Choose Image', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce'),
                 'payment_method' => $payment_method,
                 'payment_action' => $payment_action,
                 'is_paypal_credit_enable' => "yes",
@@ -334,10 +334,10 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
         public function goopter_admin_menu_own() {
             $this->plugin_screen_hook_suffix = add_submenu_page(
                     'options-general.php',
-                    __('PayPal for WooCommerce - Settings', 'goopter-advanced-paypal-complete-payments-for-woocommerce'),
+                    __('PayPal for WooCommerce - Settings', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce'),
                     GT_PPCP_NAME,
                     'manage_options',
-                    'goopter-advanced-paypal-complete-payments-for-woocommerce',
+                    'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce',
                     array($this, 'display_plugin_admin_page')
             );
         }
@@ -471,7 +471,7 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
         }
 
         public function load_plugin_textdomain() {
-            load_plugin_textdomain('goopter-advanced-paypal-complete-payments-for-woocommerce', false, plugin_basename(dirname(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_FILE)) . '/i18n/languages');
+            load_plugin_textdomain('goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce', false, plugin_basename(dirname(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_FILE)) . '/i18n/languages');
         }
 
         public function goopter_dismiss_notice() {
@@ -499,7 +499,7 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
             $gateways = $woocommerce->payment_gateways->payment_gateways();
             if (isset($gateways['goopter_ppcp']) && 'yes' === $gateways['goopter_ppcp']->enabled) {
                 $product_data_tabs['goopter_paypal_for_woo_payment_action'] = array(
-                    'label' => __('Payment Action', 'goopter-advanced-paypal-complete-payments-for-woocommerce'),
+                    'label' => __('Payment Action', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce'),
                     'target' => 'goopter_paypal_for_woo_payment_action',
                 );
             }
@@ -571,19 +571,19 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
         }
 
         public function goopter_wc_order_statuses($order_statuses) {
-            $order_statuses['wc-partial-payment'] = _x('Partially Paid', 'Order status', 'goopter-advanced-paypal-complete-payments-for-woocommerce');
+            $order_statuses['wc-partial-payment'] = _x('Partially Paid', 'Order status', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce');
             return $order_statuses;
         }
 
         public function goopter_register_post_status() {
             register_post_status('wc-partial-payment', array(
-                'label' => _x('Partially Paid', 'Order status', 'goopter-advanced-paypal-complete-payments-for-woocommerce'),
+                'label' => _x('Partially Paid', 'Order status', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce'),
                 'public' => false,
                 'exclude_from_search' => false,
                 'show_in_admin_all_list' => true,
                 'show_in_admin_status_list' => true,
                 // Translators: %s is the count of partially paid items.
-                'label_count' => _n_noop('Partially Paid <span class="count">(%s)</span>', 'Partially Paid <span class="count">(%s)</span>', 'goopter-advanced-paypal-complete-payments-for-woocommerce'),
+                'label_count' => _n_noop('Partially Paid <span class="count">(%s)</span>', 'Partially Paid <span class="count">(%s)</span>', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce'),
             ));
         }
 
@@ -630,7 +630,7 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
             $displayed_goopter_onboard_screen = get_option('displayed_goopter_onboard_screen', false);
             if ($woocommerce_goopter_ppcp_settings === false && $displayed_goopter_onboard_screen === false) {
                 update_option('displayed_goopter_onboard_screen', 'yes');
-                wp_safe_redirect(admin_url('options-general.php?page=goopter-advanced-paypal-complete-payments-for-woocommerce&tab=general_settings&gateway=paypal_payment_gateway_products'));
+                wp_safe_redirect(admin_url('options-general.php?page=goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce&tab=general_settings&gateway=paypal_payment_gateway_products'));
                 exit;
             }
         }

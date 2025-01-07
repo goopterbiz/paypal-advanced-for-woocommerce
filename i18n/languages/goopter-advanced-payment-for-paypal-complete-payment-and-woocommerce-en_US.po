@@ -2,7 +2,7 @@
 # This file is distributed under the GNU General Public License v3.0.
 msgid ""
 msgstr ""
-"Project-Id-Version: Goopter Advanced PayPal Complete Payments for WooCommerce 1.0.0\n"
+"Project-Id-Version: Goopter Advanced Payment for PayPal Complete Payment & WooCommerce 1.0.0\n"
 "for-woocommerce\n"
 "Language-Team: English\n"
 "MIME-Version: 1.0\n"
@@ -11,17 +11,17 @@ msgstr ""
 "POT-Creation-Date: 2024-12-11T01:00:38+00:00\n"
 "PO-Revision-Date: 2024-12-10 17:00-0800\n"
 "X-Generator: WP-CLI 2.11.0\n"
-"X-Domain: goopter-advanced-paypal-complete-payments-for-woocommerce\n"
+"X-Domain: goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce\n"
 "Language: en_US\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. Plugin Name of the plugin
-#: goopter-advanced-paypal-complete-payments-for-woocommerce.php
-msgid "Goopter Advanced PayPal Complete Payments for WooCommerce"
-msgstr "Goopter Advanced PayPal Complete Payments for WooCommerce"
+#: goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce.php
+msgid "Goopter Advanced Payment for PayPal Complete Payment & WooCommerce"
+msgstr "Goopter Advanced Payment for PayPal Complete Payment & WooCommerce"
 
 #. Description of the plugin
-#: goopter-advanced-paypal-complete-payments-for-woocommerce.php
+#: goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce.php
 msgid ""
 "Integrate the PayPal Complete Payments Platform into your WooCommerce site, "
 "offering PayPal Checkout, Pay Later, Venmo, direct credit card processing, "
@@ -34,12 +34,12 @@ msgstr ""
 "others!"
 
 #. Author of the plugin
-#: goopter-advanced-paypal-complete-payments-for-woocommerce.php
+#: goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce.php
 msgid "Goopter"
 msgstr "Goopter"
 
 #. Author URI of the plugin
-#: goopter-advanced-paypal-complete-payments-for-woocommerce.php
+#: goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce.php
 msgid "https://www.goopter.com/"
 msgstr "https://www.goopter.com/"
 
@@ -273,34 +273,34 @@ msgstr "This is where you can add new PayPal Transaction to your store."
 msgid "Billing Agreement Details"
 msgstr "Billing Agreement Details"
 
-#: goopter-advanced-paypal-complete-payments-for-woocommerce.php:163
+#: goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce.php:163
 msgid "Configure"
 msgstr "Configure"
 
-#: goopter-advanced-paypal-complete-payments-for-woocommerce.php:166
+#: goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce.php:166
 msgid "Contact"
 msgstr "Contact"
 
-#: goopter-advanced-paypal-complete-payments-for-woocommerce.php:246
+#: goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce.php:246
 msgid "Choose Image"
 msgstr "Choose Image"
 
-#: goopter-advanced-paypal-complete-payments-for-woocommerce.php:330
+#: goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce.php:330
 msgid "PayPal for WooCommerce - Settings"
 msgstr "PayPal for WooCommerce - Settings"
 
-#: goopter-advanced-paypal-complete-payments-for-woocommerce.php:648
+#: goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce.php:648
 #: ppcp-gateway/class-wc-gateway-ppcp-goopter-settings.php:1866
 msgid "Payment Action"
 msgstr "Payment Action"
 
-#: goopter-advanced-paypal-complete-payments-for-woocommerce.php:718
-#: goopter-advanced-paypal-complete-payments-for-woocommerce.php:724
+#: goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce.php:718
+#: goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce.php:724
 msgctxt "Order status"
 msgid "Partially Paid"
 msgstr "Partially Paid"
 
-#: goopter-advanced-paypal-complete-payments-for-woocommerce.php:729
+#: goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce.php:729
 msgid "Partially Paid <span class=\"count\">(%s)</span>"
 msgid_plural "Partially Paid <span class=\"count\">(%s)</span>"
 msgstr[0] "Partially Paid <span class=\"count\">(%s)</span>"

@@ -1,4 +1,4 @@
-=== Goopter Advanced PayPal Complete Payments for WooCommerce ===
+=== Goopter Advanced Payment for PayPal Complete Payment & WooCommerce ===
 Contributors: goopter
 Tags: woocommerce, paypal, apple pay, google play, credit card
 Requires at least: 5.8
