@@ -22,7 +22,7 @@ echo esc_html( wp_strip_all_tags( $email_heading ) );
 echo "\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n\n";
 
 /* translators: %s: Customer billing full name */
-echo sprintf( esc_html__( 'You’ve received the following order from %s:', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce' ), esc_html( $order->get_formatted_billing_full_name() ) ) . "\n\n";
+echo sprintf( esc_html__( 'You’ve received the following order from %s:', 'goopter-advanced-payment-for-woocommerce-and-paypal-complete-payment' ), esc_html( $order->get_formatted_billing_full_name() ) ) . "\n\n";
 
 /*
  * @hooked WC_Emails::order_details() Shows the order details table.

@@ -81,7 +81,7 @@ trait WC_Gateway_Base_Goopter
     
     public function process_refund($order_id, $amount = null, $reason = '') {
         if ($amount <= 0) {
-            return new WP_Error('error', __('Invalid refund amount', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce'));
+            return new WP_Error('error', __('Invalid refund amount', 'goopter-advanced-payment-for-woocommerce-and-paypal-complete-payment'));
         }
         
         $order = wc_get_order($order_id);
@@ -108,7 +108,7 @@ trait WC_Gateway_Base_Goopter
                 return true;
             } else {
                 if (!$this->can_refund_order($order)) {
-                    return new WP_Error('error', __('Refund failed.', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce'));
+                    return new WP_Error('error', __('Refund failed.', 'goopter-advanced-payment-for-woocommerce-and-paypal-complete-payment'));
                 }
                 $transaction_id = $order->get_transaction_id();
                 $bool = $this->payment_request->goopter_ppcp_refund_order($order_id, $amount, $reason, $transaction_id);

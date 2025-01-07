@@ -29,13 +29,13 @@ class WC_Gateway_CC_Goopter extends WC_Payment_Gateway_CC {
         try {
             $this->id = 'goopter_ppcp_cc';
             $this->icon = apply_filters('woocommerce_goopter_ppcp_cc_icon', plugins_url('/assets/images/cards.png', plugin_basename(dirname(__FILE__))));
-            $this->method_description = __('Accept PayPal, PayPal Credit and alternative payment types.', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce');
+            $this->method_description = __('Accept PayPal, PayPal Credit and alternative payment types.', 'goopter-advanced-payment-for-woocommerce-and-paypal-complete-payment');
             $this->has_fields = true;
             $this->goopter_ppcp_load_class();
             $this->setGatewaySupports();
 
-            // $this->title = __($this->setting_obj->get('advanced_card_payments_title', 'Credit Card'), 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce');
-            $default_title = __('Credit Card', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce');
+            // $this->title = __($this->setting_obj->get('advanced_card_payments_title', 'Credit Card'), 'goopter-advanced-payment-for-woocommerce-and-paypal-complete-payment');
+            $default_title = __('Credit Card', 'goopter-advanced-payment-for-woocommerce-and-paypal-complete-payment');
             $payment_title = $this->setting_obj->get('advanced_card_payments_title', $default_title);
             $this->title = esc_html($payment_title);
 
@@ -108,42 +108,42 @@ class WC_Gateway_CC_Goopter extends WC_Payment_Gateway_CC {
             'visa' => _x(
                     'Visa',
                     'Name of credit card',
-                    'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce'
+                    'goopter-advanced-payment-for-woocommerce-and-paypal-complete-payment'
             ),
             'mastercard' => _x(
                     'Mastercard',
                     'Name of credit card',
-                    'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce'
+                    'goopter-advanced-payment-for-woocommerce-and-paypal-complete-payment'
             ),
             'maestro' => _x(
                     'Maestro',
                     'Name of credit card',
-                    'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce'
+                    'goopter-advanced-payment-for-woocommerce-and-paypal-complete-payment'
             ),
             'amex' => _x(
                     'American Express',
                     'Name of credit card',
-                    'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce'
+                    'goopter-advanced-payment-for-woocommerce-and-paypal-complete-payment'
             ),
             'discover' => _x(
                     'Discover',
                     'Name of credit card',
-                    'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce'
+                    'goopter-advanced-payment-for-woocommerce-and-paypal-complete-payment'
             ),
             'jcb' => _x(
                     'JCB',
                     'Name of credit card',
-                    'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce'
+                    'goopter-advanced-payment-for-woocommerce-and-paypal-complete-payment'
             ),
             'elo' => _x(
                     'Elo',
                     'Name of credit card',
-                    'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce'
+                    'goopter-advanced-payment-for-woocommerce-and-paypal-complete-payment'
             ),
             'hiper' => _x(
                     'Hiper',
                     'Name of credit card',
-                    'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce'
+                    'goopter-advanced-payment-for-woocommerce-and-paypal-complete-payment'
             ),
         );
     }
@@ -448,7 +448,7 @@ class WC_Gateway_CC_Goopter extends WC_Payment_Gateway_CC {
 				<label for="wc-%1$s-new-payment-method" style="display:inline;">%2$s</label>
 			</p>',
                 esc_attr($this->id),
-                esc_html__('Save payment method to my account.', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce')
+                esc_html__('Save payment method to my account.', 'goopter-advanced-payment-for-woocommerce-and-paypal-complete-payment')
         );
 
         echo apply_filters('woocommerce_payment_gateway_save_new_payment_method_option_html', $html, $this); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

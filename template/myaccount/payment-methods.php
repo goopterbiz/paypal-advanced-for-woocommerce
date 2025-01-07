@@ -105,12 +105,12 @@ $available_payment_gateways = WC()->payment_gateways->get_available_payment_gate
 
 <?php else : ?>
 
-    <p class="woocommerce-Message woocommerce-Message--info woocommerce-info"><?php esc_html_e('No saved methods found.', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce'); ?></p>
+    <p class="woocommerce-Message woocommerce-Message--info woocommerce-info"><?php esc_html_e('No saved methods found.', 'goopter-advanced-payment-for-woocommerce-and-paypal-complete-payment'); ?></p>
 
 <?php endif; ?>
 
 <?php do_action('woocommerce_after_account_payment_methods', $has_methods); ?>
 
 <?php if ($available_payment_gateways) : ?>
-    <a class="button" href="<?php echo esc_url(wc_get_endpoint_url('add-payment-method')); ?>"><?php esc_html_e('Add payment method', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce'); ?></a>
+    <a class="button" href="<?php echo esc_url(wc_get_endpoint_url('add-payment-method')); ?>"><?php esc_html_e('Add payment method', 'goopter-advanced-payment-for-woocommerce-and-paypal-complete-payment'); ?></a>
 <?php endif; ?>

@@ -144,7 +144,7 @@ class Goopter_PayPal_PPCP_Seller_Onboarding {
                     'admin.php?page=wc-settings&tab=checkout&section=goopter_ppcp&testmode=' . $testmode
             ),
             'return_url_description' => __(
-                    'Return to your shop.', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce'
+                    'Return to your shop.', 'goopter-advanced-payment-for-woocommerce-and-paypal-complete-payment'
             ),
             'products' => array(
                 $this->dcc_applies->for_country_currency() ? 'PPCP' : 'EXPRESS_CHECKOUT'
@@ -173,7 +173,7 @@ class Goopter_PayPal_PPCP_Seller_Onboarding {
                     'admin.php?page=wc-settings&tab=checkout&section=goopter_ppcp&feature_activated=applepay&testmode=' . $testmode
             ),
             'return_url_description' => __(
-                    'Return to your shop.', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce'
+                    'Return to your shop.', 'goopter-advanced-payment-for-woocommerce-and-paypal-complete-payment'
             ),
             'capabilities' => array(
                 'APPLE_PAY'
@@ -193,7 +193,7 @@ class Goopter_PayPal_PPCP_Seller_Onboarding {
                     'admin.php?page=wc-settings&tab=checkout&section=goopter_ppcp&feature_activated=googlepay&testmode=' . $testmode
             ),
             'return_url_description' => __(
-                    'Return to your shop.', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce'
+                    'Return to your shop.', 'goopter-advanced-payment-for-woocommerce-and-paypal-complete-payment'
             ),
             'capabilities' => array(
                 'GOOGLE_PAY'
@@ -213,7 +213,7 @@ class Goopter_PayPal_PPCP_Seller_Onboarding {
                     'admin.php?page=wc-settings&tab=checkout&section=goopter_ppcp&testmode=' . $testmode
             ),
             'return_url_description' => __(
-                    'Return to your shop.', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce'
+                    'Return to your shop.', 'goopter-advanced-payment-for-woocommerce-and-paypal-complete-payment'
             ),
             'capabilities' => array(
                 'PAYPAL_WALLET_VAULTING_ADVANCED'
@@ -325,7 +325,7 @@ class Goopter_PayPal_PPCP_Seller_Onboarding {
             if (isset($_GET['place']) && $_GET['place'] === 'gateway_settings') {
                 $redirect_url = admin_url('admin.php?page=wc-settings&tab=checkout&section=goopter_ppcp&move=' . $move_to_location);
             } else {
-                $redirect_url = admin_url('options-general.php?page=goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce');
+                $redirect_url = admin_url('options-general.php?page=goopter-advanced-payment-for-woocommerce-and-paypal-complete-payment');
             }
             unset($_GET);
             wp_safe_redirect($redirect_url, 302);

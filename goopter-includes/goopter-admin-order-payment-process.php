@@ -22,8 +22,8 @@ class Goopter_Admin_Order_Payment_Process {
         }
         $screen = gt_get_shop_order_screen_id();
         if (gt_is_active_screen($screen)) {
-            add_meta_box('goopter_admin_order_payment_process', __('Reference Transaction', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce'), array($this, 'admin_order_payment_process'), $screen, 'side', 'default');
-            add_meta_box('goopter_admin_order_reference_order', __('Reference Transaction', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce'), array($this, 'admin_order_reference_order'), $screen, 'side', 'default');
+            add_meta_box('goopter_admin_order_payment_process', __('Reference Transaction', 'goopter-advanced-payment-for-woocommerce-and-paypal-complete-payment'), array($this, 'admin_order_payment_process'), $screen, 'side', 'default');
+            add_meta_box('goopter_admin_order_reference_order', __('Reference Transaction', 'goopter-advanced-payment-for-woocommerce-and-paypal-complete-payment'), array($this, 'admin_order_reference_order'), $screen, 'side', 'default');
         }
     }
 
@@ -312,16 +312,16 @@ class Goopter_Admin_Order_Payment_Process {
         $reason_array = array();
         $token_id = $this->goopter_is_usable_reference_transaction_avilable($order);
         if ($this->goopter_is_order_payment_method_selected($order) == false) {
-            $reason_array[] = __('Payment method is not available for payment process, Please select Payment method from Billing details section.', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce');
+            $reason_array[] = __('Payment method is not available for payment process, Please select Payment method from Billing details section.', 'goopter-advanced-payment-for-woocommerce-and-paypal-complete-payment');
         } else {
             if (empty($token_id) && $this->goopter_is_order_user_selected($order) == true) {
-                $reason_array[] = __('Payment Token Or Reference transaction ID is not available for payment process.', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce');
+                $reason_array[] = __('Payment Token Or Reference transaction ID is not available for payment process.', 'goopter-advanced-payment-for-woocommerce-and-paypal-complete-payment');
             }
         }
         if ($this->goopter_is_order_need_payment($order) == false) {
-            $reason_array[] = __('Order total must be greater than zero to process a reference transaction.', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce');
+            $reason_array[] = __('Order total must be greater than zero to process a reference transaction.', 'goopter-advanced-payment-for-woocommerce-and-paypal-complete-payment');
         }
-        $reason_array[] = __("Make any necessary adjustments to the item(s) on the order and calculate totals.  Remember to click Update if any adjustments were made, and then click Process Reference Transaction.", 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce');
+        $reason_array[] = __("Make any necessary adjustments to the item(s) on the order and calculate totals.  Remember to click Update if any adjustments were made, and then click Process Reference Transaction.", 'goopter-advanced-payment-for-woocommerce-and-paypal-complete-payment');
         return $reason_array;
     }
 
@@ -329,17 +329,17 @@ class Goopter_Admin_Order_Payment_Process {
         $reason_array = array();
         $token_list = $this->goopter_is_usable_reference_transaction_avilable($order);
         if ($this->goopter_is_order_user_selected($order) == false) {
-            $reason_array[] = __('This order is not associated with a registered user account, hence a reference transaction can not be done.', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce');
+            $reason_array[] = __('This order is not associated with a registered user account, hence a reference transaction can not be done.', 'goopter-advanced-payment-for-woocommerce-and-paypal-complete-payment');
         }
         if ($this->goopter_is_order_payment_method_selected($order) == false) {
-            $reason_array[] = __('Payment method is not available for payment process, Please select Payment method from Billing details section.', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce');
+            $reason_array[] = __('Payment method is not available for payment process, Please select Payment method from Billing details section.', 'goopter-advanced-payment-for-woocommerce-and-paypal-complete-payment');
         } else {
             if (empty($token_list) && $this->goopter_is_order_user_selected($order) == true) {
-                $reason_array[] = __('Payment Token Or Reference transaction ID is not available for payment process.', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce');
+                $reason_array[] = __('Payment Token Or Reference transaction ID is not available for payment process.', 'goopter-advanced-payment-for-woocommerce-and-paypal-complete-payment');
             }
         }
         if ($this->goopter_is_order_need_payment($order) == false) {
-            $reason_array[] = __('Order total must be greater than zero to process a reference transaction.', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce');
+            $reason_array[] = __('Order total must be greater than zero to process a reference transaction.', 'goopter-advanced-payment-for-woocommerce-and-paypal-complete-payment');
         }
         return $reason_array;
     }

@@ -30,7 +30,7 @@ function ModalWpr(aElem) {
     this.radio = $('input[name=reason]', aElem);
     this.closer = $('.deactivation-Modal-close, .deactivation-Modal-cancel', aElem);
     this.return = $('.deactivation-Modal-return', aElem);
-    this.opener = $('.plugins [data-slug="goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce"] .deactivate');
+    this.opener = $('.plugins [data-slug="goopter-advanced-payment-for-woocommerce-and-paypal-complete-payment"] .deactivate');
     this.question = $('.deactivation-Modal-question', aElem);
     this.button = $('.button-primary', aElem);
     this.title = $('.deactivation-Modal-header h2', aElem);

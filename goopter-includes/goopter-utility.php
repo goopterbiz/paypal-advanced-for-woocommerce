@@ -36,22 +36,22 @@ class Goopter_Utility {
 
         register_post_type('paypal_transaction', apply_filters('paypal_for_woocommerce_register_post_type_paypal_transaction_history', array(
             'labels' => array(
-                'name' => __('PayPal Transaction', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce'),
-                'singular_name' => __('PayPal Transaction', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce'),
-                'menu_name' => _x('PayPal Transaction', 'Admin menu name', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce'),
-                'add_new' => __('Add PayPal Transaction', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce'),
-                'add_new_item' => __('Add New PayPal Transaction', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce'),
-                'edit' => __('Edit', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce'),
-                'edit_item' => __('View PayPal Transaction', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce'),
-                'new_item' => __('New PayPal Transaction', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce'),
-                'view' => __('View PayPal Transaction', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce'),
-                'view_item' => __('View PayPal Transaction', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce'),
-                'search_items' => __('Search PayPal Transaction', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce'),
-                'not_found' => __('No PayPal Transaction found', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce'),
-                'not_found_in_trash' => __('No PayPal Transaction found in trash', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce'),
-                'parent' => __('Parent PayPal Transaction', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce')
+                'name' => __('PayPal Transaction', 'goopter-advanced-payment-for-woocommerce-and-paypal-complete-payment'),
+                'singular_name' => __('PayPal Transaction', 'goopter-advanced-payment-for-woocommerce-and-paypal-complete-payment'),
+                'menu_name' => _x('PayPal Transaction', 'Admin menu name', 'goopter-advanced-payment-for-woocommerce-and-paypal-complete-payment'),
+                'add_new' => __('Add PayPal Transaction', 'goopter-advanced-payment-for-woocommerce-and-paypal-complete-payment'),
+                'add_new_item' => __('Add New PayPal Transaction', 'goopter-advanced-payment-for-woocommerce-and-paypal-complete-payment'),
+                'edit' => __('Edit', 'goopter-advanced-payment-for-woocommerce-and-paypal-complete-payment'),
+                'edit_item' => __('View PayPal Transaction', 'goopter-advanced-payment-for-woocommerce-and-paypal-complete-payment'),
+                'new_item' => __('New PayPal Transaction', 'goopter-advanced-payment-for-woocommerce-and-paypal-complete-payment'),
+                'view' => __('View PayPal Transaction', 'goopter-advanced-payment-for-woocommerce-and-paypal-complete-payment'),
+                'view_item' => __('View PayPal Transaction', 'goopter-advanced-payment-for-woocommerce-and-paypal-complete-payment'),
+                'search_items' => __('Search PayPal Transaction', 'goopter-advanced-payment-for-woocommerce-and-paypal-complete-payment'),
+                'not_found' => __('No PayPal Transaction found', 'goopter-advanced-payment-for-woocommerce-and-paypal-complete-payment'),
+                'not_found_in_trash' => __('No PayPal Transaction found in trash', 'goopter-advanced-payment-for-woocommerce-and-paypal-complete-payment'),
+                'parent' => __('Parent PayPal Transaction', 'goopter-advanced-payment-for-woocommerce-and-paypal-complete-payment')
             ),
-            'description' => __('This is where you can add new PayPal Transaction to your store.', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce'),
+            'description' => __('This is where you can add new PayPal Transaction to your store.', 'goopter-advanced-payment-for-woocommerce-and-paypal-complete-payment'),
             'public' => false,
             'query_var' => false,
         )));
@@ -92,7 +92,7 @@ class Goopter_Utility {
             }
             ?>
         <h3>
-            <?php esc_html_e( 'Billing Agreement Details', 'goopter-advanced-payment-for-paypal-complete-payment-and-woocommerce' ); ?>
+            <?php esc_html_e( 'Billing Agreement Details', 'goopter-advanced-payment-for-woocommerce-and-paypal-complete-payment' ); ?>
         </h3>
         <p><?php echo esc_html( $billing_agreement_id ); ?></p> <?php
     }
