@@ -2,7 +2,7 @@
 # This file is distributed under the GNU General Public License v3.0.
 msgid ""
 msgstr ""
-"Project-Id-Version: Goopter Advanced Payment for WooCommerce & PayPal Complete Payment 1.0.0\n"
+"Project-Id-Version: Goopter Advanced Payment for WooCommerce and PayPal Complete Payment 1.0.0\n"
 "for-woocommerce\n"
 "Language-Team: English\n"
 "MIME-Version: 1.0\n"
@@ -17,8 +17,8 @@ msgstr ""
 
 #. Plugin Name of the plugin
 #: goopter-advanced-payment-for-woocommerce-and-paypal-complete-payment.php
-msgid "Goopter Advanced Payment for WooCommerce & PayPal Complete Payment"
-msgstr "Goopter Advanced Payment for WooCommerce & PayPal Complete Payment"
+msgid "Goopter Advanced Payment for WooCommerce and PayPal Complete Payment"
+msgstr "Goopter Advanced Payment for WooCommerce and PayPal Complete Payment"
 
 #. Description of the plugin
 #: goopter-advanced-payment-for-woocommerce-and-paypal-complete-payment.php
