@@ -495,6 +495,24 @@ if ( $total_tax_rates > 100 ) {
         </p>';
 }
 
+$allowed_html = array(
+    'p' => array(),  // Allow <p> tags
+    'label' => array(
+        'for' => array(),  // Allow 'for' attribute in <label>
+    ),
+    'input' => array(
+        'type' => array(),
+        'name' => array(),
+        'id' => array(),
+        'step' => array(),
+        'placeholder' => array(),
+        'value' => array(),
+    ),
+    'tr' => array(),  // Allow <tr> tags
+    'td' => array(),  // Allow <td> tags
+    'br' => array(),  // Allow <br> tags
+);
+
 echo '
 <script type="text/template" id="tmpl-wc-modal-add-tax">
     <div class="wc-backbone-modal">
@@ -519,10 +537,10 @@ echo '
                                 </tr>
                             </thead>
                             <tbody>
-                                ' . $table_rows . '
+                                ' . wp_kses($table_rows, $allowed_html) . '
                             </tbody>
                         </table>
-                        ' . $manual_tax_rate_input . '
+                        ' . wp_kses($manual_tax_rate_input, $allowed_html) . '
                     </form>
                 </article>
                 <footer>

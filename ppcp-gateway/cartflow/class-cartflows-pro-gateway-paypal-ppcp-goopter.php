@@ -286,6 +286,7 @@ class Cartflows_Pro_Gateway_PayPal_PPCP_Goopter extends Cartflows_Pro_Paypal_Gat
                 'value' => $offer_product['price'],
                 'breakdown' => $this->get_item_breakdown($order, $offer_product),
             ),
+            // translators: %s is replaced with the order ID.
             'description' => sprintf(__('One Time Offer - %s', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'), $order->get_id()),
             'items' => array(
                 $this->add_offer_item_data($order, $offer_product),

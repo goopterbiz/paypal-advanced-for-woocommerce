@@ -1097,7 +1097,7 @@ class WC_Gateway_PPCP_Goopter extends WC_Payment_Gateway {
 
     public function payment_gateways_support_tooltip($status_html) {
         try {
-            $status_html = '<span class="status-enabled tips" data-tip="' . esc_attr__('Note: You will need to activate Tokenization in settings to enable Subscription functionality.', 'woocommerce-subscriptions') . '">' . esc_html__('Yes', 'woocommerce-subscriptions') . '</span>';
+            $status_html = '<span class="status-enabled tips" data-tip="' . esc_attr__('Note: You will need to activate Tokenization in settings to enable Subscription functionality.', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce') . '">' . esc_html__('Yes', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce') . '</span>';
             return $status_html;
         } catch (Exception $ex) {
 
