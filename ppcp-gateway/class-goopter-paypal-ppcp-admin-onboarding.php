@@ -237,7 +237,7 @@ class Goopter_PayPal_PPCP_Admin_Onboarding {
                <?php if ($this->on_board_status === 'NOT_CONNECTED' || $this->on_board_status === 'USED_FIRST_PARTY') { ?>
                     <div class="paypal_woocommerce_product">
                         <div class="paypal_woocommerce_product_onboard" style="text-align:center;">
-                            <span class="ppcp_onbard_icon"><img width="200px" class="image" src="<?php echo esc_url(PAYPAL_FOR_WOOCOMMERCE_ASSET_URL . 'ppcp-gateway/images/admin/ppcp_admin_onbard_icon.png'); ?>">"></span>
+                            <span class="ppcp_onbard_icon"><img width="200px" class="image" src="<?php echo esc_url(PAYPAL_FOR_WOOCOMMERCE_ASSET_URL . 'ppcp-gateway/images/admin/ppcp_admin_onbard_icon.png'); ?>"></span>
                             <br><br>
                             <div class="paypal_woocommerce_product_onboard_content">
                                 <p><?php // Translators: %s is the name of the PayPal solution (e.g., PayPal Advanced).
@@ -259,17 +259,20 @@ class Goopter_PayPal_PPCP_Admin_Onboarding {
                                     <a target="_blank" class="wplk-button" id="<?php echo esc_attr('wplk-button'); ?>" data-paypal-onboard-complete="onboardingCallback" href="<?php echo esc_url($url); ?>" data-paypal-button="true"><?php echo esc_html__('Start Now', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'); ?></a>
                                     <?php
                                     $script_url = 'https://www.paypal.com/webapps/merchantboarding/js/lib/lightbox/partner.js';
+                                    wp_enqueue_script( 'paypal-js', $script_url, array( 'jquery' ), null, true );
+                                    $inline_script = "
+                                    document.querySelectorAll('[data-paypal-onboard-complete=onboardingCallback]').forEach((element) => {
+                                        element.addEventListener('click', (e) => {
+                                            if ('undefined' === typeof PAYPAL) {
+                                                e.preventDefault();
+                                                alert('PayPal');
+                                            }
+                                        });
+                                    });
+                                    ";
+                                    wp_add_inline_script( 'paypal-js', $inline_script );
                                     ?>
-                                    <script type="text/javascript">
-                                        document.querySelectorAll('[data-paypal-onboard-complete=onboardingCallback]').forEach((element) => {
-                                            element.addEventListener('click', (e) => {
-                                                if ('undefined' === typeof PAYPAL) {
-                                                    e.preventDefault();
-                                                    alert('PayPal');
-                                                }
-                                            });
-                                        });</script>
-                                    <script id="paypal-js" src="<?php echo esc_url($script_url); ?>"></script> <?php
+                                    <?php
                                 } else {
                                     echo esc_html__('We could not properly connect to PayPal', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce');
                                 }
@@ -323,7 +326,7 @@ class Goopter_PayPal_PPCP_Admin_Onboarding {
                     ?>
                     <div class="paypal_woocommerce_product">
                         <div class="paypal_woocommerce_product_onboard" style="text-align:center;">
-                            <span class="ppcp_onbard_icon"><img width="200px" class="image" src="<?php echo esc_url(PAYPAL_FOR_WOOCOMMERCE_ASSET_URL . 'ppcp-gateway/images/admin/ppcp_admin_onbard_icon.png'); ?>">"></span>
+                            <span class="ppcp_onbard_icon"><img width="200px" class="image" src="<?php echo esc_url(PAYPAL_FOR_WOOCOMMERCE_ASSET_URL . 'ppcp-gateway/images/admin/ppcp_admin_onbard_icon.png'); ?>"></span>
                             <br><br>
                             <div class="paypal_woocommerce_product_onboard_content">
                                 <br>
@@ -388,8 +391,8 @@ class Goopter_PayPal_PPCP_Admin_Onboarding {
                                         <a target="_blank" class="green-button" id="<?php echo esc_attr('wplk-button'); ?>" data-paypal-onboard-complete="onboardingCallback" href="<?php echo esc_url($url); ?>" data-paypal-button="true"><?php echo esc_html__('Reconnect PayPal Account', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'); ?></a>
                                         <?php
                                         $script_url = 'https://www.paypal.com/webapps/merchantboarding/js/lib/lightbox/partner.js';
-                                        ?>
-                                        <script type="text/javascript">
+                                        wp_enqueue_script( 'paypal-js', $script_url, array( 'jquery' ), null, true );
+                                        $inline_script = "
                                         document.querySelectorAll('[data-paypal-onboard-complete=onboardingCallback]').forEach((element) => {
                                             element.addEventListener('click', (e) => {
                                                 if ('undefined' === typeof PAYPAL) {
@@ -397,8 +400,11 @@ class Goopter_PayPal_PPCP_Admin_Onboarding {
                                                     alert('PayPal');
                                                 }
                                             });
-                                        });</script>
-                                        <script id="paypal-js" src="<?php echo esc_url($script_url); ?>"></script> <?php
+                                        });
+                                        ";
+                                        wp_add_inline_script( 'paypal-js', $inline_script );
+                                        ?>
+                                        <?php
                                     } else {
                                         echo esc_html__('We could not properly connect to PayPal', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce');
                                     }
@@ -420,7 +426,7 @@ class Goopter_PayPal_PPCP_Admin_Onboarding {
                     ?>
                     <div class="paypal_woocommerce_product">
                         <div class="paypal_woocommerce_product_onboard" style="text-align:center;">
-                            <span class="ppcp_onbard_icon"><img width="200px" class="image" src="<?php echo esc_url(PAYPAL_FOR_WOOCOMMERCE_ASSET_URL . 'ppcp-gateway/images/admin/ppcp_admin_onbard_icon.png'); ?>">"></span>
+                            <span class="ppcp_onbard_icon"><img width="200px" class="image" src="<?php echo esc_url(PAYPAL_FOR_WOOCOMMERCE_ASSET_URL . 'ppcp-gateway/images/admin/ppcp_admin_onbard_icon.png'); ?>"></span>
                             <br><br>
                             <div class="paypal_woocommerce_product_onboard_content">
                                 <br>
@@ -459,8 +465,8 @@ class Goopter_PayPal_PPCP_Admin_Onboarding {
                                         <a target="_blank" class="green-button" id="<?php echo esc_attr('wplk-button'); ?>" data-paypal-onboard-complete="onboardingCallback" href="<?php echo esc_url($url); ?>" data-paypal-button="true"><?php echo esc_html__('Reconnect PayPal Account', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'); ?></a>
                                         <?php
                                         $script_url = 'https://www.paypal.com/webapps/merchantboarding/js/lib/lightbox/partner.js';
-                                        ?>
-                                        <script type="text/javascript">
+                                        wp_enqueue_script( 'paypal-js', $script_url, array( 'jquery' ), null, true );
+                                        $inline_script = "
                                         document.querySelectorAll('[data-paypal-onboard-complete=onboardingCallback]').forEach((element) => {
                                             element.addEventListener('click', (e) => {
                                                 if ('undefined' === typeof PAYPAL) {
@@ -468,8 +474,11 @@ class Goopter_PayPal_PPCP_Admin_Onboarding {
                                                     alert('PayPal');
                                                 }
                                             });
-                                        });</script>
-                                        <script id="paypal-js" src="<?php echo esc_url($script_url); ?>"></script> <?php
+                                        });
+                                        ";
+                                        wp_add_inline_script( 'paypal-js', $inline_script );
+                                        ?>
+                                        <?php
                                     } else {
                                         echo esc_html__('We could not properly connect to PayPal', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce');
                                     }
@@ -507,17 +516,20 @@ class Goopter_PayPal_PPCP_Admin_Onboarding {
             <a target="_blank" class="green-button" id="<?php echo esc_attr('wplk-button'); ?>" data-paypal-onboard-complete="generalOnboardingCallback" href="<?php echo esc_url($url); ?>" data-paypal-button="true"><?php echo esc_html__('Reconnect PayPal Account', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'); ?></a>
             <?php
             $script_url = 'https://www.paypal.com/webapps/merchantboarding/js/lib/lightbox/partner.js';
+            wp_enqueue_script( 'paypal-js', $script_url, array( 'jquery' ), null, true );
+            $inline_script = "
+            document.querySelectorAll('[data-paypal-onboard-complete=onboardingCallback]').forEach((element) => {
+                element.addEventListener('click', (e) => {
+                    if ('undefined' === typeof PAYPAL) {
+                        e.preventDefault();
+                        alert('PayPal');
+                    }
+                });
+            });
+            ";
+            wp_add_inline_script( 'paypal-js', $inline_script );
             ?>
-            <script type="text/javascript">
-                                        document.querySelectorAll('[data-paypal-onboard-complete=generalOnboardingCallback]').forEach((element) => {
-                                            element.addEventListener('click', (e) => {
-                                                if ('undefined' === typeof PAYPAL) {
-                                                    e.preventDefault();
-                                                    alert('PayPal error');
-                                                }
-                                            });
-                                        });</script>
-            <script id="paypal-js" src="<?php echo esc_url($script_url); ?>"></script> <?php
+            <?php
         } else {
             echo esc_html__('We could not properly connect to PayPal', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce');
         }

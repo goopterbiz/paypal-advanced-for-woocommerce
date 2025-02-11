@@ -261,40 +261,46 @@ class WFOCU_Paypal_For_WC_Gateway_Goopter_PPCP_CC extends WFOCU_Gateway {
                 return;
             }
             ?>
-            <script>
-                (function ($) {
-                    "use strict";
-                    $(document).on('wfocu_external', function (e, Bucket) {
-                        if (0 !== Bucket.getTotal()) {
-                            Bucket.inOfferTransaction = true;
-                            var getBucketData = Bucket.getBucketSendData();
-                            var postData = $.extend(getBucketData, {action: 'wfocu_front_handle_goopter_ppcp_payments'});
-                            if (typeof wfocu_vars.wc_ajax_url !== "undefined") {
-                                var action = $.post(wfocu_vars.wc_ajax_url.toString().replace('%%endpoint%%', 'wfocu_front_handle_goopter_ppcp_payments'), postData);
-                            } else {
-                                var action = $.post(wfocu_vars.ajax_url, postData);
-                            }
-                            action.done(function (data) {
-                                if (data.status === true) {
-                                    window.location = data.redirect_url;
-                                } else {
-                                    Bucket.swal.show({'text': wfocu_vars.messages.offer_msg_pop_failure, 'type': 'warning'});
-                                    window.location = wfocu_vars.redirect_url;
-                                }
+            <?php
+            wp_register_script('render_in_offer_transaction_scripts', '', [], '', true);
+            wp_enqueue_script('render_in_offer_transaction_scripts');
 
-                            });
-                            action.fail(function () {
-                                Bucket.swal.show({'text': wfocu_vars.messages.offer_msg_pop_failure, 'type': 'warning'});
-                                if (typeof wfocu_vars.order_received_url !== 'undefined') {
-                                    window.location = wfocu_vars.order_received_url + '&ec=' + jqXHR.status;
-                                }
-                            });
+            $inline_script = "
+            (function ($) {
+                'use strict';
+                $(document).on('wfocu_external', function (e, Bucket) {
+                    if (0 !== Bucket.getTotal()) {
+                        Bucket.inOfferTransaction = true;
+                        var getBucketData = Bucket.getBucketSendData();
+                        var postData = $.extend(getBucketData, {action: 'wfocu_front_handle_goopter_ppcp_payments'});
+                        if (typeof wfocu_vars.wc_ajax_url !== 'undefined') {
+                            var action = $.post(wfocu_vars.wc_ajax_url.toString().replace('%%endpoint%%', 'wfocu_front_handle_goopter_ppcp_payments'), postData);
+                        } else {
+                            var action = $.post(wfocu_vars.ajax_url, postData);
                         }
-                    });
-                })
-                        (jQuery);
-            </script> <?php
+                        action.done(function (data) {
+                            if (data.status === true) {
+                                window.location = data.redirect_url;
+                            } else {
+                                Bucket.swal.show({'text': wfocu_vars.messages.offer_msg_pop_failure, 'type': 'warning'});
+                                window.location = wfocu_vars.redirect_url;
+                            }
+                        });
+                        action.fail(function () {
+                            Bucket.swal.show({'text': wfocu_vars.messages.offer_msg_pop_failure, 'type': 'warning'});
+                            if (typeof wfocu_vars.order_received_url !== 'undefined') {
+                                window.location = wfocu_vars.order_received_url + '&ec=' + jqXHR.status;
+                            }
+                        });
+                    }
+                });
+            })
+            (jQuery);
+            ";
 
+            wp_add_inline_script('render_in_offer_transaction_scripts', $inline_script);
+            ?>
+            <?php
         } catch (Exception $ex) {
             
         }

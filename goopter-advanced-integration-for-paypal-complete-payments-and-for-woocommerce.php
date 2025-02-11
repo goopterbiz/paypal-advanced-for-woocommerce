@@ -11,7 +11,7 @@
  * Text Domain:       goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce
  * Domain Path:       /i18n/languages/
  * Requires at least: 5.8
- * Tested up to: 6.6.2
+ * Tested up to: 6.7.1
  * Requires Plugins: woocommerce
  * WC requires at least: 3.0.0
  * WC tested up to: 9.3.2
@@ -588,8 +588,8 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
         }
 
         public function goopter_woocommerce_email_classes($emails) {
-            $emails['WC_Email_Partially_Paid_Order'] = include PAYPAL_FOR_WOOCOMMERCE_DIR_PATH . '/classes/wc-email-customer-partial-paid-order.php';
-            $emails['WC_Email_Admin_Partially_Paid_Order'] = include PAYPAL_FOR_WOOCOMMERCE_DIR_PATH . '/classes/wc-email-new-partial-paid-order.php';
+            $emails['Goopter_WC_Email_Partially_Paid_Order'] = include PAYPAL_FOR_WOOCOMMERCE_DIR_PATH . '/classes/wc-email-customer-partial-paid-order.php';
+            $emails['Goopter_WC_Email_Admin_Partially_Paid_Order'] = include PAYPAL_FOR_WOOCOMMERCE_DIR_PATH . '/classes/wc-email-new-partial-paid-order.php';
             return $emails;
         }
 
@@ -657,7 +657,7 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
             if (gt_is_active_screen($screen)) {
                 require_once plugin_dir_path(__FILE__) . 'ppcp-gateway/admin/class-wc-meta-box-order-items-ppcp.php';
                 remove_meta_box('woocommerce-order-items', $screen, 'normal');
-                add_meta_box('woocommerce-order-items', __('Items', 'woocommerce'), 'Custom_WC_Meta_Box_Order_Items::output', $screen, 'normal', 'high');
+                add_meta_box('woocommerce-order-items', __('Items', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'), 'Goopter_WC_Meta_Box_Order_Items::output', $screen, 'normal', 'high');
             }
         }
     }

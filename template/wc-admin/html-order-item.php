@@ -23,16 +23,16 @@ $row_class    = apply_filters( 'woocommerce_admin_html_order_item_class', ! empt
 		echo $product_link ? '<a href="' . esc_url( $product_link ) . '" class="wc-order-item-name">' . wp_kses_post( $item->get_name() ) . '</a>' : '<div class="wc-order-item-name">' . wp_kses_post( $item->get_name() ) . '</div>';
 
 		if ( $product && $product->get_sku() ) {
-			echo '<div class="wc-order-item-sku"><strong>' . esc_html__( 'SKU:', 'woocommerce' ) . '</strong> ' . esc_html( $product->get_sku() ) . '</div>';
+			echo '<div class="wc-order-item-sku"><strong>' . esc_html__( 'SKU:', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce' ) . '</strong> ' . esc_html( $product->get_sku() ) . '</div>';
 		}
 
 		if ( $item->get_variation_id() ) {
-			echo '<div class="wc-order-item-variation"><strong>' . esc_html__( 'Variation ID:', 'woocommerce' ) . '</strong> ';
+			echo '<div class="wc-order-item-variation"><strong>' . esc_html__( 'Variation ID:', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce' ) . '</strong> ';
 			if ( 'product_variation' === get_post_type( $item->get_variation_id() ) ) {
 				echo esc_html( $item->get_variation_id() );
 			} else {
 				/* translators: %s: variation id */
-				printf( esc_html__( '%s (No longer exists)', 'woocommerce' ), esc_html( $item->get_variation_id() ) );
+				printf( esc_html__( '%s (No longer exists)', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce' ), esc_html( $item->get_variation_id() ) );
 			}
 			echo '</div>';
 		}
@@ -108,7 +108,7 @@ $row_class    = apply_filters( 'woocommerce_admin_html_order_item_class', ! empt
 
 			if ( $item->get_subtotal() !== $item->get_total() ) {
 				/* translators: %s: discount amount */
-				echo '<span class="wc-order-item-discount">' . sprintf( esc_html__( '%s discount', 'woocommerce' ), wc_price( wc_format_decimal( $item->get_subtotal() - $item->get_total(), '' ), array( 'currency' => $order->get_currency() ) ) ) . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo '<span class="wc-order-item-discount">' . sprintf( esc_html__( '%s discount', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce' ), wc_price( wc_format_decimal( $item->get_subtotal() - $item->get_total(), '' ), array( 'currency' => $order->get_currency() ) ) ) . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			}
 
 			$refunded = -1 * $order->get_total_refunded_for_item( $item_id );
@@ -121,12 +121,12 @@ $row_class    = apply_filters( 'woocommerce_admin_html_order_item_class', ! empt
 		<div class="edit" style="display: none;">
 			<div class="split-input">
 				<div class="input">
-					<label><?php esc_attr_e( 'Before discount', 'woocommerce' ); ?></label>
+					<label><?php esc_attr_e( 'Before discount', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce' ); ?></label>
 					<input type="text" name="line_subtotal[<?php echo absint( $item_id ); ?>]" placeholder="<?php echo esc_attr( wc_format_localized_price( 0 ) ); ?>" value="<?php echo esc_attr( wc_format_localized_price( $item->get_subtotal() ) ); ?>" class="line_subtotal wc_input_price" data-subtotal="<?php echo esc_attr( wc_format_localized_price( $item->get_subtotal() ) ); ?>" />
 				</div>
 				<div class="input">
-					<label><?php esc_attr_e( 'Total', 'woocommerce' ); ?></label>
-					<input type="text" name="line_total[<?php echo absint( $item_id ); ?>]" placeholder="<?php echo esc_attr( wc_format_localized_price( 0 ) ); ?>" value="<?php echo esc_attr( wc_format_localized_price( $item->get_total() ) ); ?>" class="line_total wc_input_price" data-tip="<?php esc_attr_e( 'After pre-tax discounts.', 'woocommerce' ); ?>" data-total="<?php echo esc_attr( wc_format_localized_price( $item->get_total() ) ); ?>" />
+					<label><?php esc_attr_e( 'Total', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce' ); ?></label>
+					<input type="text" name="line_total[<?php echo absint( $item_id ); ?>]" placeholder="<?php echo esc_attr( wc_format_localized_price( 0 ) ); ?>" value="<?php echo esc_attr( wc_format_localized_price( $item->get_total() ) ); ?>" class="line_total wc_input_price" data-tip="<?php esc_attr_e( 'After pre-tax discounts.', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce' ); ?>" data-total="<?php echo esc_attr( wc_format_localized_price( $item->get_total() ) ); ?>" />
 				</div>
 			</div>
 		</div>
@@ -164,11 +164,11 @@ $row_class    = apply_filters( 'woocommerce_admin_html_order_item_class', ! empt
 				<div class="edit" style="display: none;">
 					<div class="split-input">
 						<div class="input">
-							<label><?php esc_attr_e( 'Before discount', 'woocommerce' ); ?></label>
+							<label><?php esc_attr_e( 'Before discount', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce' ); ?></label>
 							<input type="text" name="line_subtotal_tax[<?php echo absint( $item_id ); ?>][<?php echo esc_attr( $tax_item_id ); ?>]" placeholder="<?php echo esc_attr( wc_format_localized_price( 0 ) ); ?>" value="<?php echo esc_attr( wc_format_localized_price( $tax_item_subtotal ) ); ?>" class="line_subtotal_tax wc_input_price" data-subtotal_tax="<?php echo esc_attr( wc_format_localized_price( $tax_item_subtotal ) ); ?>" data-tax_id="<?php echo esc_attr( $tax_item_id ); ?>" />
 						</div>
 						<div class="input">
-							<label><?php esc_attr_e( 'Total', 'woocommerce' ); ?></label>
+							<label><?php esc_attr_e( 'Total', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce' ); ?></label>
 							<input type="text" name="line_tax[<?php echo absint( $item_id ); ?>][<?php echo esc_attr( $tax_item_id ); ?>]" placeholder="<?php echo esc_attr( wc_format_localized_price( 0 ) ); ?>" value="<?php echo esc_attr( wc_format_localized_price( $tax_item_total ) ); ?>" class="line_tax wc_input_price" data-total_tax="<?php echo esc_attr( wc_format_localized_price( $tax_item_total ) ); ?>" data-tax_id="<?php echo esc_attr( $tax_item_id ); ?>" />
 						</div>
 					</div>
@@ -184,7 +184,7 @@ $row_class    = apply_filters( 'woocommerce_admin_html_order_item_class', ! empt
 	<td class="wc-order-edit-line-item" width="1%">
 		<div class="wc-order-edit-line-item-actions">
 			<?php if ( $order->is_editable() ) : ?>
-				<a class="edit-order-item tips" href="#" data-tip="<?php esc_attr_e( 'Edit item', 'woocommerce' ); ?>"></a><a class="delete-order-item tips" href="#" data-tip="<?php esc_attr_e( 'Delete item', 'woocommerce' ); ?>"></a>
+				<a class="edit-order-item tips" href="#" data-tip="<?php esc_attr_e( 'Edit item', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce' ); ?>"></a><a class="delete-order-item tips" href="#" data-tip="<?php esc_attr_e( 'Delete item', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce' ); ?>"></a>
 			<?php endif; ?>
 		</div>
 	</td>

@@ -8,7 +8,7 @@ use Automattic\WooCommerce\Utilities\OrderUtil;
 
 if (class_exists('WC_Meta_Box_Order_Items')) {
 
-    class Custom_WC_Meta_Box_Order_Items extends WC_Meta_Box_Order_Items {
+    class Goopter_WC_Meta_Box_Order_Items extends WC_Meta_Box_Order_Items {
 
         public static function output($post) {
             global $post, $thepostid, $theorder;

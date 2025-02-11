@@ -1,10 +1,8 @@
 === Goopter advanced integration for PayPal Complete Payments and for WooCommerce ===
 Contributors: goopter
 Tags: woocommerce, paypal, apple pay, google play, credit card
-Requires at least: 5.8
-Tested up to: 6.7.1
+Tested up to: 6.7
 Stable tag: 1.0.0
-Requires PHP: 5.6
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -41,6 +39,9 @@ Congratulations! Your WooCommerce store is now ready to accept PayPal payments.
 = Minimum Requirements =
 
 * WooCommerce 3.0 or higher
+
+== External Services ==
+This plugin communicates with a paypal server and our api server to onboard paypal service or make an paypal order. We do not track or store any personal or business-critical data from you or your clients.
 
 == Changelog ==
 

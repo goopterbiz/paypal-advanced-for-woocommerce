@@ -153,7 +153,6 @@ var {registerExpressPaymentMethod, registerPaymentMethod} = wc.wcBlocksRegistry;
                             l.cc_title,
                             iconsElements
                             ),
-                    icons: ["https://www.paypalobjects.com/webstatic/mktg/Logo/pp-logo-100px.png"],
                     placeOrderButtonLabel: Object(i.__)(goopter_ppcp_cc_manager_block.placeOrderButtonLabel),
                     content: createElement(Content_PPCP_CC, null),
                     edit: Object(r.createElement)(p, null),

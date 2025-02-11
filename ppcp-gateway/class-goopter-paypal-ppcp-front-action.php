@@ -369,7 +369,7 @@ class Goopter_PayPal_PPCP_Front_Action {
                         } else {
                             $response = [
                                 'status' => false,
-                                'message' => __('Order ID is invalid', 'woocommerce')
+                                'message' => __('Order ID is invalid', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce')
                             ];
                         }
                     } else {
@@ -712,7 +712,7 @@ class Goopter_PayPal_PPCP_Front_Action {
                 wp_send_json_error(array('messages' => $error_messages));
                 exit;
             }
-            if (is_used_save_payment_token() === false) {
+            if (has_saved_payment_token_been_used() === false) {
                 // check if an existing failed order is being processed.
                 if (!class_exists('Goopter_PayPal_PPCP_Checkout')) {
                     include_once PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-goopter-paypal-ppcp-checkout.php';

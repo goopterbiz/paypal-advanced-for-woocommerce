@@ -19,14 +19,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 	<td class="name">
 		<div class="view">
-			<?php echo esc_html( $item->get_name() ? $item->get_name() : __( 'Shipping', 'woocommerce' ) ); ?>
+			<?php echo esc_html( $item->get_name() ? $item->get_name() : __( 'Shipping', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce' ) ); ?>
 		</div>
 		<div class="edit" style="display: none;">
 			<input type="hidden" name="shipping_method_id[]" value="<?php echo esc_attr( $item_id ); ?>" />
-			<input type="text" class="shipping_method_name" placeholder="<?php esc_attr_e( 'Shipping name', 'woocommerce' ); ?>" name="shipping_method_title[<?php echo esc_attr( $item_id ); ?>]" value="<?php echo esc_attr( $item->get_name() ); ?>" />
+			<input type="text" class="shipping_method_name" placeholder="<?php esc_attr_e( 'Shipping name', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce' ); ?>" name="shipping_method_title[<?php echo esc_attr( $item_id ); ?>]" value="<?php echo esc_attr( $item->get_name() ); ?>" />
 			<select class="shipping_method" name="shipping_method[<?php echo esc_attr( $item_id ); ?>]">
-				<optgroup label="<?php esc_attr_e( 'Shipping method', 'woocommerce' ); ?>">
-					<option value=""><?php esc_html_e( 'N/A', 'woocommerce' ); ?></option>
+				<optgroup label="<?php esc_attr_e( 'Shipping method', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce' ); ?>">
+					<option value=""><?php esc_html_e( 'N/A', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce' ); ?></option>
 					<?php
 					$found_method = false;
 
@@ -41,9 +41,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 					}
 
 					if ( ! $found_method && $item->get_method_id() ) {
-						echo '<option value="' . esc_attr( $item->get_method_id() ) . '" selected="selected">' . esc_html__( 'Other', 'woocommerce' ) . '</option>';
+						echo '<option value="' . esc_attr( $item->get_method_id() ) . '" selected="selected">' . esc_html__( 'Other', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce' ) . '</option>';
 					} else {
-						echo '<option value="other">' . esc_html__( 'Other', 'woocommerce' ) . '</option>';
+						echo '<option value="other">' . esc_html__( 'Other', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce' ) . '</option>';
 					}
 					?>
 				</optgroup>

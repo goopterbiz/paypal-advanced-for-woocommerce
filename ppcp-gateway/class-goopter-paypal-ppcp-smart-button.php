@@ -3,7 +3,7 @@ defined('ABSPATH') || exit;
 
 class Goopter_PayPal_PPCP_Smart_Button {
 
-    use WC_Gateway_Base_Goopter;
+    use Goopter_WC_Gateway_Base;
     use WC_PPCP_Pre_Orders_Trait;
 
     private $goopter_ppcp_plugin_name;
@@ -2053,13 +2053,13 @@ class Goopter_PayPal_PPCP_Smart_Button {
                 $token = WC_Payment_Tokens::get($token_id);
 
                 if (is_null($token) || get_current_user_id() !== $token->get_user_id() || !isset($_REQUEST['_wpnonce']) || false === wp_verify_nonce(sanitize_text_field(wp_unslash($_REQUEST['_wpnonce'])), 'delete-payment-method-' . $token_id)) {
-                    wc_add_notice(__('Invalid payment method.', 'woocommerce'), 'error');
+                    wc_add_notice(__('Invalid payment method.', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'), 'error');
                 } else {
                     $payment_token_id = $token->get_token();
                     // TODO add the handling to check if the delete api failed then do not delete the token from user account as well.
                     $this->payment_request->goopter_ppcp_delete_payment_token($payment_token_id);
                     WC_Payment_Tokens::delete($token_id);
-                    wc_add_notice(__('Payment method deleted.', 'woocommerce'));
+                    wc_add_notice(__('Payment method deleted.', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'));
                 }
                 wp_safe_redirect(wc_get_account_endpoint_url('payment-methods'));
                 exit();

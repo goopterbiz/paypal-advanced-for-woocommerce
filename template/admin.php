@@ -2,6 +2,7 @@
 /**
  * PayPal for WooCommerce - Settings
  */
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 ?>
 <?php
 // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- no security issue

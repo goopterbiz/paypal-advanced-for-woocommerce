@@ -1,7 +1,7 @@
 <?php
 
 class WC_Gateway_PPCP_Goopter extends WC_Payment_Gateway {
-    use WC_Gateway_Base_Goopter;
+    use Goopter_WC_Gateway_Base;
     use WC_PPCP_Pre_Orders_Trait;
     const PAYMENT_METHOD = 'goopter_ppcp';
     public static $_instance;
@@ -51,7 +51,8 @@ class WC_Gateway_PPCP_Goopter extends WC_Payment_Gateway {
     }
 
     public function setup_properties() {
-        $this->icon = apply_filters('woocommerce_goopter_paypal_checkout_icon', 'https://www.paypalobjects.com/webstatic/mktg/Logo/pp-logo-100px.png');
+        $image_url = PAYPAL_FOR_WOOCOMMERCE_ASSET_URL . 'assets/images/paypal.png';
+        $this->icon = apply_filters('woocommerce_goopter_paypal_checkout_icon', $image_url);
         $this->has_fields = true;
         $this->method_title = apply_filters('goopter_ppcp_gateway_method_title', sprintf('%s - Built by Goopter', GT_PPCP_NAME));
         $this->method_description = __('The easiest one-stop solution for accepting PayPal, Venmo, Debit/Credit Cards with cheaper fees than other processors!', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce');
@@ -532,7 +533,7 @@ class WC_Gateway_PPCP_Goopter extends WC_Payment_Gateway {
             if($order && $this->can_refund_order($order) && goopter_ppcp_order_item_meta_key_exists($order, '_ppcp_capture_details')) {
                 $capture_data_list = $this->payment_request->goopter_ppcp_prepare_refund_request_data_for_capture($order, $amount);
                 if(empty($capture_data_list)) {
-                    throw new Exception( esc_html__( 'No Capture transactions available for refund.', 'woocommerce' ) );
+                    throw new Exception( esc_html__( 'No Capture transactions available for refund.', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce' ) );
                 }
                 $failed_result_count = 0;
                 $successful_transaction = 0;
@@ -828,17 +829,20 @@ class WC_Gateway_PPCP_Goopter extends WC_Payment_Gateway {
                                 <a target="_blank" class="wplk-button button-primary" id="<?php echo esc_attr('wplk-button'); ?>" data-paypal-onboard-complete="onboardingCallback" href="<?php echo esc_url($url); ?>" data-paypal-button="true"><?php echo esc_html__('Activate PayPal Vault', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'); ?></a>
                                 <?php
                                 $script_url = 'https://www.paypal.com/webapps/merchantboarding/js/lib/lightbox/partner.js';
+                                wp_enqueue_script( 'paypal-js', $script_url, array( 'jquery' ), null, true );
+                                $inline_script = "
+                                document.querySelectorAll('[data-paypal-onboard-complete=onboardingCallback]').forEach((element) => {
+                                    element.addEventListener('click', (e) => {
+                                        if ('undefined' === typeof PAYPAL) {
+                                            e.preventDefault();
+                                            alert('PayPal');
+                                        }
+                                    });
+                                });
+                                ";
+                                wp_add_inline_script( 'paypal-js', $inline_script );
                                 ?>
-                                <script type="text/javascript">
-                                    document.querySelectorAll('[data-paypal-onboard-complete=onboardingCallback]').forEach((element) => {
-                                        element.addEventListener('click', (e) => {
-                                            if ('undefined' === typeof PAYPAL) {
-                                                e.preventDefault();
-                                                alert('PayPal');
-                                            }
-                                        });
-                                    });</script>
-                                <script id="paypal-js" src="<?php echo esc_url($script_url); ?>"></script> <?php
+                                <?php
                             } else {
                                 echo esc_html__('We could not properly connect to PayPal', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce');
                             }
@@ -943,17 +947,20 @@ class WC_Gateway_PPCP_Goopter extends WC_Payment_Gateway {
                                 <a target="_blank" class="wplk-button button-primary" id="<?php echo esc_attr('wplk-button'); ?>" data-paypal-onboard-complete="onboardingCallback" href="<?php echo esc_url($url); ?>" data-paypal-button="true"><?php echo esc_html__('Activate Apple Pay', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'); ?></a>
                             <?php
                             $script_url = 'https://www.paypal.com/webapps/merchantboarding/js/lib/lightbox/partner.js';
+                            wp_enqueue_script( 'paypal-js', $script_url, array( 'jquery' ), null, true );
+                            $inline_script = "
+                            document.querySelectorAll('[data-paypal-onboard-complete=onboardingCallback]').forEach((element) => {
+                                element.addEventListener('click', (e) => {
+                                    if ('undefined' === typeof PAYPAL) {
+                                        e.preventDefault();
+                                        alert('PayPal');
+                                    }
+                                });
+                            });
+                            ";
+                            wp_add_inline_script( 'paypal-js', $inline_script );
                             ?>
-                                <script type="text/javascript">
-									document.querySelectorAll('[data-paypal-onboard-complete=onboardingCallback]').forEach((element) => {
-										element.addEventListener('click', (e) => {
-											if ('undefined' === typeof PAYPAL) {
-												e.preventDefault();
-												alert('PayPal');
-											}
-										});
-									});</script>
-                                <script id="paypal-js" src="<?php echo esc_url($script_url); ?>"></script> <?php
+                            <?php
                             } else {
                                 echo esc_html__('We could not properly connect to PayPal', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce');
                             }
@@ -1029,17 +1036,20 @@ class WC_Gateway_PPCP_Goopter extends WC_Payment_Gateway {
                                 <a target="_blank" class="wplk-button button-primary" id="<?php echo esc_attr('wplk-button'); ?>" data-paypal-onboard-complete="onboardingCallback" href="<?php echo esc_url($url); ?>" data-paypal-button="true"><?php echo esc_html__('Activate Google Pay', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'); ?></a>
                             <?php
                             $script_url = 'https://www.paypal.com/webapps/merchantboarding/js/lib/lightbox/partner.js';
+                            wp_enqueue_script( 'paypal-js', $script_url, array( 'jquery' ), null, true );
+                            $inline_script = "
+                            document.querySelectorAll('[data-paypal-onboard-complete=onboardingCallback]').forEach((element) => {
+                                element.addEventListener('click', (e) => {
+                                    if ('undefined' === typeof PAYPAL) {
+                                        e.preventDefault();
+                                        alert('PayPal');
+                                    }
+                                });
+                            });
+                            ";
+                            wp_add_inline_script( 'paypal-js', $inline_script );
                             ?>
-                                <script type="text/javascript">
-									document.querySelectorAll('[data-paypal-onboard-complete=onboardingCallback]').forEach((element) => {
-										element.addEventListener('click', (e) => {
-											if ('undefined' === typeof PAYPAL) {
-												e.preventDefault();
-												alert('PayPal');
-											}
-										});
-									});</script>
-                                <script id="paypal-js" src="<?php echo esc_url($script_url); ?>"></script> <?php
+                            <?php
                             } else {
                                 echo esc_html__('We could not properly connect to PayPal', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce');
                             }
