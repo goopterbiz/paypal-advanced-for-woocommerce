@@ -1,4 +1,6 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 if (!defined('WFACP_TEMPLATE_DIR')) {
     return '';
 }
@@ -26,7 +28,7 @@ $permalink = get_the_permalink();
     <?php
     do_action('outside_header');
     if (!$checkout->is_registration_enabled() && $checkout->is_registration_required() && !is_user_logged_in()) {
-        echo esc_html(apply_filters('woocommerce_checkout_must_be_logged_in_message', __('You must be logged in to checkout.', 'woocommerce')));
+        echo esc_html(apply_filters('woocommerce_checkout_must_be_logged_in_message', __('You must be logged in to checkout.', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce')));
         return;
     }
     $payment_needed = false;
@@ -48,7 +50,11 @@ $permalink = get_the_permalink();
     add_filter('wfacp_print_shipping_hidden_fields', '__return_false');
     do_action('woocommerce_before_checkout_form', $checkout);
     ?>
-    <style>
+    <?php
+    wp_register_style('goopter-express-checkout-styles', false);
+    wp_enqueue_style('goopter-express-checkout-styles');
+
+    $css = '
         .wfacp_shipping_fields {
             display: none;
         }
@@ -91,18 +97,21 @@ $permalink = get_the_permalink();
             font-weight: bold;
             text-transform: uppercase;
         }
-        .wfacp_express_billing_address p.wfacp-form-control-wrapper, .wfacp_express_shipping_address p.wfacp-form-control-wrapper {
-            padding: 0 12px 0 0
+        .wfacp_express_billing_address p.wfacp-form-control-wrapper,
+        .wfacp_express_shipping_address p.wfacp-form-control-wrapper {
+            padding: 0 12px 0 0;
         }
-        .wfacp_express_billing_address p.wfacp-form-control-wrapper label, .wfacp_express_shipping_address p.wfacp-form-control-wrapper label {
-            left: 12px
+        .wfacp_express_billing_address p.wfacp-form-control-wrapper label,
+        .wfacp_express_shipping_address p.wfacp-form-control-wrapper label {
+            left: 12px;
         }
-        .wfacp_express_billing_address h3, .wfacp_express_shipping_address h3 {
+        .wfacp_express_billing_address h3,
+        .wfacp_express_shipping_address h3 {
             display: block;
             color: #333;
             font-size: 16px;
             font-weight: bold;
-            margin-top: 0
+            margin-top: 0;
         }
         .wfacp_express_formatted_address address {
             font-style: normal;
@@ -115,13 +124,16 @@ $permalink = get_the_permalink();
         }
 
         @media (max-width: 599px) {
-            .wfacp_express_formatted_billing_address, .wfacp_express_formatted_shipping_address {
+            .wfacp_express_formatted_billing_address,
+            .wfacp_express_formatted_shipping_address {
                 width: 100%;
                 margin: 0;
-                float: none
+                float: none;
             }
         }
-    </style>
+    ';
+    wp_add_inline_style('goopter-express-checkout-styles', $css);
+    ?>
     <form name="checkout" method="post" class="checkout woocommerce-checkout wfacp_paypal_express" action="<?php echo esc_url(get_the_permalink()); ?>" enctype="multipart/form-data" id="wfacp_checkout_form">
         <input type="hidden" name="_wfacp_post_id" class="_wfacp_post_id" value="<?php echo esc_html(WFACP_Common::get_id()); ?>">
         
@@ -144,7 +156,7 @@ $permalink = get_the_permalink();
             <div class="wfacp-comm-title">
                 <h2 class="wfacp_section_heading wfacp_section_title">
                     <?php
-                    $confirm_order_title = apply_filters('wfacp_comfirm_your_paypal_order_title', __('Confirm your PayPal order', 'woofunnels-aero-checkout'));
+                    $confirm_order_title = apply_filters('wfacp_comfirm_your_paypal_order_title', __('Confirm your PayPal order', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'));
                     echo esc_html(apply_filters('wfacp_comfirm_your_paypal_order_title', $confirm_order_title));
                     ?>
                 </h2>

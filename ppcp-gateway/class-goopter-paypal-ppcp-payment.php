@@ -1586,7 +1586,7 @@ class Goopter_PayPal_PPCP_Payment {
         } catch (Exception $ex) {
             $this->api_log->log("The exception was created on line: " . $ex->getFile() . ' ' . $ex->getLine(), 'error');
             $this->api_log->log($ex->getMessage(), 'error');
-            wc_add_notice(__('Sorry, your session has expired.', 'woocommerce'));
+            wc_add_notice(__('Sorry, your session has expired.', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'));
             return false;
         }
     }
@@ -3698,12 +3698,12 @@ class Goopter_PayPal_PPCP_Payment {
                         if ($token->validate()) {
                             $token->save();
                             update_metadata('payment_token', $token->get_id(), '_goopter_ppcp_used_payment_method', 'paypal');
-                            wc_add_notice(__('Payment method successfully added.', 'woocommerce'));
+                            wc_add_notice(__('Payment method successfully added.', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'));
                         } else {
-                            wc_add_notice(__('Unable to add payment method to your account.', 'woocommerce'), 'error');
+                            wc_add_notice(__('Unable to add payment method to your account.', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'), 'error');
                         }
                     } else {
-                        wc_add_notice(__('Payment method already exist in your account.', 'woocommerce'), 'notice');
+                        wc_add_notice(__('Payment method already exist in your account.', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'), 'notice');
                     }
                     wp_redirect(wc_get_account_endpoint_url('payment-methods'));
                     exit();
@@ -3713,7 +3713,7 @@ class Goopter_PayPal_PPCP_Payment {
                     );
                     $error_message = $this->goopter_ppcp_get_readable_message($this->api_response, $error_email_notification_param);
                     wc_add_notice($error_message, 'error');
-                    wc_add_notice(__('Unable to add payment method to your account.', 'woocommerce'), 'error');
+                    wc_add_notice(__('Unable to add payment method to your account.', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'), 'error');
                     wp_redirect(wc_get_account_endpoint_url('payment-methods'));
                     exit();
                 }
@@ -3845,12 +3845,12 @@ class Goopter_PayPal_PPCP_Payment {
                         if ($token->validate()) {
                             $token->save();
                             update_metadata('payment_token', $token->get_id(), '_goopter_ppcp_used_payment_method', 'card');
-                            wc_add_notice(__('Payment method has been added successfully.', 'woocommerce'));
+                            wc_add_notice(__('Payment method has been added successfully.', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'));
                         } else {
-                            wc_add_notice(__('Unable to add payment method to your account.', 'woocommerce'), 'error');
+                            wc_add_notice(__('Unable to add payment method to your account.', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'), 'error');
                         }
                     } else {
-                        wc_add_notice(__('Payment method already exist in your account.', 'woocommerce'), 'notice');
+                        wc_add_notice(__('Payment method already exist in your account.', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'), 'notice');
                     }
                     wp_send_json(array(
                         'result' => 'success',
@@ -3864,7 +3864,7 @@ class Goopter_PayPal_PPCP_Payment {
                     );
                     $error_message = $this->goopter_ppcp_get_readable_message($this->api_response, $error_email_notification_param);
                     wc_add_notice($error_message, 'error');
-                    wc_add_notice(__('Unable to add payment method to your account.', 'woocommerce'), 'error');
+                    wc_add_notice(__('Unable to add payment method to your account.', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'), 'error');
                     wp_send_json(array(
                         'result' => 'failure',
                         'redirect' => wc_get_account_endpoint_url('payment-methods'),
@@ -3945,7 +3945,7 @@ class Goopter_PayPal_PPCP_Payment {
                             wp_redirect($this->goopter_ppcp_get_order_return_url($order));
                             exit();
                         } else {
-                            wc_add_notice(__('Unable to add payment method to your account.', 'woocommerce'), 'error');
+                            wc_add_notice(__('Unable to add payment method to your account.', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'), 'error');
                         }
                     } else {
                         $order->payment_complete();
@@ -3961,7 +3961,7 @@ class Goopter_PayPal_PPCP_Payment {
                     );
                     $error_message = $this->goopter_ppcp_get_readable_message($this->api_response, $error_email_notification_param);
                     wc_add_notice($error_message, 'error');
-                    wc_add_notice(__('Unable to add payment method to your account.', 'woocommerce'), 'error');
+                    wc_add_notice(__('Unable to add payment method to your account.', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'), 'error');
                     wp_redirect(wc_get_checkout_url());
                     exit();
                 }
@@ -4221,7 +4221,7 @@ class Goopter_PayPal_PPCP_Payment {
                             wp_redirect(goopter_ppcp_get_view_sub_order_url($order_id));
                             exit();
                         } else {
-                            wc_add_notice(__('Unable to change payment method.', 'woocommerce'), 'error');
+                            wc_add_notice(__('Unable to change payment method.', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'), 'error');
                         }
                     }
                     wp_redirect(goopter_ppcp_get_view_sub_order_url($order_id));

@@ -28,59 +28,67 @@ class Goopter_Admin_Order_Payment_Process {
     }
 
     public function goopter_hide_reference_order_metabox() {
-        ?>
-        <style type="text/css">
+        wp_register_style( 'goopter-admin-styles', false );
+        wp_enqueue_style( 'goopter-admin-styles' );
+
+        $css = '
             #goopter_admin_order_reference_order {
-                display: none;
+                display: none !important;
             }
             label[for="goopter_admin_order_reference_order-hide"] {
-                display: none;
+                display: none !important;
             }
-        </style>
-        <?php
+        ';
 
+        wp_add_inline_style( 'goopter-admin-styles', $css );
     }
 
     public function goopter_show_reference_order_metabox() {
-        ?>
-        <style type="text/css">
+        wp_register_style( 'goopter-admin-styles', false );
+        wp_enqueue_style( 'goopter-admin-styles' );
+
+        $css = '
             #goopter_admin_order_reference_order {
-                display: block;
+                display: block !important;
             }
             label[for="goopter_admin_order_reference_order-hide"] {
-                display: inline;
+                display: inline !important;
             }
-        </style>
-        <?php
+        ';
 
+        wp_add_inline_style( 'goopter-admin-styles', $css );
     }
 
     public function goopter_hide_order_payment_metabox() {
-        ?>
-        <style type="text/css">
+        wp_register_style( 'goopter-admin-styles', false );
+        wp_enqueue_style( 'goopter-admin-styles' );
+
+        $css = '
             #goopter_admin_order_payment_process {
-                display: none;
+                display: none !important;
             }
             label[for="goopter_admin_order_payment_process-hide"] {
-                display: none;
+                display: none !important;
             }
-        </style>
-        <?php
+        ';
 
+        wp_add_inline_style( 'goopter-admin-styles', $css );
     }
 
     public function goopter_show_order_payment_metabox() {
-        ?>
-        <style type="text/css">
+        wp_register_style( 'goopter-admin-styles', false );
+        wp_enqueue_style( 'goopter-admin-styles' );
+        
+        $css = '
             #goopter_admin_order_payment_process {
-                display: block;
+                display: block !important;
             }
             label[for="goopter_admin_order_payment_process-hide"] {
-                display: inline;
+                display: inline !important;
             }
-        </style>
-        <?php
-
+        ';
+        
+        wp_add_inline_style( 'goopter-admin-styles', $css );
     }
 
     public function admin_order_reference_order($post_or_order_object) {

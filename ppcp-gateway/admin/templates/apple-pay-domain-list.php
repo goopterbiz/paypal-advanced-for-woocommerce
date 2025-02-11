@@ -2,6 +2,8 @@
 /**
  * @var array $jsonResponse
  */
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 if ($jsonResponse['status']) {
     $domain_validation_file = $this->apple_pay_domain_validation->getDomainAssociationFilePath(true);
     ?>

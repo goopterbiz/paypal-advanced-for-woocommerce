@@ -4,9 +4,9 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly.
 }
 
-if (!class_exists('WC_Email_Partially_Paid_Order', false)) :
+if (!class_exists('Goopter_WC_Email_Partially_Paid_Order', false)) :
 
-    class WC_Email_Partially_Paid_Order extends WC_Email {
+    class Goopter_WC_Email_Partially_Paid_Order extends WC_Email {
 
         public function __construct() {
             $this->id = 'customer_partially_paid_order';
@@ -156,4 +156,4 @@ if (!class_exists('WC_Email_Partially_Paid_Order', false)) :
 
     endif;
 
-return new WC_Email_Partially_Paid_Order();
+return new Goopter_WC_Email_Partially_Paid_Order();

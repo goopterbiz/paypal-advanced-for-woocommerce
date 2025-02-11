@@ -1,17 +1,26 @@
-<script type="text/javascript">
-    
-    window.addEventListener('message', function (e) {
-                    const data = e.data;
-                    const decoded = JSON.parse(data);
-                    if (typeof decoded.message_type !== 'undefined' && decoded.message_type === 'ppcp_contact_form') {
-                        setTimeout(
-                            function() {
-                                $('.ppcp_account_request-Modal-overlay').hide();
-                                $('.ppcp_account_request-Modal').hide();
-                            }, 5000);
-                    }
-                });
-</script>
+<?php
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+?>
+<?php
+wp_register_script('add_message_listener', '', [], '', true);
+wp_enqueue_script('add_message_listener');
+
+$inline_script = "
+window.addEventListener('message', function (e) {
+    const data = e.data;
+    const decoded = JSON.parse(data);
+    if (typeof decoded.message_type !== 'undefined' && decoded.message_type === 'ppcp_contact_form') {
+        setTimeout(
+            function() {
+                $('.ppcp_account_request-Modal-overlay').hide();
+                $('.ppcp_account_request-Modal').hide();
+            }, 5000);
+    }
+});
+";
+
+wp_add_inline_script('add_message_listener', $inline_script);
+?>
 <div class="ppcp_account_request-Modal" style="display: none;">
     <div class="ppcp_account_request-Modal-header">
         <div>

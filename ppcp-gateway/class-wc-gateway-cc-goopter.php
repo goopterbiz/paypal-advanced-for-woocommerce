@@ -5,7 +5,7 @@ if (!defined('ABSPATH')) {
 
 class WC_Gateway_CC_Goopter extends WC_Payment_Gateway_CC {
 
-    use WC_Gateway_Base_Goopter;
+    use Goopter_WC_Gateway_Base;
 
     public $enable_paypal_checkout_page;
     public $checkout_page_display_option;
@@ -406,18 +406,18 @@ class WC_Gateway_CC_Goopter extends WC_Payment_Gateway_CC {
         $fields = array();
 
         $cvc_field = '<p class="form-row form-row-last">
-			<label for="' . esc_attr($this->id) . '-card-cvc">' . esc_html__('Card code', 'woocommerce') . '&nbsp;<span class="required">*</span></label>
-			<input id="' . esc_attr($this->id) . '-card-cvc" class="input-text wc-credit-card-form-card-cvc" inputmode="numeric" autocomplete="off" autocorrect="no" autocapitalize="no" spellcheck="no" type="tel" maxlength="4" placeholder="' . esc_attr__('CVC', 'woocommerce') . '" ' . $this->field_name('card-cvc') . ' style="width:100px" />
+			<label for="' . esc_attr($this->id) . '-card-cvc">' . esc_html__('Card code', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce') . '&nbsp;<span class="required">*</span></label>
+			<input id="' . esc_attr($this->id) . '-card-cvc" class="input-text wc-credit-card-form-card-cvc" inputmode="numeric" autocomplete="off" autocorrect="no" autocapitalize="no" spellcheck="no" type="tel" maxlength="4" placeholder="' . esc_attr__('CVC', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce') . '" ' . $this->field_name('card-cvc') . ' style="width:100px" />
 		</p>';
 
         $default_fields = array(
             'card-number-field' => '<p class="form-row form-row-wide">
-				<label for="' . esc_attr($this->id) . '-card-number">' . esc_html__('Card number', 'woocommerce') . '&nbsp;<span class="required">*</span></label>
+				<label for="' . esc_attr($this->id) . '-card-number">' . esc_html__('Card number', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce') . '&nbsp;<span class="required">*</span></label>
 				<input id="' . esc_attr($this->id) . '-card-number" class="input-text wc-credit-card-form-card-number" inputmode="numeric" autocomplete="cc-number" autocorrect="no" autocapitalize="no" spellcheck="no" type="tel" placeholder="&bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull;" ' . $this->field_name('card-number') . ' />
 			</p>',
             'card-expiry-field' => '<p class="form-row form-row-first">
-				<label for="' . esc_attr($this->id) . '-card-expiry">' . esc_html__('Expiry (MM/YY)', 'woocommerce') . '&nbsp;<span class="required">*</span></label>
-				<input id="' . esc_attr($this->id) . '-card-expiry" class="input-text wc-credit-card-form-card-expiry" inputmode="numeric" autocomplete="cc-exp" autocorrect="no" autocapitalize="no" spellcheck="no" type="tel" placeholder="' . esc_attr__('MM / YY', 'woocommerce') . '" ' . $this->field_name('card-expiry') . ' />
+				<label for="' . esc_attr($this->id) . '-card-expiry">' . esc_html__('Expiry (MM/YY)', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce') . '&nbsp;<span class="required">*</span></label>
+				<input id="' . esc_attr($this->id) . '-card-expiry" class="input-text wc-credit-card-form-card-expiry" inputmode="numeric" autocomplete="cc-exp" autocorrect="no" autocapitalize="no" spellcheck="no" type="tel" placeholder="' . esc_attr__('MM / YY', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce') . '" ' . $this->field_name('card-expiry') . ' />
 			</p>',
         );
 

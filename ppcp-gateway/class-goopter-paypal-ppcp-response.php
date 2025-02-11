@@ -19,10 +19,11 @@ class Goopter_PayPal_PPCP_Response {
 
     public function __construct() {
         $this->goopter_ppcp_load_class();
+        $image_url = PAYPAL_FOR_WOOCOMMERCE_ASSET_URL . 'assets/images/company-logo.png';
         $this->generate_signup_link_default_request_param = array(
             'tracking_id' => '',
             'partner_config_override' => array(
-                'partner_logo_url' => 'https://www.goopter.com/wp-content/themes/Goopter/assets/images/company-logo.png',
+                'partner_logo_url' => $image_url,
                 'return_url' => '',
                 'return_url_description' => '',
                 'show_add_credit_card' => true,

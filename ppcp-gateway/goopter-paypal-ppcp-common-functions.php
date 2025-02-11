@@ -993,18 +993,18 @@ if (!function_exists('goopter_ppcp_short_payment_method')) {
 
 }
 
-if (!function_exists('is_used_save_payment_token')) {
+if (!function_exists('has_saved_payment_token_been_used')) {
 
-    function is_used_save_payment_token() {
+    function has_saved_payment_token_been_used() {
         $saved_tokens = ['wc-goopter_ppcp_apple_pay-payment-token', 'wc-goopter_ppcp-payment-token', 'wc-goopter_ppcp_cc-payment-token'];
-        $is_save_payment_used = false;
+        $has_saved_payment_token_been_used = false;
         foreach ($saved_tokens as $saved_token) {
             // phpcs:ignore WordPress.Security.NonceVerification.Missing -- no security issue
             if (!empty($_POST[$saved_token]) && $_POST[$saved_token] !== 'new') {
-                return $is_save_payment_used;
+                return $has_saved_payment_token_been_used;
             }
         }
-        return $is_save_payment_used;
+        return $has_saved_payment_token_been_used;
     }
 
 }
