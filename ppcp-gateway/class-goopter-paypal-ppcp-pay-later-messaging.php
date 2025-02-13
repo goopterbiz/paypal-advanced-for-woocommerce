@@ -3,7 +3,7 @@
 defined('ABSPATH') || exit;
 
 class Goopter_PayPal_PPCP_Pay_Later {
-    use WC_PPCP_Pre_Orders_Trait;
+    use Goopter_WC_PPCP_Pre_Orders_Trait;
     public $setting_obj;
     public $api_log;
     public $settings;
@@ -44,13 +44,13 @@ class Goopter_PayPal_PPCP_Pay_Later {
 
     public function goopter_ppcp_load_class() {
         try {
-            if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
+            if (!class_exists('Goopter_WC_Gateway_PPCP_Settings')) {
                 include_once PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-wc-gateway-ppcp-goopter-settings.php';
             }
             if (!class_exists('Goopter_PayPal_PPCP_Log')) {
                 include_once PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-goopter-paypal-ppcp-log.php';
             }
-            $this->setting_obj = WC_Gateway_PPCP_Goopter_Settings::instance();
+            $this->setting_obj = Goopter_WC_Gateway_PPCP_Settings::instance();
             $this->settings = $this->setting_obj->get_load();
             $this->api_log = Goopter_PayPal_PPCP_Log::instance();
         } catch (Exception $ex) {
@@ -60,7 +60,7 @@ class Goopter_PayPal_PPCP_Pay_Later {
     }
 
     public function goopter_ppcp_get_properties() {
-        $this->title = $this->setting_obj->get('title', GT_PPCP_NAME . ' - Built by Goopter');
+        $this->title = $this->setting_obj->get('title', GOOPTER_PPCP_NAME . ' - Built by Goopter');
         $this->enabled = 'yes' === $this->setting_obj->get('enabled', 'no');
         $this->is_sandbox = 'yes' === $this->setting_obj->get('testmode', 'no');
         $this->sandbox_client_id = $this->setting_obj->get('sandbox_client_id', '');
@@ -114,7 +114,7 @@ class Goopter_PayPal_PPCP_Pay_Later {
             if ($this->is_paypal_pay_later_messaging_enable_for_page($page = 'payment') && $this->pay_later_messaging_payment_shortcode === false) {
                 add_action('goopter_ppcp_display_paypal_button_checkout_page', array($this, 'goopter_ppcp_pay_later_messaging_payment_page'), 9);
             }
-            add_shortcode('gtpfw_bnpl_message', array($this, 'gtpfw_bnpl_message_shortcode'), 10);
+            add_shortcode('goopter_pfw_bnpl_message', array($this, 'goopter_pfw_bnpl_message_shortcode'), 10);
             add_action('woocommerce_review_order_before_submit', array($this, 'ppcp_payment_fields'));
         }
     }
@@ -122,7 +122,7 @@ class Goopter_PayPal_PPCP_Pay_Later {
     public function ppcp_payment_fields($bool = true) {
         if (apply_filters('woocommerce_checkout_show_terms', true) && function_exists('wc_terms_and_conditions_checkbox_enabled') && wc_terms_and_conditions_checkbox_enabled()) {
             echo '<div id="ppcp_payment_field_bottom">';
-            $gateway = WC_Gateway_PPCP_Goopter::$_instance;
+            $gateway = Goopter_WC_Gateway_PPCP::$_instance;
             if ($gateway->checkout_disable_smart_button === false) {
                 do_action('goopter_ppcp_display_paypal_button_checkout_page');
             }
@@ -360,7 +360,7 @@ class Goopter_PayPal_PPCP_Pay_Later {
         }
     }
 
-    public function gtpfw_bnpl_message_shortcode($atts) {
+    public function goopter_pfw_bnpl_message_shortcode($atts) {
         if (empty($atts['placement'])) {
             return '';
         }

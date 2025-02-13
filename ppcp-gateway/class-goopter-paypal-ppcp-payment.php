@@ -4,7 +4,7 @@ defined('ABSPATH') || exit;
 
 class Goopter_PayPal_PPCP_Payment {
 
-    use WC_PPCP_Pre_Orders_Trait;
+    use Goopter_WC_PPCP_Pre_Orders_Trait;
 
     public $is_sandbox;
     protected static $_instance = null;
@@ -15,8 +15,8 @@ class Goopter_PayPal_PPCP_Payment {
     public $payment_complete = 0;
     public $paypal_transaction = 0;
     public $setting_obj;
-    public WC_Goopter_PayPal_PPCP_Payment_Token $ppcp_payment_token;
-    public WC_Gateway_PPCP_Goopter_Subscriptions_Helper $subscriptions_helper;
+    public Goopter_WC_PayPal_PPCP_Payment_Token $ppcp_payment_token;
+    public Goopter_WC_Gateway_PPCP_Subscriptions_Helper $subscriptions_helper;
     public $enable_tokenized_payments;
     public $setup_tokens_url;
     public $payment_tokens_url;
@@ -89,8 +89,8 @@ class Goopter_PayPal_PPCP_Payment {
             $this->merchant_id = $this->setting_obj->get('live_merchant_id', '');
             $this->partner_client_id = PAYPAL_PPCP_PARTNER_CLIENT_ID;
         }
-        $this->title = $this->setting_obj->get('title', sprintf('%s - Built by Goopter', GT_PPCP_NAME));
-        $this->titles = $this->setting_obj->get('titles', GT_PPCP_CC);
+        $this->title = $this->setting_obj->get('title', sprintf('%s - Built by Goopter', GOOPTER_PPCP_NAME));
+        $this->titles = $this->setting_obj->get('titles', GOOPTER_PPCP_CC);
         $this->brand_name = $this->setting_obj->get('brand_name', get_bloginfo('name'));
         $this->paymentaction = $this->setting_obj->get('paymentaction', 'capture');
         $this->paymentstatus = $this->setting_obj->get('paymentstatus', 'wc-default');
@@ -116,7 +116,7 @@ class Goopter_PayPal_PPCP_Payment {
 
     public function goopter_ppcp_load_class() {
         try {
-            if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
+            if (!class_exists('Goopter_WC_Gateway_PPCP_Settings')) {
                 include_once PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-wc-gateway-ppcp-goopter-settings.php';
             }
             if (!class_exists('Goopter_PayPal_PPCP_Request')) {
@@ -125,10 +125,10 @@ class Goopter_PayPal_PPCP_Payment {
             if (!class_exists('Goopter_PayPal_PPCP_Log')) {
                 include_once PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-goopter-paypal-ppcp-log.php';
             }
-            if (!class_exists('WC_Goopter_PayPal_PPCP_Payment_Token')) {
+            if (!class_exists('Goopter_WC_PayPal_PPCP_Payment_Token')) {
                 include_once PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/ppcp-payment-token/class-goopter-paypal-ppcp-payment-token.php';
             }
-            if (!class_exists('WC_Gateway_PPCP_Goopter_Subscriptions_Helper')) {
+            if (!class_exists('Goopter_WC_Gateway_PPCP_Subscriptions_Helper')) {
                 include_once PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/subscriptions/class-wc-gateway-ppcp-goopter-subscriptions-helper.php';
             }
             if (!class_exists('Goopter_PayPal_PPCP_Error')) {
@@ -138,10 +138,10 @@ class Goopter_PayPal_PPCP_Payment {
                 include_once PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-goopter-paypal-ppcp-front-action.php';
             }
             $this->api_log = Goopter_PayPal_PPCP_Log::instance();
-            $this->setting_obj = WC_Gateway_PPCP_Goopter_Settings::instance();
+            $this->setting_obj = Goopter_WC_Gateway_PPCP_Settings::instance();
             $this->api_request = Goopter_PayPal_PPCP_Request::instance();
-            $this->ppcp_payment_token = WC_Goopter_PayPal_PPCP_Payment_Token::instance();
-            $this->subscriptions_helper = WC_Gateway_PPCP_Goopter_Subscriptions_Helper::instance();
+            $this->ppcp_payment_token = Goopter_WC_PayPal_PPCP_Payment_Token::instance();
+            $this->subscriptions_helper = Goopter_WC_Gateway_PPCP_Subscriptions_Helper::instance();
             $this->ppcp_error_handler = Goopter_PayPal_PPCP_Error::instance();
             add_filter('goopter_ppcp_add_payment_source', array($this, 'goopter_ppcp_add_payment_source'), 10, 2);
             
@@ -431,7 +431,7 @@ class Goopter_PayPal_PPCP_Payment {
             if (!empty($this->api_response['status'])) {
                 $return_response = $this->add_nonce_in_response($return_response);
                 // Add currency code and total for the apple pay orders
-                $response = $this->gt_get_updated_checkout_payment_data((!empty($order) ? $order : null));
+                $response = $this->goopter_get_updated_checkout_payment_data((!empty($order) ? $order : null));
                 $return_response = array_merge($return_response, $response);
                 $return_response['currencyCode'] = $this->api_response['purchase_units'][0]['amount']['currency_code'];
                 $return_response['totalAmount'] = $this->api_response['purchase_units'][0]['amount']['value'];
@@ -472,7 +472,7 @@ class Goopter_PayPal_PPCP_Payment {
      * @param null $order
      * @return array
      */
-    public function gt_get_updated_checkout_payment_data($order = null) {
+    public function goopter_get_updated_checkout_payment_data($order = null) {
         $details = [];
         $totalAmount = 0;
         $shippingRequired = false;
@@ -2273,7 +2273,7 @@ class Goopter_PayPal_PPCP_Payment {
     private function handle_generate_token_error_response($response) {
         if (isset($response['error'], $response['error_description']) && str_contains(strtolower($response['error_description']), 'no permissions')) {
             // display a notice to the users based on this flag and clear the flag only when call is successful
-            update_option('gt_ppcp_account_reconnect_notice', 'generate_token_error');
+            update_option('goopter_ppcp_account_reconnect_notice', 'generate_token_error');
         }
     }
 
@@ -2488,7 +2488,7 @@ class Goopter_PayPal_PPCP_Payment {
         if (function_exists('WC')) {
             try {
                 $mailer = WC()->mailer();
-                $error_email_notify_subject = apply_filters('gt_ppec_error_email_subject', sprintf('%s Error Notification', GT_PPCP_NAME));
+                $error_email_notify_subject = apply_filters('goopter_ppec_error_email_subject', sprintf('%s Error Notification', GOOPTER_PPCP_NAME));
                 $message = '';
                 if (!empty($error_email_notification_param['request'])) {
                     $message .= "<strong>" . __('Action: ', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce') . "</strong>" . ucwords(str_replace('_', ' ', $error_email_notification_param['request'])) . PHP_EOL;
@@ -2505,7 +2505,7 @@ class Goopter_PayPal_PPCP_Payment {
                     $message .= "<strong>" . __('User Email: ', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce') . "</strong>" . $userLogined->user_email . PHP_EOL;
                 }
                 $message .= "<strong>" . __('User IP: ', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce') . "</strong>" . WC_Geolocation::get_ip_address() . PHP_EOL;
-                $message = apply_filters('gt_ppec_error_email_message', $message);
+                $message = apply_filters('goopter_ppec_error_email_message', $message);
                 $message = $mailer->wrap_message($error_email_notify_subject, $message);
                 $mailer->send(get_option('admin_email'), wp_strip_all_tags($error_email_notify_subject), $message);
             } catch (Exception $ex) {

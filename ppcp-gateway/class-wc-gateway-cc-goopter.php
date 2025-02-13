@@ -3,7 +3,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-class WC_Gateway_CC_Goopter extends WC_Payment_Gateway_CC {
+class Goopter_WC_Gateway_CC extends WC_Payment_Gateway_CC {
 
     use Goopter_WC_Gateway_Base;
 

@@ -5,9 +5,9 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class Cartflows_Pro_Gateway_PayPal_PPCP_Goopter.
+ * Class Goopter_Cartflows_Pro_Gateway_PayPal_PPCP.
  */
-class Cartflows_Pro_Gateway_PayPal_PPCP_Goopter extends Cartflows_Pro_Paypal_Gateway_helper {
+class Goopter_Cartflows_Pro_Gateway_PayPal_PPCP extends Cartflows_Pro_Paypal_Gateway_helper {
 
     private static $instance;
     public $key = 'goopter_ppcp';
@@ -55,7 +55,7 @@ class Cartflows_Pro_Gateway_PayPal_PPCP_Goopter extends Cartflows_Pro_Paypal_Gat
 
     public function goopter_ppcp_load_class() {
         try {
-            if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
+            if (!class_exists('Goopter_WC_Gateway_PPCP_Settings')) {
                 include_once PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-wc-gateway-ppcp-goopter-settings.php';
             }
             if (!class_exists('Goopter_PayPal_PPCP_Request')) {
@@ -65,7 +65,7 @@ class Cartflows_Pro_Gateway_PayPal_PPCP_Goopter extends Cartflows_Pro_Paypal_Gat
                 include_once PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-goopter-paypal-ppcp-log.php';
             }
             $this->api_log = Goopter_PayPal_PPCP_Log::instance();
-            $this->setting_obj = WC_Gateway_PPCP_Goopter_Settings::instance();
+            $this->setting_obj = Goopter_WC_Gateway_PPCP_Settings::instance();
             $this->api_request = Goopter_PayPal_PPCP_Request::instance();
         } catch (Exception $ex) {
             $this->api_log->log("The exception was created on line: " . $ex->getFile() . ' ' .$ex->getLine(), 'error');
@@ -427,4 +427,4 @@ class Cartflows_Pro_Gateway_PayPal_PPCP_Goopter extends Cartflows_Pro_Paypal_Gat
 
 }
 
-Cartflows_Pro_Gateway_PayPal_PPCP_Goopter::get_instance();
+Goopter_Cartflows_Pro_Gateway_PayPal_PPCP::get_instance();

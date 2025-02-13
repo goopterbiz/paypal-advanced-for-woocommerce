@@ -4,7 +4,7 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
 
-class WC_Gateway_PPCP_Goopter_Subscriptions_Helper {
+class Goopter_WC_Gateway_PPCP_Subscriptions_Helper {
 
     protected static $_instance = null;
     public $payment_request;

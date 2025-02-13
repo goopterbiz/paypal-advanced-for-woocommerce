@@ -1,8 +1,8 @@
 <?php
 
-class WC_Gateway_PPCP_Goopter extends WC_Payment_Gateway {
+class Goopter_WC_Gateway_PPCP extends WC_Payment_Gateway {
     use Goopter_WC_Gateway_Base;
-    use WC_PPCP_Pre_Orders_Trait;
+    use Goopter_WC_PPCP_Pre_Orders_Trait;
     const PAYMENT_METHOD = 'goopter_ppcp';
     public static $_instance;
     public $settings_fields;
@@ -54,7 +54,7 @@ class WC_Gateway_PPCP_Goopter extends WC_Payment_Gateway {
         $image_url = PAYPAL_FOR_WOOCOMMERCE_ASSET_URL . 'assets/images/paypal.png';
         $this->icon = apply_filters('woocommerce_goopter_paypal_checkout_icon', $image_url);
         $this->has_fields = true;
-        $this->method_title = apply_filters('goopter_ppcp_gateway_method_title', sprintf('%s - Built by Goopter', GT_PPCP_NAME));
+        $this->method_title = apply_filters('goopter_ppcp_gateway_method_title', sprintf('%s - Built by Goopter', GOOPTER_PPCP_NAME));
         $this->method_description = __('The easiest one-stop solution for accepting PayPal, Venmo, Debit/Credit Cards with cheaper fees than other processors!', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce');
     }
 
@@ -62,7 +62,7 @@ class WC_Gateway_PPCP_Goopter extends WC_Payment_Gateway {
         $this->title = $this->get_option('title', 'PayPal');
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- no security issue
         if (isset($_GET['page']) && 'wc-settings' === $_GET['page'] && isset($_GET['tab']) && 'checkout' === $_GET['tab']) {
-            $this->title = sprintf('%s - Built by Goopter', GT_PPCP_NAME);
+            $this->title = sprintf('%s - Built by Goopter', GOOPTER_PPCP_NAME);
         }
         $this->description = $this->get_option('description', '');
         $this->enabled = $this->get_option('enabled', 'no');
@@ -119,8 +119,8 @@ class WC_Gateway_PPCP_Goopter extends WC_Payment_Gateway {
     public function goopter_defined_hooks() {
         add_action('woocommerce_update_options_payment_gateways_' . $this->id, array($this, 'process_admin_options'));
         add_action('admin_enqueue_scripts', array($this, 'enqueue_scripts'));
-        if (!has_action('woocommerce_admin_order_totals_after_total', array('WC_Gateway_PPCP_Goopter', 'goopter_ppcp_display_order_fee'))) {
-            add_action('woocommerce_admin_order_totals_after_total', array('WC_Gateway_PPCP_Goopter', 'goopter_ppcp_display_order_fee'));
+        if (!has_action('woocommerce_admin_order_totals_after_total', array('Goopter_WC_Gateway_PPCP', 'goopter_ppcp_display_order_fee'))) {
+            add_action('woocommerce_admin_order_totals_after_total', array('Goopter_WC_Gateway_PPCP', 'goopter_ppcp_display_order_fee'));
         }
         if ($this->enable_tokenized_payments === false) {
             add_filter('woocommerce_payment_gateways_renewal_support_status_html', array($this, 'payment_gateways_support_tooltip'), 10, 1);
@@ -128,11 +128,11 @@ class WC_Gateway_PPCP_Goopter extends WC_Payment_Gateway {
     }
 
     public function process_admin_options() {
-        delete_transient(GT_FEE);
+        delete_transient(GOOPTER_FEE);
         $cacheCleared = false;
         $clearCache = function () {
-            delete_option('gt_apple_pay_domain_reg_retries');
-            delete_transient('gt_seller_onboarding_status');
+            delete_option('goopter_apple_pay_domain_reg_retries');
+            delete_transient('goopter_seller_onboarding_status');
             delete_transient('goopter_apple_pay_domain_list_cache');
             return true;
         };
@@ -297,7 +297,7 @@ class WC_Gateway_PPCP_Goopter extends WC_Payment_Gateway {
                     <div class="ppcp_paypal_connection">
                         <div class="ppcp_paypal_connection_status">
                             <h3><?php // Translators: %s is the name of the PayPal service (e.g., PayPal Advanced).
-                            echo sprintf(esc_html__('Congratulations, %s is Connected!', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'), esc_html(GT_PPCP_NAME)); ?></h3>
+                            echo sprintf(esc_html__('Congratulations, %s is Connected!', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'), esc_html(GOOPTER_PPCP_NAME)); ?></h3>
                         </div>
                     </div>
                     <button type="button" class="button goopter-ppcp-disconnect"><?php echo esc_html__('Disconnect', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'); ?></button>
@@ -654,10 +654,10 @@ class WC_Gateway_PPCP_Goopter extends WC_Payment_Gateway {
         $message = sprintf(
             // Translators: %1$s is the PayPal service name, %2$s is the URL to connect the account.
             __('%1$s is almost ready. To get started, <a href="%2$s">connect your account</a>.', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'),
-            esc_html(GT_PPCP_NAME),
+            esc_html(GOOPTER_PPCP_NAME),
             esc_url(admin_url('options-general.php?page=goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce&tab=general_settings&gateway=paypal_payment_gateway_products'))
         );
-        // $message = sprintf(__('%s is almost ready. To get started, <a href="%1$s">connect your account</a>.','goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'),GT_PPCP_NAME,admin_url('options-general.php?page=goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce&tab=general_settings&gateway=paypal_payment_gateway_products'));
+        // $message = sprintf(__('%s is almost ready. To get started, <a href="%1$s">connect your account</a>.','goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'),GOOPTER_PPCP_NAME,admin_url('options-general.php?page=goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce&tab=general_settings&gateway=paypal_payment_gateway_products'));
         ?>
         <div class="notice notice-warning is-dismissible">
             <p><?php echo esc_html($message); ?></p>

@@ -142,7 +142,7 @@ class Goopter_PayPal_PPCP_Request {
         $args['headers'] = array('Content-Type' => 'application/json');
         if ('seller_onboarding_status' !== $action_name) {
             if ($this->goopter_ppcp_paypal_fee()) {
-                $args['headers'][GT_FEE] = "true";
+                $args['headers'][GOOPTER_FEE] = "true";
             }
         }
         $args['headers']['plugin_version_id'] = VERSION_PFW;
@@ -185,14 +185,14 @@ class Goopter_PayPal_PPCP_Request {
             if (!class_exists('Goopter_PayPal_PPCP_Response')) {
                 include_once PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-goopter-paypal-ppcp-response.php';
             }
-            if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
+            if (!class_exists('Goopter_WC_Gateway_PPCP_Settings')) {
                 include_once PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-wc-gateway-ppcp-goopter-settings.php';
             }
             if (!class_exists('Goopter_PayPal_PPCP_Log')) {
                 include_once PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-goopter-paypal-ppcp-log.php';
             }
             $this->api_log = Goopter_PayPal_PPCP_Log::instance();
-            $this->setting_obj = WC_Gateway_PPCP_Goopter_Settings::instance();
+            $this->setting_obj = Goopter_WC_Gateway_PPCP_Settings::instance();
             $this->api_response = Goopter_PayPal_PPCP_Response::instance();
         } catch (Exception $ex) {
             $this->api_log->log("The exception was created on line: " . $ex->getFile() . ' ' .$ex->getLine(), 'error');
@@ -201,17 +201,17 @@ class Goopter_PayPal_PPCP_Request {
     }
 
     public function goopter_ppcp_paypal_fee() {
-        if (false === ( $value = get_transient(GT_FEE) )) {
+        if (false === ( $value = get_transient(GOOPTER_FEE) )) {
             if (!class_exists('Goopter_PayPal_PPCP_Seller_Onboarding')) {
                 include_once PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-goopter-paypal-ppcp-seller-onboarding.php';
             }
             $seller_onboarding = Goopter_PayPal_PPCP_Seller_Onboarding::instance();
             $result = $seller_onboarding->goopter_track_seller_onboarding_status($this->merchant_id);
             if ($seller_onboarding->goopter_ppcp_is_fee_enable($result)) {
-                set_transient(GT_FEE, 'yes', 12 * HOUR_IN_SECONDS);
+                set_transient(GOOPTER_FEE, 'yes', 12 * HOUR_IN_SECONDS);
                 return true;
             } else {
-                set_transient(GT_FEE, 'no', 12 * HOUR_IN_SECONDS);
+                set_transient(GOOPTER_FEE, 'no', 12 * HOUR_IN_SECONDS);
                 return false;
             }
         } else {

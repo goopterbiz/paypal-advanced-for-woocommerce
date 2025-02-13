@@ -41,7 +41,13 @@ Congratulations! Your WooCommerce store is now ready to accept PayPal payments.
 * WooCommerce 3.0 or higher
 
 == External Services ==
-This plugin communicates with a paypal server and our api server to onboard paypal service or make an paypal order. We do not track or store any personal or business-critical data from you or your clients.
+This plugin communicates with PayPal’s API to facilitate payment transactions. 
+The PayPal API may collect information required for processing payments, such as user details, payment method, and transaction information.
+By using this plugin, you agree to the following terms and conditions related to PayPal’s services:
+
+*Service Provider: PayPal
+*Terms of Use: [PayPal Terms of Service](https://www.paypal.com/us/legalhub/paypal/home)
+*Privacy Policy: [PayPal Privacy Policy](https://www.paypal.com/us/legalhub/paypal/privacy-full)
 
 == Changelog ==
 

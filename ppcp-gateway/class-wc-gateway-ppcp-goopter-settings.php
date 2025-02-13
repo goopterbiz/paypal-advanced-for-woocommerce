@@ -2,9 +2,9 @@
 
 defined('ABSPATH') || exit;
 
-if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
+if (!class_exists('Goopter_WC_Gateway_PPCP_Settings')) {
 
-    class WC_Gateway_PPCP_Goopter_Settings {
+    class Goopter_WC_Gateway_PPCP_Settings {
 
         public $goopter_ppcp_gateway_setting;
         public $gateway_key;
@@ -186,7 +186,7 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                 'pay_later_messaging_home_flex_layout_color' => 'blue',
                 'pay_later_messaging_home_flex_layout_ratio' => '8x1',
                 'pay_later_messaging_home_shortcode' => 'no',
-                'pay_later_messaging_home_preview_shortcode' => '[gtpfw_bnpl_message placement="home"]',
+                'pay_later_messaging_home_preview_shortcode' => '[goopter_pfw_bnpl_message placement="home"]',
                 'pay_later_messaging_category_page_settings' => '',
                 'pay_later_messaging_category_layout_type' => 'flex',
                 'pay_later_messaging_category_text_layout_logo_type' => 'primary',
@@ -196,7 +196,7 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                 'pay_later_messaging_category_flex_layout_color' => 'blue',
                 'pay_later_messaging_category_flex_layout_ratio' => '8x1',
                 'pay_later_messaging_category_shortcode' => 'no',
-                'pay_later_messaging_category_preview_shortcode' => '[gtpfw_bnpl_message placement="category"]',
+                'pay_later_messaging_category_preview_shortcode' => '[goopter_pfw_bnpl_message placement="category"]',
                 'pay_later_messaging_product_page_settings' => '',
                 'pay_later_messaging_product_layout_type' => 'text',
                 'pay_later_messaging_product_text_layout_logo_type' => 'primary',
@@ -206,7 +206,7 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                 'pay_later_messaging_product_flex_layout_color' => 'blue',
                 'pay_later_messaging_product_flex_layout_ratio' => '8x1',
                 'pay_later_messaging_product_shortcode' => 'no',
-                'pay_later_messaging_product_preview_shortcode' => '[gtpfw_bnpl_message placement="product"]',
+                'pay_later_messaging_product_preview_shortcode' => '[goopter_pfw_bnpl_message placement="product"]',
                 'pay_later_messaging_cart_page_settings' => '',
                 'pay_later_messaging_cart_layout_type' => 'text',
                 'pay_later_messaging_cart_text_layout_logo_type' => 'primary',
@@ -216,7 +216,7 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                 'pay_later_messaging_cart_flex_layout_color' => 'blue',
                 'pay_later_messaging_cart_flex_layout_ratio' => '8x1',
                 'pay_later_messaging_cart_shortcode' => 'no',
-                'pay_later_messaging_cart_preview_shortcode' => '[gtpfw_bnpl_message placement="cart"]',
+                'pay_later_messaging_cart_preview_shortcode' => '[goopter_pfw_bnpl_message placement="cart"]',
                 'pay_later_messaging_payment_page_settings' => '',
                 'pay_later_messaging_payment_layout_type' => 'text',
                 'pay_later_messaging_payment_text_layout_logo_type' => 'primary',
@@ -226,7 +226,7 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                 'pay_later_messaging_payment_flex_layout_color' => 'blue',
                 'pay_later_messaging_payment_flex_layout_ratio' => '8x1',
                 'pay_later_messaging_payment_shortcode' => 'no',
-                'pay_later_messaging_payment_preview_shortcode' => '[gtpfw_bnpl_message placement="payment"]',
+                'pay_later_messaging_payment_preview_shortcode' => '[goopter_pfw_bnpl_message placement="payment"]',
                 'advanced_settings' => '',
                 'paymentaction' => 'capture',
                 'paymentstatus' => 'wc-default',
@@ -412,10 +412,10 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                 'enabled' => array(
                     'title' => __('Enable/Disable', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'),
                     'type' => 'checkbox',
-                    // 'label' => __(sprintf('%s', GT_PPCP_NAME), 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'),
+                    // 'label' => __(sprintf('%s', GOOPTER_PPCP_NAME), 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'),
                     // phpcs:disable WordPress.WP.I18n.NoEmptyStrings
-                    // translators: %s is replaced with the GT_PPCP_NAME constant.
-                    'label' => sprintf(__('%s', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'), GT_PPCP_NAME),
+                    // translators: %s is replaced with the GOOPTER_PPCP_NAME constant.
+                    'label' => sprintf(__('%s', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'), GOOPTER_PPCP_NAME),
                     // phpcs:enable WordPress.WP.I18n.NoEmptyStrings
                     'default' => 'no',
                 ),
@@ -1418,7 +1418,7 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'description' => '',
                     'custom_attributes' => array('readonly' => 'readonly'),
                     'button_class' => 'home_copy_text',
-                    'default' => '[gtpfw_bnpl_message placement="home"]'
+                    'default' => '[goopter_pfw_bnpl_message placement="home"]'
                 ),
                 'pay_later_messaging_category_page_settings' => array(
                     'title' => __('Category Page', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'),
@@ -1511,7 +1511,7 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'description' => '',
                     'button_class' => 'category_copy_text',
                     'custom_attributes' => array('readonly' => 'readonly'),
-                    'default' => '[gtpfw_bnpl_message placement="category"]'
+                    'default' => '[goopter_pfw_bnpl_message placement="category"]'
                 ),
                 'pay_later_messaging_product_page_settings' => array(
                     'title' => __('Product Page', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'),
@@ -1604,7 +1604,7 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'description' => '',
                     'button_class' => 'product_copy_text',
                     'custom_attributes' => array('readonly' => 'readonly'),
-                    'default' => '[gtpfw_bnpl_message placement="product"]'
+                    'default' => '[goopter_pfw_bnpl_message placement="product"]'
                 ),
                 'pay_later_messaging_cart_page_settings' => array(
                     'title' => __('Cart Page', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'),
@@ -1697,7 +1697,7 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'description' => '',
                     'button_class' => 'cart_copy_text',
                     'custom_attributes' => array('readonly' => 'readonly'),
-                    'default' => '[gtpfw_bnpl_message placement="cart"]'
+                    'default' => '[goopter_pfw_bnpl_message placement="cart"]'
                 ),
                 'pay_later_messaging_payment_page_settings' => array(
                     'title' => __('Payment Page', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'),
@@ -1790,7 +1790,7 @@ if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
                     'description' => '',
                     'button_class' => 'payment_copy_text',
                     'custom_attributes' => array('readonly' => 'readonly'),
-                    'default' => '[gtpfw_bnpl_message placement="payment"]'
+                    'default' => '[goopter_pfw_bnpl_message placement="payment"]'
                 ),
                 'tokenization_subscriptions' => array(
                     'title' => __('Tokenization / Subscriptions', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'),

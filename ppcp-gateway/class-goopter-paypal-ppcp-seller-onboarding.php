@@ -52,7 +52,7 @@ class Goopter_PayPal_PPCP_Seller_Onboarding {
             if (!class_exists('Goopter_PayPal_PPCP_DCC_Validate')) {
                 include_once ( PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-goopter-paypal-ppcp-dcc-validate.php');
             }
-            if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
+            if (!class_exists('Goopter_WC_Gateway_PPCP_Settings')) {
                 include_once PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-wc-gateway-ppcp-goopter-settings.php';
             }
             if (!class_exists('Goopter_PayPal_PPCP_Request')) {
@@ -65,7 +65,7 @@ class Goopter_PayPal_PPCP_Seller_Onboarding {
                 include_once PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/admin/class-goopter-paypal-ppcp-apple-pay-configurations.php';
             }
             $this->api_log = Goopter_PayPal_PPCP_Log::instance();
-            $this->setting_obj = WC_Gateway_PPCP_Goopter_Settings::instance();
+            $this->setting_obj = Goopter_WC_Gateway_PPCP_Settings::instance();
             $this->dcc_applies = Goopter_PayPal_PPCP_DCC_Validate::instance();
             $this->api_request = Goopter_PayPal_PPCP_Request::instance();
             Goopter_PayPal_PPCP_Apple_Pay_Configurations::instance();
@@ -294,8 +294,8 @@ class Goopter_PayPal_PPCP_Seller_Onboarding {
             }
 
             // Delete the transient so that system fetches the latest status after connecting the account
-            delete_transient('gt_seller_onboarding_status');
-            delete_option('gt_ppcp_account_reconnect_notice');
+            delete_transient('goopter_seller_onboarding_status');
+            delete_option('goopter_ppcp_account_reconnect_notice');
 
             $move_to_location = 'tokenization_subscriptions';
             if (isset($_GET['feature_activated'])) {
@@ -340,7 +340,7 @@ class Goopter_PayPal_PPCP_Seller_Onboarding {
     public function goopter_track_seller_onboarding_status_from_cache($merchant_id, $force_refresh = false) {
         $seller_onboarding_status_transient = false;
         if (!$force_refresh) {
-            $seller_onboarding_status_transient = get_transient('gt_seller_onboarding_status');
+            $seller_onboarding_status_transient = get_transient('goopter_seller_onboarding_status');
         }
         if (!$seller_onboarding_status_transient) {
             $this->is_sandbox = 'yes' === $this->setting_obj->get('testmode', 'no');
@@ -375,7 +375,7 @@ class Goopter_PayPal_PPCP_Seller_Onboarding {
                 $seller_onboarding_status_transient = [];
             }
         }
-        set_transient('gt_seller_onboarding_status', $seller_onboarding_status_transient, DAY_IN_SECONDS);
+        set_transient('goopter_seller_onboarding_status', $seller_onboarding_status_transient, DAY_IN_SECONDS);
         return $seller_onboarding_status_transient;
     }
 

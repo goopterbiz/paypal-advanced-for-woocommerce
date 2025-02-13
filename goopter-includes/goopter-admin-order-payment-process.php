@@ -20,8 +20,8 @@ class Goopter_Admin_Order_Payment_Process {
         if (!is_a($order, 'WC_Order')) {
             return;
         }
-        $screen = gt_get_shop_order_screen_id();
-        if (gt_is_active_screen($screen)) {
+        $screen = goopter_get_shop_order_screen_id();
+        if (goopter_is_active_screen($screen)) {
             add_meta_box('goopter_admin_order_payment_process', __('Reference Transaction', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'), array($this, 'admin_order_payment_process'), $screen, 'side', 'default');
             add_meta_box('goopter_admin_order_reference_order', __('Reference Transaction', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'), array($this, 'admin_order_reference_order'), $screen, 'side', 'default');
         }
@@ -96,7 +96,7 @@ class Goopter_Admin_Order_Payment_Process {
         if (!is_a($order, 'WC_Order')) {
             return;
         }
-        if (gt_is_active_screen(gt_get_shop_order_screen_id())) {
+        if (goopter_is_active_screen(goopter_get_shop_order_screen_id())) {
             if ($this->goopter_is_order_need_payment($order) && $this->goopter_is_admin_order_payment_method_available($order) == true && $this->goopter_is_order_created_by_create_new_reference_order($order) == false) {
                 $reason_array = $this->goopter_get_reason_why_create_reference_transaction_order_button_not_available($order);
                 $reason_message = $this->goopter_reason_array_to_nice_message($reason_array);
@@ -166,7 +166,7 @@ class Goopter_Admin_Order_Payment_Process {
                 )
             ) {
                 $order = ( $post_or_order_object instanceof WP_Post ) ? wc_get_order( $post_or_order_object->ID ) : $post_or_order_object;
-                if (gt_is_active_screen(gt_get_shop_order_screen_id())) {
+                if (goopter_is_active_screen(goopter_get_shop_order_screen_id())) {
                     do_action('goopter_admin_create_reference_order_action_hook', $order);
                 }
 
@@ -184,7 +184,7 @@ class Goopter_Admin_Order_Payment_Process {
                 )
             ) {
                 $order = ( $post_or_order_object instanceof WP_Post ) ? wc_get_order( $post_or_order_object->ID ) : $post_or_order_object;
-                if (gt_is_active_screen(gt_get_shop_order_screen_id())) {
+                if (goopter_is_active_screen(goopter_get_shop_order_screen_id())) {
                     do_action('goopter_admin_order_process_payment_action_hook', $order);
                 }
             }

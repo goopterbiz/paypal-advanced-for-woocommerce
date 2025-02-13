@@ -4,7 +4,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-trait WC_PPCP_Pre_Orders_Trait {
+trait Goopter_WC_PPCP_Pre_Orders_Trait {
 
     private static $has_attached_pre_order_integration_hooks = false;
 

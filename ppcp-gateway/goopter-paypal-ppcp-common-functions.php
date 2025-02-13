@@ -1009,9 +1009,9 @@ if (!function_exists('has_saved_payment_token_been_used')) {
 
 }
 
-if (!function_exists('gt_get_checkout_url')) {
+if (!function_exists('goopter_get_checkout_url')) {
 
-    function gt_get_checkout_url(): string {
+    function goopter_get_checkout_url(): string {
         $checkout_page_url = wc_get_checkout_url();
         // phpcs:disable WordPress.Security.NonceVerification.Recommended -- from third party plugin
         if (isset($_REQUEST['wfacp_id'])) {
