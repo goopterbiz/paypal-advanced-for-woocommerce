@@ -60,7 +60,7 @@ class WFOCU_Paypal_For_WC_Gateway_Goopter_PPCP_CC extends WFOCU_Gateway {
 
     public function goopter_ppcp_load_class() {
         try {
-            if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
+            if (!class_exists('Goopter_WC_Gateway_PPCP_Settings')) {
                 include_once PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-wc-gateway-ppcp-goopter-settings.php';
             }
             if (!class_exists('Goopter_PayPal_PPCP_Request')) {
@@ -75,7 +75,7 @@ class WFOCU_Paypal_For_WC_Gateway_Goopter_PPCP_CC extends WFOCU_Gateway {
 
             $this->api_log = Goopter_PayPal_PPCP_Log::instance();
             $this->api_request = Goopter_PayPal_PPCP_Request::instance();
-            $this->setting_obj = WC_Gateway_PPCP_Goopter_Settings::instance();
+            $this->setting_obj = Goopter_WC_Gateway_PPCP_Settings::instance();
             $this->payment_request = Goopter_PayPal_PPCP_Payment::instance();
         } catch (Exception $ex) {
             $this->api_log->log("The exception was created on line: " . $ex->getFile() . ' ' . $ex->getLine(), 'error');
@@ -634,9 +634,9 @@ class WFOCU_Paypal_For_WC_Gateway_Goopter_PPCP_CC extends WFOCU_Gateway {
             // phpcs:ignore WordPress.Security.NonceVerification.Missing -- from third party plugin
             $refund_data = $_POST;
             $order_id = WFOCU_WC_Compatibility::get_order_id($order);
-            $amount = isset($refund_data['amt']) ? $refund_data['amt'] : '';
-            $event_id = isset($refund_data['event_id']) ? $refund_data['event_id'] : '';
-            $txn_id = isset($refund_data['txn_id']) ? $refund_data['txn_id'] : '';
+            $amount = isset($refund_data['amt']) ? floatval($refund_data['amt']) : '';
+            $event_id = isset($refund_data['event_id']) ? sanitize_text_field(wp_unslash($refund_data['event_id'])) : '';
+            $txn_id = isset($refund_data['txn_id']) ? sanitize_text_field(wp_unslash($refund_data['txn_id'])) : '';
             $response = false;
             if (!empty($event_id) && !empty($order_id) && !empty($txn_id)) {
                 if (!is_null($amount)) {

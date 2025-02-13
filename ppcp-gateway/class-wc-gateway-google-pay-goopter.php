@@ -3,7 +3,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-class WC_Gateway_Google_Pay_Goopter extends WC_Gateway_PPCP_Goopter {
+class Goopter_WC_Gateway_Google_Pay extends Goopter_WC_Gateway_PPCP {
 
     protected bool $enable_google_pay;
     const PAYMENT_METHOD = 'google_pay';

@@ -64,7 +64,7 @@ class Goopter_PayPal_PPCP_Admin_Onboarding {
 
     public function goopter_ppcp_load_class() {
         try {
-            if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
+            if (!class_exists('Goopter_WC_Gateway_PPCP_Settings')) {
                 include_once PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-wc-gateway-ppcp-goopter-settings.php';
             }
             if (!class_exists('Goopter_PayPal_PPCP_Seller_Onboarding')) {
@@ -74,7 +74,7 @@ class Goopter_PayPal_PPCP_Admin_Onboarding {
                 include_once ( PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-goopter-paypal-ppcp-dcc-validate.php');
             }
             $this->dcc_applies = Goopter_PayPal_PPCP_DCC_Validate::instance();
-            $this->setting_obj = WC_Gateway_PPCP_Goopter_Settings::instance();
+            $this->setting_obj = Goopter_WC_Gateway_PPCP_Settings::instance();
             $this->seller_onboarding = Goopter_PayPal_PPCP_Seller_Onboarding::instance();
         } catch (Exception $ex) {
             $this->api_log->log("The exception was created on line: " . $ex->getFile() . ' ' . $ex->getLine(), 'error');
@@ -145,9 +145,9 @@ class Goopter_PayPal_PPCP_Admin_Onboarding {
                         $this->on_board_status = 'CONNECTED_BUT_NOT_ACC';
                     }
                     if ($this->seller_onboarding->goopter_ppcp_is_fee_enable($this->result)) {
-                        set_transient(GT_FEE, 'yes', 24 * DAY_IN_SECONDS);
+                        set_transient(GOOPTER_FEE, 'yes', 24 * DAY_IN_SECONDS);
                     } else {
-                        set_transient(GT_FEE, 'no', 24 * DAY_IN_SECONDS);
+                        set_transient(GOOPTER_FEE, 'no', 24 * DAY_IN_SECONDS);
                     }
                 }
                 $this->is_paypal_vault_approved = goopter_is_vaulting_enable($this->result);
@@ -171,9 +171,9 @@ class Goopter_PayPal_PPCP_Admin_Onboarding {
                         $this->on_board_status = 'CONNECTED_BUT_NOT_ACC';
                     }
                     if ($this->seller_onboarding->goopter_ppcp_is_fee_enable($this->result)) {
-                        set_transient(GT_FEE, 'yes', 24 * DAY_IN_SECONDS);
+                        set_transient(GOOPTER_FEE, 'yes', 24 * DAY_IN_SECONDS);
                     } else {
-                        set_transient(GT_FEE, 'no', 24 * DAY_IN_SECONDS);
+                        set_transient(GOOPTER_FEE, 'no', 24 * DAY_IN_SECONDS);
                     }
                 }
                 $this->is_paypal_vault_approved = goopter_is_vaulting_enable($this->result);
@@ -231,7 +231,7 @@ class Goopter_PayPal_PPCP_Admin_Onboarding {
 
         try {
             $this->goopter_ppcp_load_variable();
-            $gt_ppcp_account_reconnect_notice = get_option('gt_ppcp_account_reconnect_notice');
+            $goopter_ppcp_account_reconnect_notice = get_option('goopter_ppcp_account_reconnect_notice');
             ?>
             <div id="goopter_paypal_marketing_table">
                <?php if ($this->on_board_status === 'NOT_CONNECTED' || $this->on_board_status === 'USED_FIRST_PARTY') { ?>
@@ -241,7 +241,7 @@ class Goopter_PayPal_PPCP_Admin_Onboarding {
                             <br><br>
                             <div class="paypal_woocommerce_product_onboard_content">
                                 <p><?php // Translators: %s is the name of the PayPal solution (e.g., PayPal Advanced).
-                                echo sprintf(wp_kses_post(__('Welcome to the %s solution for WooCommerce. <br> Built by Goopter Commerce Solutions.', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce')), esc_html(GT_PPCP_NAME)); ?></p>
+                                echo sprintf(wp_kses_post(__('Welcome to the %s solution for WooCommerce. <br> Built by Goopter Commerce Solutions.', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce')), esc_html(GOOPTER_PPCP_NAME)); ?></p>
                                 <?php
                                 // phpcs:disable WordPress.Security.NonceVerification.Recommended -- no security issue
                                 if (isset($_GET['testmode'])) {
@@ -339,7 +339,7 @@ class Goopter_PayPal_PPCP_Admin_Onboarding {
                                             'You’re currently set up and enjoying the benefits of %s. <br> Built by Goopter.',
                                             'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'
                                         ),
-                                        esc_html(GT_PPCP_NAME)
+                                        esc_html(GOOPTER_PPCP_NAME)
                                     )
                                 );
                                 ?></p>
@@ -408,7 +408,7 @@ class Goopter_PayPal_PPCP_Admin_Onboarding {
                                     } else {
                                         echo esc_html__('We could not properly connect to PayPal', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce');
                                     }
-                                } else if (!empty($gt_ppcp_account_reconnect_notice)) {
+                                } else if (!empty($goopter_ppcp_account_reconnect_notice)) {
                                     $this->print_general_reconnect_paypal_account_section($testmode);
                                 }
                                 ?>
@@ -432,7 +432,7 @@ class Goopter_PayPal_PPCP_Admin_Onboarding {
                                 <br>
                                 <span><img class="green_checkmark" src="<?php echo esc_url(PAYPAL_FOR_WOOCOMMERCE_ASSET_URL . 'ppcp-gateway/images/admin/green_checkmark.png'); ?>"></span>
                                 <p><?php // Translators: %s is the name of the PayPal solution (e.g., PayPal Advanced).
-                                echo sprintf(wp_kses_post(__('You’re currently set up and enjoying the benefits of %s. <br> Built by Goopter.', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce')), esc_html(GT_PPCP_NAME)); ?></p>
+                                echo sprintf(wp_kses_post(__('You’re currently set up and enjoying the benefits of %s. <br> Built by Goopter.', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce')), esc_html(GOOPTER_PPCP_NAME)); ?></p>
                                 <p><?php echo wp_kses_post(__('To modify your setup or learn more about additional options, <br> please use the buttons below.', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce')); ?></p>
                                 <?php if ($this->is_paypal_vault_approved === false && in_array($this->ppcp_paypal_country, $paypal_vault_supported_country)) { ?>
                                     <p>
@@ -482,7 +482,7 @@ class Goopter_PayPal_PPCP_Admin_Onboarding {
                                     } else {
                                         echo esc_html__('We could not properly connect to PayPal', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce');
                                     }
-                                } elseif (!empty($gt_ppcp_account_reconnect_notice)) {
+                                } elseif (!empty($goopter_ppcp_account_reconnect_notice)) {
                                     $this->print_general_reconnect_paypal_account_section($testmode);
                                 }
                                 ?>

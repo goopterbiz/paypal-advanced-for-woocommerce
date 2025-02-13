@@ -64,7 +64,7 @@ class Goopter_Utility {
             if (!is_a($order, 'WC_Order')) {
                 return;
             }
-            if (gt_is_active_screen(gt_get_shop_order_screen_id())) {
+            if (goopter_is_active_screen(goopter_get_shop_order_screen_id())) {
                 if (empty($this->payment_method)) {
                     $this->payment_method = $order->get_payment_method();
                 }

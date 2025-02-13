@@ -3,7 +3,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-class WC_Gateway_Apple_Pay_Goopter extends WC_Gateway_PPCP_Goopter {
+class Goopter_WC_Gateway_Apple_Pay extends Goopter_WC_Gateway_PPCP {
 
     protected bool $enable_apple_pay;
     const PAYMENT_METHOD = 'apple_pay';

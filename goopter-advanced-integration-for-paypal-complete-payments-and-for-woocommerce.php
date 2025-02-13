@@ -78,9 +78,9 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
                 'PAYPAL_FOR_WOOCOMMERCE_PPCP_AWS_WEB_SERVICE' => 'https://api-dev.goopter.com/api/v8/ppcpRequest',
                 'PAYPAL_FOR_WOOCOMMERCE_PPCP_GOOPTER_WEB_SERVICE' => 'https://api-dev.goopter.com/api/v8/ppcpRequest',
                 
-                'GT_FEE' => 'gt_p_f',
-                'GT_PPCP_NAME' => 'PayPal Complete Payments',
-                'GT_PPCP_CC' => 'Credit or Debit Card',
+                'GOOPTER_FEE' => 'goopter_p_f',
+                'GOOPTER_PPCP_NAME' => 'PayPal Complete Payments',
+                'GOOPTER_PPCP_CC' => 'Credit or Debit Card',
             ];
 
             foreach ($constants as $key => $value) {
@@ -272,8 +272,8 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
                     if ((isset($_GET['tab']) && 'checkout' === $_GET['tab']) && !isset($_GET['section'])) {
                         include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-wc-gateway-ppcp-goopter.php');
                         include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-wc-gateway-cc-goopter.php');
-                        $methods[] = 'WC_Gateway_PPCP_Goopter_Subscriptions';
-                        $methods[] = 'WC_Gateway_PPCP_Goopter';
+                        $methods[] = 'Goopter_WC_Gateway_PPCP_Subscriptions';
+                        $methods[] = 'Goopter_WC_Gateway_PPCP';
                     } else {
                         include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/subscriptions/wc-gateway-ppcp-goopter-subscriptions-base.php');
                         include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/subscriptions/class-wc-gateway-ppcp-goopter-subscriptions.php');
@@ -281,27 +281,27 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
                         include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/subscriptions/class-wc-gateway-ppcp-goopter-google-pay-subscriptions.php');
                         include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/subscriptions/class-wc-gateway-cc-goopter-subscriptions.php');
                         if (!isset($_GET['tab']) || $_GET['tab'] !== 'checkout') {
-                            $methods[] = 'WC_Gateway_PPCP_Goopter_Apple_Pay_Subscriptions';
-                            $methods[] = 'WC_Gateway_PPCP_Goopter_Google_Pay_Subscriptions';
-                            $methods[] = 'WC_Gateway_CC_Goopter_Subscriptions';
+                            $methods[] = 'Goopter_WC_Gateway_PPCP_Apple_Pay_Subscriptions';
+                            $methods[] = 'Goopter_WC_Gateway_PPCP_Google_Pay_Subscriptions';
+                            $methods[] = 'Goopter_WC_Gateway_CC_Subscriptions';
                         }
-                        $methods[] = 'WC_Gateway_PPCP_Goopter_Subscriptions';
+                        $methods[] = 'Goopter_WC_Gateway_PPCP_Subscriptions';
                     }
                 } else {
                     if ((isset($_GET['tab']) && 'checkout' === $_GET['tab']) && !isset($_GET['section'])) {
                         include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-wc-gateway-ppcp-goopter.php');
                         include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-wc-gateway-cc-goopter.php');
-                        $methods[] = 'WC_Gateway_PPCP_Goopter';
+                        $methods[] = 'Goopter_WC_Gateway_PPCP';
                     } else {
                         include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-wc-gateway-ppcp-goopter.php');
                         include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-wc-gateway-cc-goopter.php');
                         include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-wc-gateway-apple-pay-goopter.php');
                         include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-wc-gateway-google-pay-goopter.php');
-                        $methods[] = 'WC_Gateway_PPCP_Goopter';
+                        $methods[] = 'Goopter_WC_Gateway_PPCP';
                         if (!isset($_GET['tab']) || $_GET['tab'] !== 'checkout') {
-                            $methods[] = 'WC_Gateway_Apple_Pay_Goopter';
-                            $methods[] = 'WC_Gateway_Google_Pay_Goopter';
-                            $methods[] = 'WC_Gateway_CC_Goopter';
+                            $methods[] = 'Goopter_WC_Gateway_Apple_Pay';
+                            $methods[] = 'Goopter_WC_Gateway_Google_Pay';
+                            $methods[] = 'Goopter_WC_Gateway_CC';
                         }
                     }
                 }
@@ -313,19 +313,19 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
                     include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/subscriptions/class-wc-gateway-ppcp-goopter-apple-pay-subscriptions.php');
                     include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/subscriptions/class-wc-gateway-ppcp-goopter-google-pay-subscriptions.php');
                     include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/subscriptions/class-wc-gateway-cc-goopter-subscriptions.php');
-                    $methods[] = 'WC_Gateway_PPCP_Goopter_Apple_Pay_Subscriptions';
-                    $methods[] = 'WC_Gateway_PPCP_Goopter_Google_Pay_Subscriptions';
-                    $methods[] = 'WC_Gateway_PPCP_Goopter_Subscriptions';
-                    $methods[] = 'WC_Gateway_CC_Goopter_Subscriptions';
+                    $methods[] = 'Goopter_WC_Gateway_PPCP_Apple_Pay_Subscriptions';
+                    $methods[] = 'Goopter_WC_Gateway_PPCP_Google_Pay_Subscriptions';
+                    $methods[] = 'Goopter_WC_Gateway_PPCP_Subscriptions';
+                    $methods[] = 'Goopter_WC_Gateway_CC_Subscriptions';
                 } else {
                     include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-wc-gateway-ppcp-goopter.php');
                     include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-wc-gateway-cc-goopter.php');
                     include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-wc-gateway-apple-pay-goopter.php');
                     include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-wc-gateway-google-pay-goopter.php');
-                    $methods[] = 'WC_Gateway_Apple_Pay_Goopter';
-                    $methods[] = 'WC_Gateway_Google_Pay_Goopter';
-                    $methods[] = 'WC_Gateway_PPCP_Goopter';
-                    $methods[] = 'WC_Gateway_CC_Goopter';
+                    $methods[] = 'Goopter_WC_Gateway_Apple_Pay';
+                    $methods[] = 'Goopter_WC_Gateway_Google_Pay';
+                    $methods[] = 'Goopter_WC_Gateway_PPCP';
+                    $methods[] = 'Goopter_WC_Gateway_CC';
                 }
             }
             return $methods;
@@ -335,7 +335,7 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
             $this->plugin_screen_hook_suffix = add_submenu_page(
                     'options-general.php',
                     __('PayPal for WooCommerce - Settings', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'),
-                    GT_PPCP_NAME,
+                    GOOPTER_PPCP_NAME,
                     'manage_options',
                     'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce',
                     array($this, 'display_plugin_admin_page')
@@ -612,7 +612,7 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
                 if (!is_a($order, 'WC_Order')) {
                     return $classes;
                 }
-                if (gt_is_active_screen(gt_get_shop_order_screen_id())) {
+                if (goopter_is_active_screen(goopter_get_shop_order_screen_id())) {
                     $order = wc_get_order(absint($post->ID));
                     $payment_method = $order->get_payment_method();
                     if (!empty($payment_method)) {
@@ -653,8 +653,8 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
         }
 
         public function add_meta_boxes() {
-            $screen = gt_get_shop_order_screen_id();
-            if (gt_is_active_screen($screen)) {
+            $screen = goopter_get_shop_order_screen_id();
+            if (goopter_is_active_screen($screen)) {
                 require_once plugin_dir_path(__FILE__) . 'ppcp-gateway/admin/class-wc-meta-box-order-items-ppcp.php';
                 remove_meta_box('woocommerce-order-items', $screen, 'normal');
                 add_meta_box('woocommerce-order-items', __('Items', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'), 'Goopter_WC_Meta_Box_Order_Items::output', $screen, 'normal', 'high');

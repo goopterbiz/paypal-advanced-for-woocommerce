@@ -4,7 +4,7 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
 
-class WC_Gateway_PPCP_Goopter_Subscriptions extends WC_Gateway_PPCP_Goopter {
+class Goopter_WC_Gateway_PPCP_Subscriptions extends Goopter_WC_Gateway_PPCP {
 
-    use WC_Gateway_PPCP_Goopter_Subscriptions_Base;
+    use Goopter_WC_Gateway_PPCP_Subscriptions_Base;
 }

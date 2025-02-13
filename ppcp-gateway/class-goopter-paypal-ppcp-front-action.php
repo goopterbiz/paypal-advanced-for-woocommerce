@@ -37,7 +37,7 @@ class Goopter_PayPal_PPCP_Front_Action {
         $this->goopter_ppcp_plugin_name = 'goopter_ppcp';
         $this->goopter_ppcp_load_class();
         $this->paymentaction = $this->setting_obj->get('paymentaction', 'capture');
-        $this->title = $this->setting_obj->get('title', GT_PPCP_NAME . ' - Built by Goopter');
+        $this->title = $this->setting_obj->get('title', GOOPTER_PPCP_NAME . ' - Built by Goopter');
         $this->advanced_card_payments = 'yes' === $this->setting_obj->get('enable_advanced_card_payments', 'no');
         $this->is_sandbox = 'yes' === $this->setting_obj->get('testmode', 'no');
         if ($this->dcc_applies->for_country_currency() === false) {
@@ -57,7 +57,7 @@ class Goopter_PayPal_PPCP_Front_Action {
 
     public function goopter_ppcp_load_class() {
         try {
-            if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
+            if (!class_exists('Goopter_WC_Gateway_PPCP_Settings')) {
                 include_once PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-wc-gateway-ppcp-goopter-settings.php';
             }
             if (!class_exists('Goopter_PayPal_PPCP_Log')) {
@@ -72,7 +72,7 @@ class Goopter_PayPal_PPCP_Front_Action {
             if (!class_exists('Goopter_PayPal_PPCP_Smart_Button')) {
                 include_once ( PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-goopter-paypal-ppcp-smart-button.php');
             }
-            $this->setting_obj = WC_Gateway_PPCP_Goopter_Settings::instance();
+            $this->setting_obj = Goopter_WC_Gateway_PPCP_Settings::instance();
             $this->api_log = Goopter_PayPal_PPCP_Log::instance();
             $this->payment_request = Goopter_PayPal_PPCP_Payment::instance();
             $this->dcc_applies = Goopter_PayPal_PPCP_DCC_Validate::instance();
@@ -365,7 +365,7 @@ class Goopter_PayPal_PPCP_Front_Action {
                     if (!empty($woo_order_id)) {
                         $order = wc_get_order($woo_order_id);
                         if (is_a($order, 'WC_Order')) {
-                            $response = $this->payment_request->gt_get_updated_checkout_payment_data($order);
+                            $response = $this->payment_request->goopter_get_updated_checkout_payment_data($order);
                         } else {
                             $response = [
                                 'status' => false,
@@ -373,7 +373,7 @@ class Goopter_PayPal_PPCP_Front_Action {
                             ];
                         }
                     } else {
-                        $response = $this->payment_request->gt_get_updated_checkout_payment_data();
+                        $response = $this->payment_request->goopter_get_updated_checkout_payment_data();
                     }
                     wp_send_json($response);
                     break;
@@ -403,10 +403,10 @@ class Goopter_PayPal_PPCP_Front_Action {
 
                     $from = Goopter_Session_Manager::get('from', '');
 
-                    if (!class_exists('WC_Gateway_PPCP_Goopter_Settings')) {
+                    if (!class_exists('Goopter_WC_Gateway_PPCP_Settings')) {
                         include_once PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-wc-gateway-ppcp-goopter-settings.php';
                     }
-                    $this->setting_obj = WC_Gateway_PPCP_Goopter_Settings::instance();
+                    $this->setting_obj = Goopter_WC_Gateway_PPCP_Settings::instance();
                     $this->skip_final_review = 'yes' === $this->setting_obj->get('skip_final_review', 'no');
 
                     if ('checkout_top' === $from && !$this->skip_final_review) {
@@ -588,7 +588,7 @@ class Goopter_PayPal_PPCP_Front_Action {
                         }
                         wp_send_json_success(array(
                             'result' => 'failure',
-                            'redirect' => gt_get_checkout_url()
+                            'redirect' => goopter_get_checkout_url()
                         ));
                         exit();
                     }
@@ -643,7 +643,7 @@ class Goopter_PayPal_PPCP_Front_Action {
                         remove_filter('woocommerce_get_checkout_url', [$this->smart_button, 'goopter_ppcp_woocommerce_get_checkout_url']);
                         wp_send_json_success(array(
                             'result' => 'failure',
-                            'redirect' => gt_get_checkout_url()
+                            'redirect' => goopter_get_checkout_url()
                         ));
                     }
                 }

@@ -1,6 +1,6 @@
 <?php
 
-trait WC_Gateway_PPCP_Goopter_Subscriptions_Base {
+trait Goopter_WC_Gateway_PPCP_Subscriptions_Base {
 
     public function __construct() {
         parent::__construct();

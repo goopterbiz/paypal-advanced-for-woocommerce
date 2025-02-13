@@ -4,7 +4,7 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
 
-class WC_Gateway_CC_Goopter_Subscriptions extends WC_Gateway_CC_Goopter {
+class Goopter_WC_Gateway_CC_Subscriptions extends Goopter_WC_Gateway_CC {
 
     public function __construct() {
         parent::__construct();

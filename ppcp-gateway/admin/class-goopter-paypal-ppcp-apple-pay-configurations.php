@@ -100,7 +100,7 @@ class Goopter_PayPal_PPCP_Apple_Pay_Configurations
             $checkIsDomainAdded = self::isApplePayDomainAdded($jsonResponse);
             if ($checkIsDomainAdded) {
                 $successMessage = __('Your domain has been registered successfully, Close the popup and refresh the page to update the status.', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce');
-                $applePayGateway = WC_Gateway_Apple_Pay_Goopter::instance();
+                $applePayGateway = Goopter_WC_Gateway_Apple_Pay::instance();
                 $applePayGateway->update_option('apple_pay_domain_added', 'yes');
             }
         } catch (Exception $exception) {
@@ -143,11 +143,11 @@ class Goopter_PayPal_PPCP_Apple_Pay_Configurations
                  * Try to register the domain max 1 time, this reduces the register attempt in case add domain fails
                  * If domain registration fails its expected user will register manually.
                  */
-                $auto_register_status = get_option('gt_apple_pay_domain_reg_retries', 0);
+                $auto_register_status = get_option('goopter_apple_pay_domain_reg_retries', 0);
                 if ($auto_register_status > 0) {
                     return false;
                 }
-                update_option('gt_apple_pay_domain_reg_retries', 1);
+                update_option('goopter_apple_pay_domain_reg_retries', 1);
                 $instance = Goopter_PayPal_PPCP_Apple_Pay_Configurations::instance();
 
                 /**

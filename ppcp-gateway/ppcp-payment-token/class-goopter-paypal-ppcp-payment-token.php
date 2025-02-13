@@ -4,7 +4,7 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
 
-class WC_Goopter_PayPal_PPCP_Payment_Token {
+class Goopter_WC_PayPal_PPCP_Payment_Token {
 
     protected static $_instance = null;
 

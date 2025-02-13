@@ -12,7 +12,7 @@ final class Goopter_PPCP_CC_Block extends AbstractPaymentMethodType {
     public function initialize() {
         $this->version = VERSION_PFW;
         $this->settings = get_option('woocommerce_goopter_ppcp_settings', []);
-        $this->gateway = new WC_Gateway_CC_Goopter();
+        $this->gateway = new Goopter_WC_Gateway_CC();
         if (!class_exists('Goopter_PayPal_PPCP_Pay_Later')) {
             include_once ( PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-goopter-paypal-ppcp-pay-later-messaging.php');
         }
