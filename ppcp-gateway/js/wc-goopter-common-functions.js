@@ -290,6 +290,8 @@ const goopterOrder = {
         }
         if (jQuery('.wp-block-woocommerce-checkout-fields-block').length) {
             jQuery('.wp-block-woocommerce-checkout-fields-block #contact-fields, .wp-block-woocommerce-checkout-fields-block #billing-fields, .wp-block-woocommerce-checkout-fields-block #payment-method').block({message: null, overlayCSS: {background: '#fff', opacity: 0.6}});
+        } else if (jQuery('.wp-block-woocommerce-cart').length) {
+            jQuery('.wp-block-woocommerce-cart').block({message: null, overlayCSS: {background: '#fff', opacity: 0.6}});
         } else if (jQuery(containerSelector).length) {
             jQuery(containerSelector).block({message: null, overlayCSS: {background: '#fff', opacity: 0.6}});
         }
@@ -301,6 +303,8 @@ const goopterOrder = {
         }
         if (jQuery('.wp-block-woocommerce-checkout-fields-block').length) {
             jQuery('.wc-block-components-checkout-place-order-button, .wp-block-woocommerce-checkout-fields-block #contact-fields, .wp-block-woocommerce-checkout-fields-block #billing-fields, .wp-block-woocommerce-checkout-fields-block #payment-method').unblock();
+        } else if (jQuery('.wp-block-woocommerce-cart').length) {
+            jQuery('.wp-block-woocommerce-cart').unblock();
         } else if (jQuery(containerSelector).length) {
             jQuery(containerSelector).unblock();
         }
@@ -623,7 +627,7 @@ const goopterOrder = {
         if (data) {
             cartTotals = data;
         } else if (jQuery('#goopter_cart_totals').length) {
-            cartTotals = JSON.parse(jQuery('#goopter_cart_totals').text());
+            cartTotals = JSON.parse(jQuery('#goopter_cart_totals').text().replace(/[“”″]/g, '"'));
         }
         if (cartTotals) {
             // Check if the currency changed then reload the JS SDK with latest currency
