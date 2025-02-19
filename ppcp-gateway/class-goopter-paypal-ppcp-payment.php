@@ -2522,15 +2522,8 @@ class Goopter_PayPal_PPCP_Payment {
             }
             $order = wc_get_order($orderid);
             $goopter_ppcp_payment_method_title = $this->get_payment_method_title_for_order($orderid);
-            $_paypal_order_id = goopter_ppcp_get_post_meta($order, '_paypal_order_id');
-            $respnse = $this->goopter_ppcp_get_paypal_order($_paypal_order_id);
-            $payment_status = isset($respnse['status']) ? $respnse['status'] : $payment_status;
+
             switch (strtoupper($payment_status)) :
-                case 'COMPLETED' :
-                    $order->payment_complete();
-                    // Translators: %1$s is the payment method title, %2$s is the payment status.
-                    $order->add_order_note(sprintf(__('Payment via %1$s: %2$s.', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'), $goopter_ppcp_payment_method_title, ucfirst(strtolower($payment_status))));
-                    break;
                 case 'DECLINED' :
                     // Translators: %s is the payment method title.
                     $order->update_status('failed', sprintf(__('Payment via %s declined.', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'), $goopter_ppcp_payment_method_title));
