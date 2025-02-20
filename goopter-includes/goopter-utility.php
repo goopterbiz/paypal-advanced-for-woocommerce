@@ -32,9 +32,7 @@ class Goopter_Utility {
             return;
         }
 
-        do_action('paypal_for_woocommerce_register_post_type');
-
-        register_post_type('paypal_transaction', apply_filters('paypal_for_woocommerce_register_post_type_paypal_transaction_history', array(
+        register_post_type('paypal_transaction', apply_filters('goopter_paypal_for_woocommerce_register_post_type_paypal_transaction_history', array(
             'labels' => array(
                 'name' => __('PayPal Transaction', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'),
                 'singular_name' => __('PayPal Transaction', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'),

@@ -3559,9 +3559,9 @@ class Goopter_PayPal_PPCP_Payment {
         try {
             // phpcs:disable WordPress.Security.NonceVerification.Recommended -- no security issue, paypal token is used to verify
             $body_request = array();
-            if (isset($_GET[APPROVAL_TOKEN_ID_PARAM_NAME]) && isset($_GET['order_id'])) {
+            if (isset($_GET[GOOPTER_APPROVAL_TOKEN_ID_PARAM_NAME]) && isset($_GET['order_id'])) {
                 $body_request['payment_source']['token'] = array(
-                    'id' => wc_clean(sanitize_text_field(wp_unslash($_GET[APPROVAL_TOKEN_ID_PARAM_NAME]))),
+                    'id' => wc_clean(sanitize_text_field(wp_unslash($_GET[GOOPTER_APPROVAL_TOKEN_ID_PARAM_NAME]))),
                     'type' => 'SETUP_TOKEN'
                 );
                 $args = array(
@@ -3648,13 +3648,13 @@ class Goopter_PayPal_PPCP_Payment {
         try {
             // phpcs:disable WordPress.Security.NonceVerification.Recommended -- no security issue, paypal token is used to verify
             $body_request = array();
-            if (isset($_GET[APPROVAL_TOKEN_ID_PARAM_NAME])) {
+            if (isset($_GET[GOOPTER_APPROVAL_TOKEN_ID_PARAM_NAME])) {
                 // Clear the notices as WooCommerce PayPal Payments tries to handle the approval_token_id parameter
                 // before our handler and sets an error in session [RESOURCE_NOT_FOUND] The specified resource does not exist.
                 // so clear those notices to show the clean notice to users
                 wc_clear_notices();
                 $body_request['payment_source']['token'] = array(
-                    'id' => wc_clean(sanitize_text_field(wp_unslash($_GET[APPROVAL_TOKEN_ID_PARAM_NAME]))),
+                    'id' => wc_clean(sanitize_text_field(wp_unslash($_GET[GOOPTER_APPROVAL_TOKEN_ID_PARAM_NAME]))),
                     'type' => 'SETUP_TOKEN'
                 );
                 $args = array(
@@ -3789,9 +3789,9 @@ class Goopter_PayPal_PPCP_Payment {
         try {
             // phpcs:disable WordPress.Security.NonceVerification.Recommended -- no security issue, paypal token is used to verify
             $body_request = array();
-            if (isset($_GET[APPROVAL_TOKEN_ID_PARAM_NAME])) {
+            if (isset($_GET[GOOPTER_APPROVAL_TOKEN_ID_PARAM_NAME])) {
                 $body_request['payment_source']['token'] = array(
-                    'id' => wc_clean(sanitize_text_field(wp_unslash($_GET[APPROVAL_TOKEN_ID_PARAM_NAME]))),
+                    'id' => wc_clean(sanitize_text_field(wp_unslash($_GET[GOOPTER_APPROVAL_TOKEN_ID_PARAM_NAME]))),
                     'type' => 'SETUP_TOKEN'
                 );
                 $args = array(
@@ -3875,9 +3875,9 @@ class Goopter_PayPal_PPCP_Payment {
         try {
             // phpcs:disable WordPress.Security.NonceVerification.Recommended -- no security issue, paypal token is used to verify
             $body_request = array();
-            if (isset($_GET[APPROVAL_TOKEN_ID_PARAM_NAME]) && isset($_GET['order_id'])) {
+            if (isset($_GET[GOOPTER_APPROVAL_TOKEN_ID_PARAM_NAME]) && isset($_GET['order_id'])) {
                 $body_request['payment_source']['token'] = array(
-                    'id' => wc_clean(sanitize_text_field(wp_unslash($_GET[APPROVAL_TOKEN_ID_PARAM_NAME]))),
+                    'id' => wc_clean(sanitize_text_field(wp_unslash($_GET[GOOPTER_APPROVAL_TOKEN_ID_PARAM_NAME]))),
                     'type' => 'SETUP_TOKEN'
                 );
                 $args = array(
@@ -4022,7 +4022,7 @@ class Goopter_PayPal_PPCP_Payment {
                 if (isset($this->api_response['status']) && 'APPROVED' === $this->api_response['status']) {
                     return array(
                         'result' => 'success',
-                        'redirect' => add_query_arg(array(APPROVAL_TOKEN_ID_PARAM_NAME => $this->api_response['id'], 'goopter_ppcp_action' => 'advanced_credit_card_create_payment_token_free_signup_with_free_trial', 'utm_nooverride' => '1', 'customer_id' => get_current_user_id(), 'order_id' => $order_id), untrailingslashit(WC()->api_request_url('Goopter_PayPal_PPCP_Front_Action')))
+                        'redirect' => add_query_arg(array(GOOPTER_APPROVAL_TOKEN_ID_PARAM_NAME => $this->api_response['id'], 'goopter_ppcp_action' => 'advanced_credit_card_create_payment_token_free_signup_with_free_trial', 'utm_nooverride' => '1', 'customer_id' => get_current_user_id(), 'order_id' => $order_id), untrailingslashit(WC()->api_request_url('Goopter_PayPal_PPCP_Front_Action')))
                     );
                 } elseif (isset($this->api_response['status']) && 'PAYER_ACTION_REQUIRED' === $this->api_response['status']) {
                     if (!empty($this->api_response['links'])) {
@@ -4115,7 +4115,7 @@ class Goopter_PayPal_PPCP_Payment {
                 if (isset($this->api_response['status']) && 'APPROVED' === $this->api_response['status']) {
                     return array(
                         'result' => 'success',
-                        'redirect' => add_query_arg(array(APPROVAL_TOKEN_ID_PARAM_NAME => $this->api_response['id'], 'goopter_ppcp_action' => 'advanced_credit_card_create_payment_token_sub_change_payment', 'utm_nooverride' => '1', 'customer_id' => get_current_user_id(), 'order_id' => $order_id), untrailingslashit(WC()->api_request_url('Goopter_PayPal_PPCP_Front_Action')))
+                        'redirect' => add_query_arg(array(GOOPTER_APPROVAL_TOKEN_ID_PARAM_NAME => $this->api_response['id'], 'goopter_ppcp_action' => 'advanced_credit_card_create_payment_token_sub_change_payment', 'utm_nooverride' => '1', 'customer_id' => get_current_user_id(), 'order_id' => $order_id), untrailingslashit(WC()->api_request_url('Goopter_PayPal_PPCP_Front_Action')))
                     );
                 } elseif (isset($this->api_response['status']) && 'PAYER_ACTION_REQUIRED' === $this->api_response['status']) {
                     if (!empty($this->api_response['links'])) {
@@ -4153,9 +4153,9 @@ class Goopter_PayPal_PPCP_Payment {
         try {
             // phpcs:disable WordPress.Security.NonceVerification.Recommended -- no security issue, paypal token is used to verify
             $body_request = array();
-            if (isset($_GET[APPROVAL_TOKEN_ID_PARAM_NAME]) && isset($_GET['order_id'])) {
+            if (isset($_GET[GOOPTER_APPROVAL_TOKEN_ID_PARAM_NAME]) && isset($_GET['order_id'])) {
                 $body_request['payment_source']['token'] = array(
-                    'id' => wc_clean(sanitize_text_field(wp_unslash($_GET[APPROVAL_TOKEN_ID_PARAM_NAME]))),
+                    'id' => wc_clean(sanitize_text_field(wp_unslash($_GET[GOOPTER_APPROVAL_TOKEN_ID_PARAM_NAME]))),
                     'type' => 'SETUP_TOKEN'
                 );
                 $args = array(
@@ -4299,9 +4299,9 @@ class Goopter_PayPal_PPCP_Payment {
         try {
             // phpcs:disable WordPress.Security.NonceVerification.Recommended -- no security issue, paypal token is used to verify
             $body_request = array();
-            if (isset($_GET[APPROVAL_TOKEN_ID_PARAM_NAME]) && isset($_GET['order_id'])) {
+            if (isset($_GET[GOOPTER_APPROVAL_TOKEN_ID_PARAM_NAME]) && isset($_GET['order_id'])) {
                 $body_request['payment_source']['token'] = array(
-                    'id' => wc_clean(sanitize_text_field(wp_unslash($_GET[APPROVAL_TOKEN_ID_PARAM_NAME]))),
+                    'id' => wc_clean(sanitize_text_field(wp_unslash($_GET[GOOPTER_APPROVAL_TOKEN_ID_PARAM_NAME]))),
                     'type' => 'SETUP_TOKEN'
                 );
                 $args = array(

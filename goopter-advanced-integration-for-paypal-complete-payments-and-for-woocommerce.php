@@ -68,14 +68,14 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
                 'PAYPAL_FOR_WOOCOMMERCE_BASENAME' => plugin_basename(__FILE__),
                 'PAYPAL_FOR_WOOCOMMERCE_DIR_PATH' => untrailingslashit(plugin_dir_path(__FILE__)),
                 
-                // Goopter
+                // The following keys are used to identify merchants onboarded with Goopter.  
+                // For details, refer to: https://developer.paypal.com/api/rest/requests/#paypal-auth-assertion  
                 'PAYPAL_PPCP_SANDBOX_PARTNER_MERCHANT_ID' => '58MRAGUA3QU7J',
                 'PAYPAL_PPCP_PARTNER_MERCHANT_ID' => 'BNLF2FXLXTS6J',
                 'PAYPAL_PPCP_SANDBOX_PARTNER_CLIENT_ID' => 'AUCjmZviwYLNMzMOXAxGgfxIB06HO4QaG4tGTiK7VjErSbGiJUcTqTNhvR3X0k58-ROEPj3PWGpBwNJ_',
                 'PAYPAL_PPCP_PARTNER_CLIENT_ID' => 'ATYIBuWDPfFXuRoYNYx2spSQNyTOi0fm_zLo8G55Pe6oF5gLBKmOZJm7bpDTSlDXfsbiu8-qCd8nt1TY',
 
                 // Goopter
-                'PAYPAL_FOR_WOOCOMMERCE_PPCP_AWS_WEB_SERVICE' => 'https://api-dev.goopter.com/api/v8/ppcpRequest',
                 'PAYPAL_FOR_WOOCOMMERCE_PPCP_GOOPTER_WEB_SERVICE' => 'https://api-dev.goopter.com/api/v8/ppcpRequest',
                 
                 'GOOPTER_FEE' => 'goopter_p_f',
@@ -203,7 +203,7 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
             if (!class_exists("WC_Payment_Gateway"))
                 return;
 
-            include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/includes/gt-ppcp-constants.php');
+            include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/includes/goopter-ppcp-constants.php');
             include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/includes/trait-goopter-ppcp-core.php');
             include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/pre-order/trait-wc-ppcp-pre-orders.php');
             include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/includes/class-goopter-session-manager.php');
@@ -232,7 +232,7 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
         }
 
         public function admin_scripts() {
-            global $pos;
+            global $post;
             if (!empty($post->ID)) {
                 $payment_method = get_post_meta($post->ID, '_payment_method', true);
                 $payment_action = get_post_meta($post->ID, '_payment_action', true);
@@ -627,9 +627,9 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
 
         public function goopter_redirect_to_onboard() {
             $woocommerce_goopter_ppcp_settings = get_option('woocommerce_goopter_ppcp_settings', false);
-            $displayed_goopter_onboard_screen = get_option('displayed_goopter_onboard_screen', false);
-            if ($woocommerce_goopter_ppcp_settings === false && $displayed_goopter_onboard_screen === false) {
-                update_option('displayed_goopter_onboard_screen', 'yes');
+            $goopter_displayed_onboard_screen = get_option('goopter_displayed_onboard_screen', false);
+            if ($woocommerce_goopter_ppcp_settings === false && $goopter_displayed_onboard_screen === false) {
+                update_option('goopter_displayed_onboard_screen', 'yes');
                 wp_safe_redirect(admin_url('options-general.php?page=goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce&tab=general_settings&gateway=paypal_payment_gateway_products'));
                 exit;
             }
