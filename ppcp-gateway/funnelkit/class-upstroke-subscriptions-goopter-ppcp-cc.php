@@ -1,10 +1,10 @@
 <?php
 
-if (class_exists("UpStroke_Subscriptions_Goopter_PPCP_CC") || !class_exists("WFOCU_Paypal_For_WC_Gateway_Goopter_PPCP_CC")) {
+if (class_exists("Goopter_UpStroke_Subscriptions_PPCP_CC") || !class_exists("Goopter_WFOCU_Paypal_For_WC_Gateway_PPCP_CC")) {
     return;
 }
 
-class UpStroke_Subscriptions_Goopter_PPCP_CC extends WFOCU_Paypal_For_WC_Gateway_Goopter_PPCP_CC {
+class Goopter_UpStroke_Subscriptions_PPCP_CC extends Goopter_WFOCU_Paypal_For_WC_Gateway_PPCP_CC {
 
     public function __construct() {
         add_action('wfocu_subscription_created_for_upsell', array($this, 'save_payment_token_to_subscription'), 10, 3);
@@ -37,5 +37,5 @@ class UpStroke_Subscriptions_Goopter_PPCP_CC extends WFOCU_Paypal_For_WC_Gateway
 }
 
 if (class_exists('WC_Subscriptions')) {
-    new UpStroke_Subscriptions_Goopter_PPCP_CC();
+    new Goopter_UpStroke_Subscriptions_PPCP_CC();
 }

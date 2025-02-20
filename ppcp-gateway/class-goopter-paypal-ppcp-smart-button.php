@@ -805,7 +805,7 @@ class Goopter_PayPal_PPCP_Smart_Button {
             'goopter_ppcp_cc_setup_tokens' => add_query_arg(array('goopter_ppcp_action' => 'goopter_ppcp_cc_setup_tokens', 'utm_nooverride' => '1'), untrailingslashit(WC()->api_request_url('Goopter_PayPal_PPCP_Front_Action'))),
             'advanced_credit_card_create_payment_token' => add_query_arg(array('goopter_ppcp_action' => 'advanced_credit_card_create_payment_token', 'utm_nooverride' => '1', 'customer_id' => get_current_user_id()), untrailingslashit(WC()->api_request_url('Goopter_PayPal_PPCP_Front_Action'))),
             'constants' => [
-                'approval_token_id' => APPROVAL_TOKEN_ID_PARAM_NAME
+                'approval_token_id' => GOOPTER_APPROVAL_TOKEN_ID_PARAM_NAME
             ],
             'is_hide_place_order_button' => goopter_ppcp_is_cart_contains_free_trial() || ($this->is_pre_order_item_in_cart() && $this->is_paypal_vault_used_for_pre_order() && $this->is_pre_order_charged_upon_release_in_cart()) ? 'no' : 'yes',
         ));
@@ -1617,9 +1617,9 @@ class Goopter_PayPal_PPCP_Smart_Button {
                 'wc-goopter_ppcp_apple_pay-new-payment-method', 'wc-goopter_ppcp_apple_pay-payment-token',
                 'ship_to_different_address', 'shipping_method'
             ];
-            foreach ($_POST as $key => $value) {
-                if (in_array($key, $look_for_keys_post)) {
-                    $order_data[$key] = $value;
+            foreach ($look_for_keys_post as $key) {
+                if (isset($_POST[$key])) {
+                    $order_data[$key] = sanitize_text_field(wp_unslash($_POST[$key]));
                 }
             }
         }
@@ -2091,10 +2091,10 @@ class Goopter_PayPal_PPCP_Smart_Button {
     public function wfocu_upsell_supported_gateways($gateways) {
         try {
             if ($this->enabled) {
-                $gateways['goopter_ppcp'] = 'WFOCU_Paypal_For_WC_Gateway_Goopter_PPCP';
+                $gateways['goopter_ppcp'] = 'Goopter_WFOCU_Paypal_For_WC_Gateway_PPCP';
             }
             if ($this->advanced_card_payments) {
-                $gateways['goopter_ppcp_cc'] = 'WFOCU_Paypal_For_WC_Gateway_Goopter_PPCP_CC';
+                $gateways['goopter_ppcp_cc'] = 'Goopter_WFOCU_Paypal_For_WC_Gateway_PPCP_CC';
             }
             return $gateways;
         } catch (Exception $ex) {
@@ -2121,6 +2121,7 @@ class Goopter_PayPal_PPCP_Smart_Button {
     public function goopter_ppcp_admin_init() {
         if (function_exists('cacsp_load_textdomain')) {
             // Exclude PayPal SDK from Cookies and Content Security Policy plugin
+            // cacsp is https://wordpress.org/plugins/cookies-and-content-security-policy/ plugin, the option names shouldn't be changed
             $cacsp_option_always_scripts = get_option('cacsp_option_always_scripts');
             if (!empty($cacsp_option_always_scripts)) {
                 if (strpos($cacsp_option_always_scripts, 'https://www.paypal.com/') === false) {

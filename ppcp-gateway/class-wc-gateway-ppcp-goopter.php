@@ -212,16 +212,16 @@ class Goopter_WC_Gateway_PPCP extends WC_Payment_Gateway {
         wp_enqueue_script('wc-credit-card-form');
         $fields = array();
         $cvc_field = '<div class="form-row form-row-last">
-                        <label for="' . esc_attr($this->id) . '-card-cvc">' . apply_filters('cc_form_label_card_code', __('Card Security Code', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'), $this->id) . ' </label>
+                        <label for="' . esc_attr($this->id) . '-card-cvc">' . apply_filters('goopter_cc_form_label_card_code', __('Card Security Code', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'), $this->id) . ' </label>
                         <div id="' . esc_attr($this->id) . '-card-cvc" class="input-text wc-credit-card-form-card-cvc hosted-field-braintree"></div>
                     </div>';
         $default_fields = array(
             'card-number-field' => '<div class="form-row form-row-wide">
-                        <label for="' . esc_attr($this->id) . '-card-number">' . apply_filters('cc_form_label_card_number', __('Card number', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'), $this->id) . '</label>
+                        <label for="' . esc_attr($this->id) . '-card-number">' . apply_filters('goopter_cc_form_label_card_number', __('Card number', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'), $this->id) . '</label>
                         <div id="' . esc_attr($this->id) . '-card-number"  class="input-text wc-credit-card-form-card-number hosted-field-braintree"></div>
                     </div>',
             'card-expiry-field' => '<div class="form-row form-row-first">
-                        <label for="' . esc_attr($this->id) . '-card-expiry">' . apply_filters('cc_form_label_expiry', __('Expiration Date', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'), $this->id) . ' </label>
+                        <label for="' . esc_attr($this->id) . '-card-expiry">' . apply_filters('goopter_cc_form_label_expiry', __('Expiration Date', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'), $this->id) . ' </label>
                         <div id="' . esc_attr($this->id) . '-card-expiry" class="input-text wc-credit-card-form-card-expiry hosted-field-braintree"></div>
                     </div>',
         );

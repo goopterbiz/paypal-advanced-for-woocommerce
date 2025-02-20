@@ -4,11 +4,11 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-if (class_exists("WFOCU_Paypal_For_WC_Gateway_Goopter_PPCP_CC") || !class_exists("WFOCU_Gateway")) {
+if (class_exists("Goopter_WFOCU_Paypal_For_WC_Gateway_PPCP_CC") || !class_exists("WFOCU_Gateway")) {
     return;
 }
 
-class WFOCU_Paypal_For_WC_Gateway_Goopter_PPCP_CC extends WFOCU_Gateway {
+class Goopter_WFOCU_Paypal_For_WC_Gateway_PPCP_CC extends WFOCU_Gateway {
 
     public $key = 'goopter_ppcp_cc';
     public $is_sandbox;

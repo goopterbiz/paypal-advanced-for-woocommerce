@@ -712,7 +712,7 @@ class Goopter_PayPal_PPCP_Front_Action {
                 wp_send_json_error(array('messages' => $error_messages));
                 exit;
             }
-            if (has_saved_payment_token_been_used() === false) {
+            if (goopter_has_saved_payment_token_been_used() === false) {
                 // check if an existing failed order is being processed.
                 if (!class_exists('Goopter_PayPal_PPCP_Checkout')) {
                     include_once PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-goopter-paypal-ppcp-checkout.php';
