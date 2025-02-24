@@ -2,7 +2,7 @@
 Contributors: goopter
 Tags: woocommerce, paypal, apple pay, google play, credit card
 Tested up to: 6.7
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -51,5 +51,8 @@ By using this plugin, you agree to the following terms and conditions related to
 
 == Changelog ==
 
-= 1.0 =
-Initial Release
+= 1.0.0 - 2025-02-21 =
+* New: Initial Release
+
+= 1.0.1 - 2025-02-24 =
+* New: Added 3ds on product and cart pages
