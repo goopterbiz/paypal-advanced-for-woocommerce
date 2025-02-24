@@ -238,7 +238,7 @@ if (!class_exists('Goopter_WC_Gateway_PPCP_Settings')) {
                 'send_items' => 'yes',
                 'enable_advanced_card_payments' => 'no',
                 '3d_secure_contingency' => 'SCA_WHEN_REQUIRED',
-                'advanced_card_payments_title' => 'Credit Card',
+                'advanced_card_payments_title' => 'Debit or Credit Card',
                 'advanced_card_payments_display_position' => 'after',
                 'disable_cards' => '',
                 'cards_input_size' => '',
@@ -2039,7 +2039,7 @@ if (!class_exists('Goopter_WC_Gateway_PPCP_Settings')) {
                     'title' => __('Advanced Credit Cards Title', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'),
                     'type' => 'text',
                     'description' => __('This controls the title which the user sees during checkout.', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'),
-                    'default' => __('Credit Card', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'),
+                    'default' => __('Debit or Credit Card', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'),
                     'desc_tip' => true,
                     'class' => 'advanced_cc_fields_group'
                 ),

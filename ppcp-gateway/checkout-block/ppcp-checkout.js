@@ -142,15 +142,17 @@ var {addAction} = wp.hooks;
                     }, []);
                     
                     let renderComponents = [createElement("div", {key: "default", id: "goopter_ppcp_checkout_top"})];
-                    if (goopterOrder.isApplePayEnabled()) {
-                        jQuery.each(goopter_ppcp_manager.apple_pay_btn_selector, function (key) {
-                            renderComponents.push(createElement("div", {key, id: key}));
-                        });
-                    }
-                    if (goopterOrder.isGooglePayEnabled()) {
-                        jQuery.each(goopter_ppcp_manager.google_pay_btn_selector, function (key) {
-                            renderComponents.push(createElement("div", {key, id: key}));
-                        });
+                    if (goopter_ppcp_manager.advanced_card_payments !== 'yes') {
+                        if (goopterOrder.isApplePayEnabled()) {
+                            jQuery.each(goopter_ppcp_manager.apple_pay_btn_selector, function (key) {
+                                renderComponents.push(createElement("div", {key, id: key}));
+                            });
+                        }
+                        if (goopterOrder.isGooglePayEnabled()) {
+                            jQuery.each(goopter_ppcp_manager.google_pay_btn_selector, function (key) {
+                                renderComponents.push(createElement("div", {key, id: key}));
+                            });
+                        }
                     }
                     return renderComponents;
                 };

@@ -72,7 +72,8 @@ final class Goopter_PPCP_CC_Block extends AbstractPaymentMethodType {
             'cc_title' => $this->get_setting('advanced_card_payments_title'),
             'description' => $this->get_setting('description'),
             'supports' => $this->get_supported_features(),
-            'icons' => $this->gateway->get_block_icon()
+            'icons' => $this->gateway->get_block_icon(),
+            'icon_path' => PAYPAL_FOR_WOOCOMMERCE_ASSET_URL 
         ];
     }
 }

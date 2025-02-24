@@ -48,15 +48,6 @@ jQuery(function ($) {
             term_notice.show();
         }
     }).change();
-    $('#woocommerce_goopter_ppcp_enable_advanced_card_payments').click(function () {
-        if ($(this).is(':checked')) {
-            $('#woocommerce_goopter_ppcp_cart_disallowed_funding_methods option[value="card"]').prop("selected", true);
-            $("#woocommerce_goopter_ppcp_cart_disallowed_funding_methods").trigger("change");
-        } else {
-            $('#woocommerce_goopter_ppcp_cart_disallowed_funding_methods option[value="card"]').prop("selected", false);
-            $("#woocommerce_goopter_ppcp_cart_disallowed_funding_methods").trigger("change");
-        }
-    });
     $('#woocommerce_goopter_ppcp_enable_advanced_card_payments').change(function () {
         if ($(this).is(':checked')) {
             $('#woocommerce_goopter_ppcp_3d_secure_contingency').closest('tr').show();

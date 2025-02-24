@@ -34,8 +34,7 @@ class Goopter_WC_Gateway_CC extends WC_Payment_Gateway_CC {
             $this->goopter_ppcp_load_class();
             $this->setGatewaySupports();
 
-            // $this->title = __($this->setting_obj->get('advanced_card_payments_title', 'Credit Card'), 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce');
-            $default_title = __('Credit Card', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce');
+            $default_title = __('Debit or Credit Card', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce');
             $payment_title = $this->setting_obj->get('advanced_card_payments_title', $default_title);
             $this->title = esc_html($payment_title);
 

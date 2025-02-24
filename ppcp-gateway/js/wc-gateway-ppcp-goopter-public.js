@@ -54,22 +54,18 @@ function initSmartButtons() {
         return true;
     });
 
-    goopterOrder.isCheckoutPage() === false ? goopterOrder.renderSmartButton() : null;
-
-    if (goopter_ppcp_manager.is_pay_page === 'yes') {
-        goopterOrder.hideShowPlaceOrderButton();
-        setTimeout(function () {
-            goopterOrder.renderSmartButton();
-            if (goopterOrder.isCardFieldEligible() === true) {
-                if ($('#goopter_ppcp_cc-card-number iframe').length === 0) {
-                    $(goopterOrder.getCheckoutSelectorCss()).removeClass('CardFields');
-                }
-                $('.checkout_cc_separator').show();
-                $('#wc-goopter_ppcp-cc-form').show();
-                goopterOrder.renderHostedButtons();
+    goopterOrder.hideShowPlaceOrderButton();
+    setTimeout(function () {
+        goopterOrder.renderSmartButton();
+        if (goopterOrder.isCardFieldEligible() === true) {
+            if ($('#goopter_ppcp_cc-card-number iframe').length === 0) {
+                $(goopterOrder.getCheckoutSelectorCss()).removeClass('CardFields');
             }
-        }, 300);
-    }
+            $('.checkout_cc_separator').show();
+            $('#wc-goopter_ppcp-cc-form').show();
+            goopterOrder.renderHostedButtons();
+        }
+    }, 300);
 
     goopterOrder.updateCartTotalsInEnvironment();
     goopterOrder.hooks.onPaymentCancellation();

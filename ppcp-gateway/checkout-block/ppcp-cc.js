@@ -2,6 +2,7 @@ var {createElement} = wp.element;
 var {registerPlugin} = wp.plugins;
 var {ExperimentalOrderMeta} = wc.blocksCheckout;
 var {registerExpressPaymentMethod, registerPaymentMethod} = wc.wcBlocksRegistry;
+var {addAction} = wp.hooks;
 
 (function (e) {
     var t = {};
@@ -106,12 +107,13 @@ var {registerExpressPaymentMethod, registerPaymentMethod} = wc.wcBlocksRegistry;
                         a = n(1);
 
                 const l = Object(u.getSetting)("goopter_ppcp_cc_data", {});
+                const iconPath = l?.icon_path;
                 const iconsElements = l.icons.map(icon => (
                             createElement("img", {key: icon, src: icon, style: {float: "right", marginRight: "10px"}})
                             ));
                 const p = () => Object(a.decodeEntities)(l.description || "");
-                const ppcp_settings = goopter_ppcp_manager_block.settins;
-                const {is_order_confirm_page, is_paylater_enable_incart_page, page} = goopter_ppcp_manager_block;
+                const ppcp_settings = goopter_ppcp_cc_manager_block.settins;
+                const {is_order_confirm_page, is_paylater_enable_incart_page, page} = goopter_ppcp_cc_manager_block;
                 const {useEffect} = window.wp.element;
 
                 const Content_PPCP_CC = (props) => {
@@ -136,15 +138,78 @@ var {registerExpressPaymentMethod, registerPaymentMethod} = wc.wcBlocksRegistry;
                             jQuery('.wc-block-components-checkout-place-order-button, .wp-block-woocommerce-checkout-fields-block #contact-fields, .wp-block-woocommerce-checkout-fields-block #billing-fields, .wp-block-woocommerce-checkout-fields-block #payment-method').block({message: null, overlayCSS: {background: '#fff', opacity: 0.6}});
                         });
                     }, [onPaymentSetup]);
-                    return createElement(
-                            "fieldset",
-                            {key: "wc-goopter_ppcp_cc-form", id: "wc-goopter_ppcp_cc-form", className: "wc-credit-card-form wc-payment-form"},
-                            createElement("div", {key: "goopter_ppcp_cc-card-number", id: "goopter_ppcp_cc-card-number"}),
-                            createElement("div", {key: "goopter_ppcp_cc-card-expiry", id: "goopter_ppcp_cc-card-expiry"}),
-                            createElement("div", {key: "goopter_ppcp_cc-card-cvc", id: "goopter_ppcp_cc-card-cvc"})
-                            );
-                };
+                    if (page == 'cart') {
+                        let renderComponents = [createElement("div", {key: "cc_container", id: "goopter_ppcp_cc_container"})];
+                        renderComponents.push(createElement(
+                            "div",
+                            { key: "cc-button-container", className: "goopter_ppcp-button-container" },
+                            createElement(
+                            "div",
+                            {id: "goopter_ppcp_cc_cart" },
+                            createElement(
+                                "div",
+                                {id: "goopter_ppcp_cc_button" },
+                                createElement(
+                                    "img",
+                                    {className: "goopter_ppcp_cc_button_logo", src: iconPath + "ppcp-gateway/images/icon/credit-cards/credit-card.svg"},
+                                ),
+                                createElement(
+                                    "span",
+                                    {className: "goopter_ppcp_cc_button_label"},
+                                    ppcp_settings.advanced_card_payments_title
+                                )
+                            ),
+                            createElement(
+                                "div",
+                                { className: "goopter_ppcp_cc_container goopter_ppcp_cc_container_hide" },
+                                createElement(
+                                "button",
+                                {
+                                    className: "goopter_ppcp_cc_close_button",
+                                    style: { background: "none", border: "none", cursor: "pointer", fontSize: "1.5em" }
+                                },
+                                "✕"
+                                ),
+                                createElement(
+                                "fieldset",
+                                { id: "wc-goopter_ppcp_cc-form", className: "wc-credit-card-form wc-payment-form" },
+                                createElement("div", { id: "goopter_ppcp_cc-card-number" }),
+                                createElement("div", { id: "goopter_ppcp_cc-card-expiry" }),
+                                createElement("div", { id: "goopter_ppcp_cc-card-cvc" }),
+                                createElement(
+                                    "button",
+                                    { id: "goopter_ppcp_cc-card-submit-button", type: "button" },
+                                    "Continue"
+                                )
+                                )
+                            )
+                            )
+                        ));
+                        if (goopter_ppcp_manager.advanced_card_payments === 'yes') {
+                            if (goopterOrder.isApplePayEnabled()) {
+                                jQuery.each(goopter_ppcp_manager.apple_pay_btn_selector, function (key) {
+                                    renderComponents.push(createElement("div", {key, id: key}));
+                                });
+                            }
+                            if (goopterOrder.isGooglePayEnabled()) {
+                                jQuery.each(goopter_ppcp_manager.google_pay_btn_selector, function (key) {
+                                    renderComponents.push(createElement("div", {key, id: key}));
+                                });
+                            }
+                        }
+                        return renderComponents;
+                    } else {
+                        return createElement(
+                                "fieldset",
+                                {key: "wc-goopter_ppcp_cc-form", id: "wc-goopter_ppcp_cc-form", className: "wc-credit-card-form wc-payment-form"},
+                                createElement("div", {key: "goopter_ppcp_cc-card-number", id: "goopter_ppcp_cc-card-number"}),
+                                createElement("div", {key: "goopter_ppcp_cc-card-expiry", id: "goopter_ppcp_cc-card-expiry"}),
+                                createElement("div", {key: "goopter_ppcp_cc-card-cvc", id: "goopter_ppcp_cc-card-cvc"})
+                                );
+                    }
 
+                };
+                
                 const s = {
                     name: "goopter_ppcp_cc",
                     label: createElement(
@@ -165,6 +230,10 @@ var {registerExpressPaymentMethod, registerPaymentMethod} = wc.wcBlocksRegistry;
                     }
                 };
                 Object(c.registerPaymentMethod)(s);
+                // cart
+                if (page == 'cart') {
+                    registerExpressPaymentMethod(s);
+                }
 
                 const render = () => {
                     const shouldShowDiv = is_paylater_enable_incart_page === 'yes';

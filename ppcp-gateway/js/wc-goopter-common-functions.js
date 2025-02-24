@@ -123,6 +123,7 @@ const goopterOrder = {
     },
     createSmartButtonOrder: ({goopter_ppcp_button_selector, errorLogId}) => {
         return goopterOrder.createOrder({goopter_ppcp_button_selector, errorLogId}).then((data) => {
+            goopterOrder.hideProcessingSpinner();
             return data.orderID;
         });
     },
@@ -332,12 +333,10 @@ const goopterOrder = {
         }
     },
     isCardFieldEligible: () => {
-        if (goopterOrder.isCheckoutPage()) {
-            if (goopter_ppcp_manager.advanced_card_payments === 'yes') {
-                return typeof goopter_paypal_sdk !== 'undefined' && typeof goopter_paypal_sdk.CardFields !== 'undefined'
-                        ? goopter_paypal_sdk.CardFields().isEligible() === true
-                        : false;
-            }
+        if (goopter_ppcp_manager.advanced_card_payments === 'yes') {
+            return typeof goopter_paypal_sdk !== 'undefined' && typeof goopter_paypal_sdk.CardFields !== 'undefined'
+                    ? goopter_paypal_sdk.CardFields().isEligible() === true
+                    : false;
         }
         return false;
     },
@@ -435,6 +434,7 @@ const goopterOrder = {
             goopter_paypal_sdk.Buttons({
                 style: goopter_ppcp_style,
                 createOrder: function (data, actions) {
+                    goopterOrder.showProcessingSpinner();
                     errorLogId = goopterJsErrorLogger.generateErrorId();
                     goopterJsErrorLogger.addToLog(errorLogId, 'PayPal Smart Button Payment Started');
                     return goopterOrder.createSmartButtonOrder({
@@ -508,9 +508,6 @@ const goopterOrder = {
         if (jQuery(checkoutSelector).is('.CardFields')) {
             return false;
         }
-        if (goopterOrder.isCCPaymentMethodSelected() === false) {
-            return false;
-        }
         let spinnerSelectors = checkoutSelector;
         jQuery(checkoutSelector).addClass('CardFields');
         let errorLogId = null;
@@ -532,10 +529,11 @@ const goopterOrder = {
             },
             onApprove: function (data, actions) {
                 if (data.orderID) {
-                    goopterOrder.checkoutFormCapture({checkoutSelector, payPalOrderId: data.orderID, errorLogId});
+                    goopterOrder.approveOrder({orderID: data.orderID, payerID: '', errorLogId});
                 }
             },
             onError: function (err) {
+                goopterOrder.hideProcessingSpinner(spinnerSelectors);
                 if (typeof err === 'object' && err !== null) {
                     console.log('Error message:', err.message || 'No error message available');
                     if (err.stack) {
@@ -572,7 +570,7 @@ const goopterOrder = {
                 }
             }
         });
-        if (cardFields.isEligible()) {
+        if (cardFields.isEligible() && jQuery('#goopter_ppcp_cc-card-number').length > 0) {
             cardFields.NumberField().render("#goopter_ppcp_cc-card-number");
             cardFields.ExpiryField().render("#goopter_ppcp_cc-card-expiry");
             cardFields.CVVField().render("#goopter_ppcp_cc-card-cvc");
@@ -600,6 +598,53 @@ const goopterOrder = {
                 }
             });
         });
+
+        jQuery(document.body).on('click', '#goopter_ppcp_cc_button', function() {
+            jQuery('.goopter_ppcp_cc_container').removeClass('goopter_ppcp_cc_container_hide');
+        });
+
+        jQuery(document.body).on('click', '.goopter_ppcp_cc_close_button', function() {
+            jQuery('.goopter_ppcp_cc_container').addClass('goopter_ppcp_cc_container_hide');
+        });
+
+        jQuery(document.body).on('click', '#goopter_ppcp_cc-card-submit-button', function() {
+            jQuery(document.body).trigger('submit_paypal_cc_form');
+        });
+
+        jQuery(window).on('load resize', function(event) {
+            setTimeout(function() {
+                const width = jQuery('.paypal-buttons').width();
+                let height = 55;
+                let fontSize = 10;
+                switch (true) {
+                    case (width <= 199): {
+                        height = 25;
+                        fontSize = 10;
+                        break;
+                    }
+                    case (width <= 299): {
+                        height = 35;
+                        fontSize = 13;
+                        break;
+                    }
+                    case (width <= 499): {
+                        height = 45;
+                        fontSize = 16;
+                        break;
+                    }
+                    default:
+                        height = 55;
+                        fontSize = 20;
+                }
+                jQuery('#goopter_ppcp_cc_button').width(width).height(height);
+                jQuery('#goopter_ppcp_cc_button').css('display', 'flex');
+                jQuery('.goopter_ppcp_cc_button_label').css('font-size', fontSize + 'px');
+            }, event.type == "resize" ? 200 : 0)
+        });
+
+        if (document.readyState === 'complete') {
+            jQuery(window).trigger('resize');
+        }
     },
     applePayDataInit: async () => {
         // This function is deprecated as we don't use it because its already loaded in environment
