@@ -121,18 +121,7 @@ var {addAction} = wp.hooks;
                                 goopterOrder.renderPaymentButtons();
                             }
                     );
-                    let renderComponents = [createElement("div", {key: "default", id: "goopter_ppcp_checkout"})];
-                    if (goopterOrder.isApplePayEnabled()) {
-                        jQuery.each(goopter_ppcp_manager.apple_pay_btn_selector, function (key) {
-                            renderComponents.push(createElement("div", {key, id: key}));
-                        });
-                    }
-                    if (goopterOrder.isGooglePayEnabled()) {
-                        jQuery.each(goopter_ppcp_manager.google_pay_btn_selector, function (key) {
-                            renderComponents.push(createElement("div", {key, id: key}));
-                        });
-                    }
-                    return renderComponents;
+                    return createElement("div", {key: "default", id: "goopter_ppcp_checkout"});
                 };
 
                 // cart

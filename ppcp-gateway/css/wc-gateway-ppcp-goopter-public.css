@@ -1,3 +1,6 @@
+html body .blockUI.blockOverlay {
+    background: white !important;
+}
 .goopter_ppcp-button-container {
     text-align: center;
     border-bottom: none !important;

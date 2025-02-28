@@ -54,8 +54,8 @@ function initSmartButtons() {
         return true;
     });
 
-    goopterOrder.hideShowPlaceOrderButton();
     setTimeout(function () {
+        goopterOrder.hideShowPlaceOrderButton();
         goopterOrder.renderSmartButton();
         if (goopterOrder.isCardFieldEligible() === true) {
             if ($('#goopter_ppcp_cc-card-number iframe').length === 0) {
