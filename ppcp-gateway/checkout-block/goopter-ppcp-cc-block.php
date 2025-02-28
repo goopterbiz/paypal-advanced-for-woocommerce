@@ -29,7 +29,7 @@ final class Goopter_PPCP_CC_Block extends AbstractPaymentMethodType {
         if (goopter_ppcp_has_active_session()) {
             $order_button_text = apply_filters('goopter_ppcp_cc_order_review_page_place_order_button_text', __('Confirm Your PayPal Order', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'));
         } else {
-            $order_button_text = 'Proceed to PayPal';
+            $order_button_text = 'Pay with Card';
         }
         $is_paylater_enable_incart_page = 'no';
         if ($this->pay_later->is_paypal_pay_later_messaging_enable_for_page($page = 'cart') && $this->pay_later->pay_later_messaging_cart_shortcode === false) {

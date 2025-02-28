@@ -229,10 +229,11 @@ var {addAction} = wp.hooks;
                         showSaveOption: false
                     }
                 };
-                Object(c.registerPaymentMethod)(s);
                 // cart
                 if (page == 'cart' && goopter_ppcp_manager.advanced_card_payments === 'yes') {
                     registerExpressPaymentMethod(s);
+                } else {
+                    Object(c.registerPaymentMethod)(s);
                 }
 
                 const render = () => {
