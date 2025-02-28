@@ -633,9 +633,9 @@ class Goopter_PayPal_PPCP_Smart_Button {
                     }
                 }
                 $button_selector['goopter_ppcp_checkout_shortcode'] = '#goopter_ppcp_checkout_shortcode';
-                $apple_pay_btn_selector['goopter_ppcp_checkout_shortcode_apple_pay'] = '#goopter_ppcp_checkout_shortcode_apple_pay';
+                // $apple_pay_btn_selector['goopter_ppcp_checkout_shortcode_apple_pay'] = '#goopter_ppcp_checkout_shortcode_apple_pay';
                 $apple_pay_btn_selector['goopter_ppcp_checkout_apple_pay'] = '#goopter_ppcp_checkout_apple_pay';
-                $google_pay_btn_selector['goopter_ppcp_checkout_shortcode_google_pay'] = '#goopter_ppcp_checkout_shortcode_google_pay';
+                // $google_pay_btn_selector['goopter_ppcp_checkout_shortcode_google_pay'] = '#goopter_ppcp_checkout_shortcode_google_pay';
                 $google_pay_btn_selector['goopter_ppcp_checkout_google_pay'] = '#goopter_ppcp_checkout_google_pay';
 
                 // get order details
@@ -658,9 +658,9 @@ class Goopter_PayPal_PPCP_Smart_Button {
                 $is_pay_page = 'yes';
             } elseif (is_checkout()) {
                 $page = 'checkout';
-                $apple_pay_btn_selector['goopter_ppcp_checkout_shortcode_apple_pay'] = '#goopter_ppcp_checkout_shortcode_apple_pay';
+                // $apple_pay_btn_selector['goopter_ppcp_checkout_shortcode_apple_pay'] = '#goopter_ppcp_checkout_shortcode_apple_pay';
                 $apple_pay_btn_selector['goopter_ppcp_checkout_apple_pay'] = '#goopter_ppcp_checkout_apple_pay';
-                $google_pay_btn_selector['goopter_ppcp_checkout_shortcode_google_pay'] = '#goopter_ppcp_checkout_shortcode_google_pay';
+                // $google_pay_btn_selector['goopter_ppcp_checkout_shortcode_google_pay'] = '#goopter_ppcp_checkout_shortcode_google_pay';
                 $google_pay_btn_selector['goopter_ppcp_checkout_google_pay'] = '#goopter_ppcp_checkout_google_pay';
                 if ($this->checkout_page_display_option === 'top') {
                     $button_selector['goopter_ppcp_checkout_top'] = '#goopter_ppcp_checkout_top';
@@ -1555,6 +1555,11 @@ class Goopter_PayPal_PPCP_Smart_Button {
                 }
             }
             return $methods;
+        }
+        if ($this->enable_paypal_checkout_page === false || $this->checkout_page_display_option === 'top') {
+            if (isset($methods['goopter_ppcp'])) {
+                unset($methods['goopter_ppcp']);
+            }
         }
         if (!empty($methods['goopter_ppcp'])) {
             $methods = goopter_ppcp_short_payment_method($methods, 'goopter_ppcp', 'goopter_ppcp_cc', $this->advanced_card_payments_display_position);

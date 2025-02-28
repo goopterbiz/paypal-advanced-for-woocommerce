@@ -3,7 +3,7 @@
  * @wordpress-plugin
  * Plugin Name:       Goopter advanced integration for PayPal Complete Payments and for WooCommerce
  * Description:       Integrate the PayPal Complete Payments Platform into your WooCommerce site, offering PayPal Checkout, Pay Later, Venmo, direct credit card processing, and various alternative payment options such as Apple Pay, Google Pay, and others!
- * Version:           1.0.1
+ * Version:           1.0.2
  * Author:            Goopter
  * Author URI:        https://www.goopter.com/
  * License:           GNU General Public License v3.0
@@ -313,19 +313,19 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
                     include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/subscriptions/class-wc-gateway-ppcp-goopter-apple-pay-subscriptions.php');
                     include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/subscriptions/class-wc-gateway-ppcp-goopter-google-pay-subscriptions.php');
                     include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/subscriptions/class-wc-gateway-cc-goopter-subscriptions.php');
-                    $methods[] = 'Goopter_WC_Gateway_PPCP_Apple_Pay_Subscriptions';
-                    $methods[] = 'Goopter_WC_Gateway_PPCP_Google_Pay_Subscriptions';
                     $methods[] = 'Goopter_WC_Gateway_PPCP_Subscriptions';
                     $methods[] = 'Goopter_WC_Gateway_CC_Subscriptions';
+                    $methods[] = 'Goopter_WC_Gateway_PPCP_Apple_Pay_Subscriptions';
+                    $methods[] = 'Goopter_WC_Gateway_PPCP_Google_Pay_Subscriptions';
                 } else {
                     include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-wc-gateway-ppcp-goopter.php');
                     include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-wc-gateway-cc-goopter.php');
                     include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-wc-gateway-apple-pay-goopter.php');
                     include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-wc-gateway-google-pay-goopter.php');
-                    $methods[] = 'Goopter_WC_Gateway_Apple_Pay';
-                    $methods[] = 'Goopter_WC_Gateway_Google_Pay';
                     $methods[] = 'Goopter_WC_Gateway_PPCP';
                     $methods[] = 'Goopter_WC_Gateway_CC';
+                    $methods[] = 'Goopter_WC_Gateway_Apple_Pay';
+                    $methods[] = 'Goopter_WC_Gateway_Google_Pay';
                 }
             }
             return $methods;
@@ -680,11 +680,15 @@ add_action('woocommerce_blocks_loaded', function () {
         }
         require_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/checkout-block/goopter-ppcp-checkout-block.php');
         require_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/checkout-block/goopter-ppcp-cc-block.php');
+        require_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/checkout-block/goopter-ppcp-apple-pay-block.php');
+        require_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/checkout-block/goopter-ppcp-google-pay-block.php');
         add_action(
                 'woocommerce_blocks_payment_method_type_registration',
                 function (Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry $payment_method_registry) {
                     $payment_method_registry->register(new Goopter_PPCP_Checkout_Block);
                     $payment_method_registry->register(new Goopter_PPCP_CC_Block);
+                    $payment_method_registry->register(new Goopter_Apple_Pay_Checkout_Block);
+                    $payment_method_registry->register(new Goopter_Google_Pay_Checkout_Block);
                 }
         );
     } catch (Exception $ex) {
