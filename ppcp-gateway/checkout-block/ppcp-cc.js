@@ -119,18 +119,18 @@ var {addAction} = wp.hooks;
                 const Content_PPCP_CC = (props) => {
                     const {eventRegistration, emitResponse, onSubmit, billing, shippingData} = props;
                     const {onPaymentSetup} = eventRegistration;
+                    jQuery(document.body).on('ppcp_cc_checkout_updated', function () {
+                        let address = {
+                            'billing': billing.billingAddress,
+                            'shipping': shippingData.shippingAddress
+                        };
+                        goopterOrder.ppcp_address = address;
+                        jQuery('#wc-goopter_ppcp_cc-form').unblock();
+                        goopterOrder.renderPaymentButtons();
+                    });
                     useEffect(() => {
                         jQuery(document.body).trigger('trigger_goopter_ppcp_cc');
-                        jQuery(document.body).on('ppcp_cc_checkout_updated', function () {
-                            let address = {
-                                'billing': billing.billingAddress,
-                                'shipping': shippingData.shippingAddress
-                            };
-                            goopterOrder.ppcp_address = [];
-                            goopterOrder.ppcp_address = address;
-                            jQuery('#wc-goopter_ppcp_cc-form').unblock();
-                            goopterOrder.renderPaymentButtons();
-                        });
+
                         const unsubscribe = onPaymentSetup(async () => {
                             wp.data.dispatch(wc.wcBlocksData.CHECKOUT_STORE_KEY).__internalSetIdle();
                             jQuery(document.body).trigger('submit_paypal_cc_form');

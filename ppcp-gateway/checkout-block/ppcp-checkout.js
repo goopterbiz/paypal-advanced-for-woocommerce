@@ -115,7 +115,6 @@ var {addAction} = wp.hooks;
                                     billing: billing.billingAddress,
                                     shipping: shippingData.shippingAddress,
                                 };
-                                goopterOrder.ppcp_address = [];
                                 goopterOrder.ppcp_address = address;
                                 jQuery("#goopter_ppcp_checkout").unblock();
                                 goopterOrder.renderPaymentButtons();
