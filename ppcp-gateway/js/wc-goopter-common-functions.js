@@ -304,6 +304,7 @@ const goopterOrder = {
         }
         if (jQuery('.wp-block-woocommerce-checkout-fields-block').length) {
             jQuery('.wc-block-components-checkout-place-order-button, .wp-block-woocommerce-checkout-fields-block #contact-fields, .wp-block-woocommerce-checkout-fields-block #billing-fields, .wp-block-woocommerce-checkout-fields-block #payment-method').unblock();
+            jQuery('.wc-block-components-spinner').remove();
         } else if (jQuery('.wp-block-woocommerce-cart').length) {
             jQuery('.wp-block-woocommerce-cart').unblock();
         } else if (jQuery(containerSelector).length) {
@@ -588,6 +589,7 @@ const goopterOrder = {
                     });
                 } else if (!data.isFormValid) {
                     jQuery(checkoutSelector).removeClass('processing paypal_cc_submiting CardFields createOrder');
+                    goopterOrder.hideProcessingSpinner(spinnerSelectors);
                     goopterOrder.showError(localizedMessages.fields_not_valid);
                     return;
                 } else if (data.errors) {
