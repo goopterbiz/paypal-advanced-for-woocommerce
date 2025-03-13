@@ -2,7 +2,7 @@ var {createElement} = wp.element;
 var {registerPlugin} = wp.plugins;
 var {ExperimentalOrderMeta} = wc.blocksCheckout;
 var {registerExpressPaymentMethod, registerPaymentMethod} = wc.wcBlocksRegistry;
-var {addAction} = wp.hooks;
+var {addAction, removeAction} = wp.hooks;
 
 (function (e) {
     var t = {};
@@ -108,18 +108,7 @@ var {addAction} = wp.hooks;
                 // checkout 
                 const Content_PPCP_Smart_Button = (props) => {
                     const {billing, shippingData} = props;
-                    jQuery(document.body).on(
-                            "ppcp_checkout_updated",
-                            function () {
-                                let address = {
-                                    billing: billing.billingAddress,
-                                    shipping: shippingData.shippingAddress,
-                                };
-                                goopterOrder.ppcp_address = address;
-                                jQuery("#goopter_ppcp_checkout").unblock();
-                                goopterOrder.renderPaymentButtons();
-                            }
-                    );
+                    goopterOrder.addPPCPCheckoutUpdatedEventListener(billing, shippingData);
                     return createElement("div", {key: "default", id: "goopter_ppcp_checkout"});
                 };
 
@@ -273,13 +262,10 @@ const ppcp_uniqueEvents = new Set([
 ]);
 
 ppcp_uniqueEvents.forEach(function (action) {
-    addAction(action, "c", function () {
-        // jQuery("#goopter_ppcp_checkout").block({
-        //     message: null,
-        //     overlayCSS: {background: "#fff", opacity: 0.6},
-        // });
+    removeAction(action, 'c');
+    addAction(action, 'c', function () {
         setTimeout(function () {
             jQuery(document.body).trigger("ppcp_checkout_updated");
-        }, 2000);
+        }, 500);
     });
 });

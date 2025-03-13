@@ -2,7 +2,7 @@ var {createElement} = wp.element;
 var {registerPlugin} = wp.plugins;
 var {ExperimentalOrderMeta} = wc.blocksCheckout;
 var {registerExpressPaymentMethod, registerPaymentMethod} = wc.wcBlocksRegistry;
-var {addAction} = wp.hooks;
+var {addAction, removeAction} = wp.hooks;
 
 (function (e) {
     var t = {};
@@ -112,6 +112,8 @@ var {addAction} = wp.hooks;
                 const {useEffect} = window.wp.element;
                 const isApplePaySupported = typeof ApplePaySession !== 'undefined' && ApplePaySession?.supportsVersion(4) && ApplePaySession?.canMakePayments()
                 const Content_PPCP_CC = (props) => {
+                    const {billing, shippingData} = props;
+                    goopterOrder.addPPCPCheckoutUpdatedEventListener(billing, shippingData);
                     useEffect(() => {
                         goopterOrder.renderPaymentButtons();
                     }, []);
@@ -149,4 +151,21 @@ document.addEventListener('DOMContentLoaded', function () {
     setTimeout(function () {
         jQuery(document.body).trigger('ppcp_block_ready');
     }, 2000);
+});
+
+const ppcp_apple_uniqueEvents = new Set([
+    'experimental__woocommerce_blocks-checkout-set-shipping-address',
+    'experimental__woocommerce_blocks-checkout-set-billing-address',
+    'experimental__woocommerce_blocks-checkout-set-email-address',
+    'experimental__woocommerce_blocks-checkout-render-checkout-form',
+    'experimental__woocommerce_blocks-checkout-set-active-payment-method'
+]);
+
+ppcp_uniqueEvents.forEach(function (action) {
+    removeAction(action, 'c');
+    addAction(action, 'c', function () {
+        setTimeout(function () {
+            jQuery(document.body).trigger("ppcp_checkout_updated");
+        }, 500);
+    });
 });
