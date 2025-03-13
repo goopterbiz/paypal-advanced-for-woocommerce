@@ -838,7 +838,24 @@ const goopterOrder = {
                 }
             });
         }
-    }
+    },
+    addPPCPCheckoutUpdatedEventListener: (billing, shippingData) => {
+        const currentEventListeners = jQuery._data(document.body, "events");
+        if (currentEventListeners["ppcp_checkout_updated"] && currentEventListeners["ppcp_checkout_updated"].length > 0) {
+            jQuery(document.body).off('ppcp_checkout_updated');
+        }
+        jQuery(document.body).on(
+            "ppcp_checkout_updated",
+            function () {
+                let address = {
+                    billing: billing.billingAddress,
+                    shipping: shippingData.shippingAddress,
+                };
+                goopterOrder.ppcp_address = address;
+                goopterOrder.renderPaymentButtons();
+            }
+        );
+    },
 }
 
 __ = wp.i18n.__;

@@ -2,7 +2,7 @@ var {createElement} = wp.element;
 var {registerPlugin} = wp.plugins;
 var {ExperimentalOrderMeta} = wc.blocksCheckout;
 var {registerExpressPaymentMethod, registerPaymentMethod} = wc.wcBlocksRegistry;
-var {addAction} = wp.hooks;
+var {addAction, removeAction} = wp.hooks;
 
 (function (e) {
     var t = {};
@@ -119,15 +119,7 @@ var {addAction} = wp.hooks;
                 const Content_PPCP_CC = (props) => {
                     const {eventRegistration, emitResponse, onSubmit, billing, shippingData} = props;
                     const {onPaymentSetup} = eventRegistration;
-                    jQuery(document.body).on('ppcp_cc_checkout_updated', function () {
-                        let address = {
-                            'billing': billing.billingAddress,
-                            'shipping': shippingData.shippingAddress
-                        };
-                        goopterOrder.ppcp_address = address;
-                        jQuery('#wc-goopter_ppcp_cc-form').unblock();
-                        goopterOrder.renderPaymentButtons();
-                    });
+                    goopterOrder.addPPCPCheckoutUpdatedEventListener(billing, shippingData);
                     useEffect(() => {
                         jQuery(document.body).trigger('trigger_goopter_ppcp_cc');
 
@@ -263,9 +255,10 @@ const ppcp_cc_uniqueEvents = new Set([
 ]);
 
 ppcp_cc_uniqueEvents.forEach(function (action) {
+    removeAction(action, 'c');
     addAction(action, 'c', function () {
         setTimeout(function () {
-            jQuery(document.body).trigger('ppcp_cc_checkout_updated');
-        }, 2000);
+            jQuery(document.body).trigger("ppcp_checkout_updated");
+        }, 500);
     });
 });
