@@ -2,7 +2,7 @@
 Contributors: goopter
 Tags: woocommerce, paypal, apple pay, google play, credit card
 Tested up to: 6.7
-Stable tag: 1.0.5
+Stable tag: 1.0.6
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -66,5 +66,8 @@ By using this plugin, you agree to the following terms and conditions related to
 = 1.0.4 - 2025-03-06 =
 * Fix: checkout billing address issue when the payapl is disabled(#14753)
 
-= 1.0.5 - 2025-03-06 =
+= 1.0.5 - 2025-03-13 =
 * Fix: checkout billing address issue when the payapl and 3ds are both disabled(#14753)
+
+= 1.0.6 - 2025-03-17 =
+* Update: updated goopter server end point
