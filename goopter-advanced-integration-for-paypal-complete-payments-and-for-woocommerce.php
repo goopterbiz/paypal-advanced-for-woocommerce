@@ -3,7 +3,7 @@
  * @wordpress-plugin
  * Plugin Name:       Goopter advanced integration for PayPal Complete Payments and for WooCommerce
  * Description:       Integrate the PayPal Complete Payments Platform into your WooCommerce site, offering PayPal Checkout, Pay Later, Venmo, direct credit card processing, and various alternative payment options such as Apple Pay, Google Pay, and others!
- * Version:           1.0.5
+ * Version:           1.0.6
  * Author:            Goopter
  * Author URI:        https://www.goopter.com/
  * License:           GNU General Public License v3.0
@@ -76,7 +76,7 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
                 'PAYPAL_PPCP_PARTNER_CLIENT_ID' => 'ATYIBuWDPfFXuRoYNYx2spSQNyTOi0fm_zLo8G55Pe6oF5gLBKmOZJm7bpDTSlDXfsbiu8-qCd8nt1TY',
 
                 // Goopter
-                'PAYPAL_FOR_WOOCOMMERCE_PPCP_GOOPTER_WEB_SERVICE' => 'https://api-dev.goopter.com/api/v8/ppcpRequest',
+                'PAYPAL_FOR_WOOCOMMERCE_PPCP_GOOPTER_WEB_SERVICE' => 'https://api.goopter.com/api/v8/ppcpRequest',
                 
                 'GOOPTER_FEE' => 'goopter_p_f',
                 'GOOPTER_PPCP_NAME' => 'PayPal Complete Payments',
