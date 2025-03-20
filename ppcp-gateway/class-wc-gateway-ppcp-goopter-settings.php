@@ -2119,7 +2119,7 @@ if (!class_exists('Goopter_WC_Gateway_PPCP_Settings')) {
                     'title' => __('Credit Card Statement Name', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'),
                     'type' => 'text',
                     'description' => __('The value entered here will be displayed on the buyer\'s credit card statement.', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'),
-                    'default' => substr(get_bloginfo('name'), 0, 21),
+                    'default' => substr(get_bloginfo('name'), 0, 22),
                     'desc_tip' => true,
                     'custom_attributes' => array('maxlength' => '22'),
                 ),

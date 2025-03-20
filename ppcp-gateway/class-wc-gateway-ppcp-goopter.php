@@ -74,7 +74,7 @@ class Goopter_WC_Gateway_PPCP extends WC_Payment_Gateway {
         $this->sandbox_secret_id = $this->get_option('sandbox_api_secret', '');
         $this->live_client_id = $this->get_option('api_client_id', '');
         $this->live_secret_id = $this->get_option('api_secret', '');
-        $this->soft_descriptor = $this->get_option('soft_descriptor', substr(get_bloginfo('name'), 0, 21));
+        $this->soft_descriptor = $this->get_option('soft_descriptor', substr(get_bloginfo('name'), 0, 22));
         if (!empty($this->sandbox_client_id) && !empty($this->sandbox_secret_id)) {
             $this->is_sandbox_first_party_used = 'yes';
             $this->is_sandbox_third_party_used = 'no';
@@ -125,6 +125,7 @@ class Goopter_WC_Gateway_PPCP extends WC_Payment_Gateway {
         if ($this->enable_tokenized_payments === false) {
             add_filter('woocommerce_payment_gateways_renewal_support_status_html', array($this, 'payment_gateways_support_tooltip'), 10, 1);
         }
+        add_action('update_option', array($this, 'track_option_changes'), 10, 3);
     }
 
     public function process_admin_options() {
@@ -162,6 +163,16 @@ class Goopter_WC_Gateway_PPCP extends WC_Payment_Gateway {
             }
             wp_redirect(admin_url('admin.php?page=wc-settings&tab=checkout&section=goopter_ppcp'));
             die;
+        }
+    }
+
+    public function track_option_changes($option_name, $old_value, $new_value) {
+        // check if soft descriptor option is updated
+        if ($option_name === "woocommerce_goopter_ppcp_settings") {
+            // if it is updated, delete goopter_seller_onboarding_status transient to make an update call for the soft descriptor
+            if ($old_value['soft_descriptor'] !== $new_value['soft_descriptor']) {
+                delete_transient('goopter_seller_onboarding_status');
+            }
         }
     }
 
