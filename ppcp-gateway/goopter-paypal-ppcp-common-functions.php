@@ -544,7 +544,7 @@ if (!function_exists('goopter_ppcp_get_value')) {
         switch ($key) {
             case 'soft_descriptor':
                 if (!empty($value)) {
-                    return substr($value, 0, 21);
+                    return substr($value, 0, 22);
                 }
                 break;
             default:

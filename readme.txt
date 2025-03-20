@@ -2,7 +2,7 @@
 Contributors: goopter
 Tags: woocommerce, paypal, apple pay, google play, credit card
 Tested up to: 6.7
-Stable tag: 1.0.6
+Stable tag: 1.0.7
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -71,3 +71,6 @@ By using this plugin, you agree to the following terms and conditions related to
 
 = 1.0.6 - 2025-03-17 =
 * Update: updated goopter server end point
+
+= 1.0.7 - 2025-03-19 =
+* Fix: Corrected the maximum soft descriptor length from 21 to 22(#14760)

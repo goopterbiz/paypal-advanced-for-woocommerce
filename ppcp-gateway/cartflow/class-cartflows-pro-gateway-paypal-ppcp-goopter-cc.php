@@ -33,7 +33,7 @@ class Goopter_Cartflows_Pro_Gateway_PayPal_PPCP_CC extends Cartflows_Pro_Paypal_
             $this->merchant_id = $this->setting_obj->get('live_merchant_id', '');
         }
         $this->invoice_prefix = $this->setting_obj->get('invoice_prefix', 'GT-PPCP');
-        $this->soft_descriptor = $this->setting_obj->get('soft_descriptor', substr(get_bloginfo('name'), 0, 21));
+        $this->soft_descriptor = $this->setting_obj->get('soft_descriptor', substr(get_bloginfo('name'), 0, 22));
         add_filter('cartflows_offer_supported_payment_gateway_slugs', array($this, 'goopter_ppcp_cartflows_offer_supported_payment_gateway_slugs'));
         add_filter('cartflows_offer_js_localize', array($this, 'goopter_ppcp_cartflows_offer_js_localize'));
         add_action('wp_enqueue_scripts', array($this, 'goopter_ppcp_frontend_scripts'));

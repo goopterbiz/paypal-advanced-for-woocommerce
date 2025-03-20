@@ -35,7 +35,7 @@ class Goopter_PayPal_PPCP_Request {
     public $skip_final_review;
     public $billing_address;
     public $disable_term;
-    public $softdescriptor;
+    public $soft_descriptor;
     public $testmode;
     public $fraud_management_filters;
     public $email_notify_order_cancellations;
@@ -68,6 +68,7 @@ class Goopter_PayPal_PPCP_Request {
         $this->sandbox_secret_id = $this->setting_obj->get('sandbox_api_secret', '');
         $this->live_client_id = $this->setting_obj->get('api_client_id', '');
         $this->live_secret_id = $this->setting_obj->get('api_secret', '');
+        $this->soft_descriptor = $this->setting_obj->get('soft_descriptor', substr(get_bloginfo('name'), 0, 22));
         if (!empty($this->sandbox_client_id) && !empty($this->sandbox_secret_id)) {
             $this->is_sandbox_first_party_used = 'yes';
             $this->is_sandbox_third_party_used = 'no';
@@ -144,7 +145,11 @@ class Goopter_PayPal_PPCP_Request {
             if ($this->goopter_ppcp_paypal_fee()) {
                 $args['headers'][GOOPTER_FEE] = "true";
             }
+        } else {
+            // send soft descriptor for onboarding procedure
+            $args['headers']['Soft-Descriptor'] = $this->soft_descriptor;
         }
+
         $args['headers']['plugin_version_id'] = VERSION_PFW;
         
         $this->result = wp_remote_get($this->ppcp_host, $args);
