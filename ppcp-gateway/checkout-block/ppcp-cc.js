@@ -128,7 +128,11 @@ var {addAction, removeAction} = wp.hooks;
                             jQuery(document.body).trigger('submit_paypal_cc_form');
                             jQuery('.wc-block-components-checkout-place-order-button').append('<span class="wc-block-components-spinner" aria-hidden="true"></span>');
                             jQuery('.wc-block-components-checkout-place-order-button, .wp-block-woocommerce-checkout-fields-block #contact-fields, .wp-block-woocommerce-checkout-fields-block #billing-fields, .wp-block-woocommerce-checkout-fields-block #payment-method').block({message: null, overlayCSS: {background: '#fff', opacity: 0.6}});
+                            return true;
                         });
+                        return () => {
+                            unsubscribe();
+                        };
                     }, [onPaymentSetup]);
                     if (page == 'cart') {
                         let renderComponents = [createElement("div", {key: "cc_container", id: "goopter_ppcp_cc_container"})];

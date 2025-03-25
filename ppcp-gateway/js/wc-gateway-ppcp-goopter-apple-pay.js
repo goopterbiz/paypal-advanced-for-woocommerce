@@ -295,7 +295,7 @@ class ApplePayCheckoutButton {
                 await session.completePayment({
                     status: ApplePaySession.STATUS_SUCCESS,
                 });
-                goopterOrder.approveOrder({orderID: orderID, payerID: ''});
+                await goopterOrder.approveOrder({orderID: orderID, payerID: ''});
             } catch (error) {
                 paymentCancelled(error);
             }

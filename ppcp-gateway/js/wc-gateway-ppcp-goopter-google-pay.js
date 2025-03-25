@@ -210,7 +210,7 @@ class GooglePayCheckoutButton {
                     await goopterOrder.shippingAddressUpdate({shippingDetails}, {billingDetails}, additionalData.thisObject.errorLogId);
                 }
                 /* Capture the Order */
-                goopterOrder.approveOrder({orderID: orderID, payerID: ''});
+                await goopterOrder.approveOrder({orderID: orderID, payerID: ''});
                 return { transactionState: "SUCCESS" };
             } else {
                 return { transactionState: "ERROR" };

@@ -493,8 +493,12 @@ const goopterOrder = {
             body: data
         }).then(function (res) {
             return res.json();
-        }).then(function (data) {
-            window.location.href = data.data.redirect;
+        }).then(function (response) {
+            if (response?.data?.result == 'success') {
+                window.location.href = response.data.redirect;
+            } else {
+                throw {message : response?.data?.message ?? 'This payment was unable to be processed successfully. Please try again with another payment method.'};
+            }
         }).catch((error) => {
             jQuery(checkoutSelector).removeClass('processing paypal_cc_submiting CardFields createOrder');
             goopterOrder.handleCreateOrderError(error, errorLogId);
@@ -534,15 +538,10 @@ const goopterOrder = {
                 }
             },
             onError: function (err) {
-                goopterOrder.hideProcessingSpinner(spinnerSelectors);
-                if (typeof err === 'object' && err !== null) {
-                    console.log('Error message:', err.message || 'No error message available');
-                    if (err.stack) {
-                        console.log('Stack trace:', err.stack);
-                    }
-                } else {
-                    console.log('Unexpected error format:', err);
-                }
+                errorLogId = goopterJsErrorLogger.generateErrorId();
+                err.message = 'This payment was unable to be processed successfully. Please try again with another payment method.'
+                jQuery(checkoutSelector).removeClass('createOrder');
+                goopterOrder.handleCreateOrderError(err, errorLogId);
             },
             style: {
                 'input': {
