@@ -588,6 +588,7 @@ class Goopter_PayPal_PPCP_Front_Action {
                         }
                         wp_send_json_success(array(
                             'result' => 'failure',
+                            'message' => $exception->getMessage(),
                             'redirect' => goopter_get_checkout_url()
                         ));
                         exit();
@@ -604,18 +605,26 @@ class Goopter_PayPal_PPCP_Front_Action {
                 if ($liability_shift_result === 1) {
                     if ($this->paymentaction === 'capture') {
                         $is_success = $this->payment_request->goopter_ppcp_order_capture_request($order_id, true);
+                        if (!$is_success) {
+                            $error_message = __('We cannot process your order with the payment information that you provided. Please use an alternate payment method.', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce');
+                        }
                     } else {
                         $is_success = $this->payment_request->goopter_ppcp_order_auth_request($order_id);
+                        if (!$is_success) {
+                            $error_message = __('We cannot process your order with the payment information that you provided. Please use an alternate payment method.', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce');
+                        }
                     }
                     $order->update_meta_data('_paymentaction', $this->paymentaction);
                     $order->update_meta_data('_enviorment', ($this->is_sandbox) ? 'sandbox' : 'live');
                     $order->save_meta_data();
                 } elseif ($liability_shift_result === 2) {
                     $is_success = false;
-                    wc_add_notice(__('We cannot process your order with the payment information that you provided. Please use an alternate payment method.', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'), 'error');
+                    $error_message = __('We cannot process your order with the payment information that you provided. Please use an alternate payment method.', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce');
+                    wc_add_notice($error_message, 'error');
                 } elseif ($liability_shift_result === 3) {
                     $is_success = false;
-                    wc_add_notice(__('Something went wrong. Please try again.', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'), 'error');
+                    $error_message = __('We cannot process your order with the payment information that you provided. Please use an alternate payment method.', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce');
+                    wc_add_notice($error_message, 'error');
                 }
                 if ($is_success) {
                     WC()->cart->empty_cart();
@@ -637,12 +646,14 @@ class Goopter_PayPal_PPCP_Front_Action {
                     if (isset($_GET['is_pay_page']) && 'yes' === $_GET['is_pay_page']) {
                         wp_send_json_success(array(
                             'result' => 'failure',
+                            'message' => $error_message,
                             'redirect' => $order->get_checkout_payment_url()
                         ));
                     } else {
                         remove_filter('woocommerce_get_checkout_url', [$this->smart_button, 'goopter_ppcp_woocommerce_get_checkout_url']);
                         wp_send_json_success(array(
                             'result' => 'failure',
+                            'message' => $error_message,
                             'redirect' => goopter_get_checkout_url()
                         ));
                     }
