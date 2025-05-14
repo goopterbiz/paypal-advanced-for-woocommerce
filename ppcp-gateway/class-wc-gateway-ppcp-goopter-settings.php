@@ -566,11 +566,11 @@ if (!class_exists('Goopter_WC_Gateway_PPCP_Settings')) {
                     'type' => 'select',
                     'class' => 'wc-enhanced-select goopter_ppcp_product_button_settings',
                     'description' => __('Select Vertical for stacked buttons, and Horizontal for side-by-side buttons.', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'),
-                    'default' => 'horizontal',
+                    'default' => 'vertical',
                     'desc_tip' => true,
                     'options' => array(
-                        'horizontal' => __('Horizontal (Recommended)', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'),
-                        'vertical' => __('Vertical', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce')
+                        'vertical' => __('Vertical (Recommended)', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'),
+                        'horizontal' => __('Horizontal', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce')
                     ),
                 ),
                 'product_style_color' => array(

@@ -640,7 +640,12 @@ const goopterOrder = {
                 jQuery('#goopter_ppcp_cc_button').width(width).height(height);
                 jQuery('#goopter_ppcp_cc_button').css('display', 'flex');
                 jQuery('.goopter_ppcp_cc_button_label').css('font-size', fontSize + 'px');
-            }, event.type == "resize" ? 200 : 0)
+            }, event.type == "resize" ? 300 : 0)
+        });
+
+        // if the product has variations, then trigger the resize event on variation change
+        jQuery('.variations_form').on('woocommerce_variation_has_changed input change', function() {
+            jQuery(window).trigger('resize');
         });
 
         if (document.readyState === 'complete') {

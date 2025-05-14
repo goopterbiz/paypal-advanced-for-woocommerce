@@ -6,11 +6,40 @@ function initSmartButtons() {
     
     let checkoutSelector = goopterOrder.getCheckoutSelectorCss();
     if ($('.variations_form').length) {
-            let div_to_hide_show = '#goopter_ppcp_product, #goopter_ppcp_product_google_pay, #goopter_ppcp_product_apple_pay';
+            let div_to_hide_show = '#goopter_ppcp_product, #goopter_ppcp_product_google_pay, #goopter_ppcp_product_apple_pay, #goopter_ppcp_cc_product';
+            
+            // check if all variations are selected
+            function areAllVariationsPicked() {
+                let allSelected = true;
+                $('.variations_form [name^="attribute_"]').each(function(){
+                if (! this.value) {
+                    allSelected = false;
+                    return false; // break
+                }
+                });
+                return allSelected;
+            }
+
+            $(div_to_hide_show).hide();
+            var variationForm = $('.variations_form');
+            var formEl        = variationForm[0]; 
             $('.variations_form').on('show_variation', function () {
+                // additional check for custom variation fields
+                if(formEl.checkValidity()) {
                     $(div_to_hide_show).show();
+                }
             }).on('hide_variation', function () {
+                if(!formEl.checkValidity()) {
                     $(div_to_hide_show).hide();
+                }
+            });
+            // add event listener for input and change events to show/hide the buttons
+            $('.variations_form').on('input change', function(){
+                if(formEl.checkValidity() && areAllVariationsPicked()) {
+                    $(div_to_hide_show).show();
+                } else {
+                    $(div_to_hide_show).hide();
+                }
             });
     }
 
