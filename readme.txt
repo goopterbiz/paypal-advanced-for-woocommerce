@@ -1,7 +1,7 @@
 === Goopter advanced integration for PayPal Complete Payments and for WooCommerce ===
 Contributors: goopter
 Tags: woocommerce, paypal, apple pay, google play, credit card
-Tested up to: 6.7
+Tested up to: 6.8
 Stable tag: 1.0.9
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
