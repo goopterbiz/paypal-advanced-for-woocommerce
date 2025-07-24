@@ -280,6 +280,7 @@ html body .blockUI.blockOverlay {
 }
 #goopter_ppcp_product_apple_pay, #goopter_ppcp_product_google_pay,
 #goopter_ppcp_cart_apple_pay, #goopter_ppcp_cart_google_pay {
+    max-width: 750px;
     margin-top: 14px;
     margin-bottom: 10px;
 }
@@ -294,6 +295,7 @@ html body .blockUI.blockOverlay {
 
 #goopter_ppcp_cc_button {
     display: none;
+    max-width: 750px;
     justify-content: center;
     align-items: center;
     background-color: #2C2E2F;

@@ -1,8 +1,8 @@
 === Goopter advanced integration for PayPal Complete Payments and for WooCommerce ===
 Contributors: goopter
 Tags: woocommerce, paypal, apple pay, google play, credit card
-Tested up to: 6.7
-Stable tag: 1.0.8
+Tested up to: 6.8
+Stable tag: 1.0.9
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -77,3 +77,6 @@ By using this plugin, you agree to the following terms and conditions related to
 
 = 1.0.8 - 2025-03-14 =
 * Fix: Fixed missing error message for apple, google, 3ds in new checkout block page(#14763)
+
+= 1.0.9 - 2025-05-14 =
+* Update: Enhanced theme compatibility and buttons display logic for product variation
