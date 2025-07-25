@@ -23,6 +23,7 @@ class Goopter_PayPal_PPCP_Admin_Action {
     public $merchant_id;
     public $paymentaction;
     public $view_transaction_url;
+    private $goopter_direct_pay_webhook_secret;
 
     public static function instance() {
         if (is_null(self::$_instance_self)) {
@@ -78,6 +79,7 @@ class Goopter_PayPal_PPCP_Admin_Action {
         } else {
             $this->merchant_id = $this->setting_obj->get('live_merchant_id', '');
         }
+        $this->goopter_direct_pay_webhook_secret = $this->setting_obj->get('goopter_direct_pay_webhook_secret_key', '');
         add_action('admin_notices', array($this, 'admin_notices'));
         // On checkout page these hooks conflicts when we change order status to processing or completed from our payment gateway
         // We need to apply these hooks in admin panel
@@ -100,6 +102,7 @@ class Goopter_PayPal_PPCP_Admin_Action {
             add_action('woocommerce_admin_order_totals_after_tax', array($this, 'goopter_ppcp_display_total_capture'), 1, 1);
         }
         add_action('admin_notices', array($this, 'goopter_ppcp_display_payment_authorization_notice'));
+        add_action('woocommerce_api_goopter_direct_pay_webhook', array($this, 'goopter_direct_pay_webhook_handler'));
     }
     
     public function goopter_ppcp_pre_order_order_status_completed($order_id) {
@@ -748,5 +751,35 @@ class Goopter_PayPal_PPCP_Admin_Action {
     
     public function goopter_ppcp_vault_payment($order_id) {
         $this->payment_request->goopter_ppcp_capture_order_using_payment_method_token($order_id);
+    }
+
+    public function goopter_direct_pay_webhook_handler() {
+        if (!$this->goopter_direct_pay_webhook_secret) {
+            wp_send_json_error('Missing Webhook Secret in the setting', 403);
+        }
+
+        $raw_post_data = file_get_contents('php://input');
+
+        // Get signature from request header
+        $received_signature = $_SERVER['HTTP_X_SIGNATURE'] ?? '';
+        // Calculate expected HMAC-SHA256 signature
+        $expected_signature = hash_hmac('sha256', $raw_post_data, $this->goopter_direct_pay_webhook_secret);
+
+        if (!hash_equals($expected_signature, $received_signature)) {
+            // Invalid signature
+            wp_send_json_error('Invalid Webhook Secret', 401);
+            exit;
+        }
+
+        $data = json_decode($raw_post_data, true);
+        
+        $STATUS_CAPTURE_COMPLETED = 1;
+        if ($data["event_type"] === "PAYMENT.CAPTURE.COMPLETED" && $data["status"] === $STATUS_CAPTURE_COMPLETED) {
+            $order_id = $data["order_id"];
+            $order = wc_get_order($order_id);
+            $order->set_transaction_id($data["trx_id"]);
+            $order->update_status('processing', "Payment received via Clover");
+        }
+        wp_send_json_success();
     }
 }

@@ -114,6 +114,8 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
             add_action('wp_head', array($this, 'paypal_for_woo_head_mark'), 1);
             add_action('init', array($this, 'goopter_register_post_status'), 99);
             add_action('current_screen', array($this, 'goopter_redirect_to_onboard'), 9);
+            add_action('woocommerce_before_thankyou', array($this, 'goopter_direct_pay_thankyou_msg'));
+            add_filter('woocommerce_my_account_my_orders_actions', array($this, 'goopter_direct_pay_custom_pay_link'), 10, 2);
         }
 
         private function include_files_and_classes() {
@@ -218,6 +220,7 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
             include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-wc-gateway-cc-goopter.php');
             include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-wc-gateway-apple-pay-goopter.php');
             include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-wc-gateway-google-pay-goopter.php');
+            include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-wc-gateway-direct-payment-goopter.php');
             include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/lib/class-goopter-wordpress-custom-routes-handler.php');
             include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/includes/class-goopter-paypal-ppcp-apple-domain-validation.php');
             Goopter_PayPal_PPCP_Smart_Button::instance();
@@ -297,11 +300,13 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
                         include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-wc-gateway-cc-goopter.php');
                         include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-wc-gateway-apple-pay-goopter.php');
                         include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-wc-gateway-google-pay-goopter.php');
+                        include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-wc-gateway-direct-payment-goopter.php');
                         $methods[] = 'Goopter_WC_Gateway_PPCP';
                         if (!isset($_GET['tab']) || $_GET['tab'] !== 'checkout') {
                             $methods[] = 'Goopter_WC_Gateway_Apple_Pay';
                             $methods[] = 'Goopter_WC_Gateway_Google_Pay';
                             $methods[] = 'Goopter_WC_Gateway_CC';
+                            $methods[] = 'Goopter_WC_Gateway_Direct_Pay';
                         }
                     }
                 }
@@ -322,10 +327,12 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
                     include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-wc-gateway-cc-goopter.php');
                     include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-wc-gateway-apple-pay-goopter.php');
                     include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-wc-gateway-google-pay-goopter.php');
+                    include_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/class-wc-gateway-direct-payment-goopter.php');
                     $methods[] = 'Goopter_WC_Gateway_PPCP';
                     $methods[] = 'Goopter_WC_Gateway_CC';
                     $methods[] = 'Goopter_WC_Gateway_Apple_Pay';
                     $methods[] = 'Goopter_WC_Gateway_Google_Pay';
+                    $methods[] = 'Goopter_WC_Gateway_Direct_Pay';
                 }
             }
             return $methods;
@@ -660,6 +667,39 @@ if (!class_exists('Goopter_Gateway_Paypal')) {
                 add_meta_box('woocommerce-order-items', __('Items', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'), 'Goopter_WC_Meta_Box_Order_Items::output', $screen, 'normal', 'high');
             }
         }
+
+        public function goopter_direct_pay_thankyou_msg( $order_id ) {
+            $order = wc_get_order( $order_id );
+            if ( $order && $order->get_payment_method() === 'goopter_direct_pay' ) {
+                add_filter( 'woocommerce_thankyou_order_received_text', '__return_empty_string');
+                if($order->is_paid()){
+                    echo '<h1 style="font-weight:bold;color:green;">Payment successful</h1>';
+                }elseif($order->get_status()=='pending'){
+                    $pay_link = $order->get_meta('_goopter_direct_pay_href', true);
+                    if ( $pay_link ) {
+                        echo '<h1 style="font-weight:bold;color:black;">Choose a Payment Option</h1>';
+                        echo '<iframe src="'.$pay_link.'" style="width:100%;border:none;min-height: 500px;"></iframe>';
+                    }          
+                }
+            }
+        }
+
+        function goopter_direct_pay_custom_pay_link( $actions, $order ) {
+            if ($order->get_payment_method() === 'goopter_direct_pay') {
+                // in order_received_page(thankhyou page), we don't want to show the pay and cancel actions
+                if (function_exists('is_order_received_page') && is_order_received_page()) {
+                    unset($actions['pay']);
+                    unset($actions['cancel']);
+                }
+                // update the pay action URL for my account order page
+                if (isset($actions['pay'])) {
+                    $return_url = $order->get_checkout_order_received_url();
+                    // Swap out the URL
+                    $actions['pay']['url'] = esc_url( $return_url );
+                }
+            }
+            return $actions;
+        }
     }
 
 }
@@ -682,6 +722,7 @@ add_action('woocommerce_blocks_loaded', function () {
         require_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/checkout-block/goopter-ppcp-cc-block.php');
         require_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/checkout-block/goopter-ppcp-apple-pay-block.php');
         require_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/checkout-block/goopter-ppcp-google-pay-block.php');
+        require_once(PAYPAL_FOR_WOOCOMMERCE_PLUGIN_DIR . '/ppcp-gateway/checkout-block/goopter-direct-pay-block.php');
         add_action(
                 'woocommerce_blocks_payment_method_type_registration',
                 function (Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry $payment_method_registry) {
@@ -689,6 +730,7 @@ add_action('woocommerce_blocks_loaded', function () {
                     $payment_method_registry->register(new Goopter_PPCP_CC_Block);
                     $payment_method_registry->register(new Goopter_Apple_Pay_Checkout_Block);
                     $payment_method_registry->register(new Goopter_Google_Pay_Checkout_Block);
+                    $payment_method_registry->register(new Goopter_Direct_Pay_Block);
                 }
         );
     } catch (Exception $ex) {

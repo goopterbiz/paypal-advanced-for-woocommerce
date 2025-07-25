@@ -1074,6 +1074,55 @@ class Goopter_WC_Gateway_PPCP extends WC_Payment_Gateway {
         }
     }
 
+    public function generate_checkbox_enable_goopter_direct_pay_html($key, $data) {
+        if (isset($data['type']) && $data['type'] === 'checkbox_enable_goopter_direct_pay') {
+            $field_key = $this->get_field_key($key);
+            $defaults = array(
+                'title' => '',
+                'label' => '',
+                'disabled' => false,
+                'class' => '',
+                'css' => '',
+                'type' => 'text',
+                'desc_tip' => false,
+                'description' => '',
+                'custom_attributes' => array(),
+            );
+            $data = wp_parse_args($data, $defaults);
+            if (!$data['label']) {
+                $data['label'] = $data['title'];
+            }
+            $is_goopter_direct_pay_approved = $data['is_goopter_direct_pay_approved'] ?? false;
+            $is_goopter_direct_pay_enabled = $data['is_goopter_direct_pay_enable'] ?? false;
+            $is_disabled = $data['disabled'] || !$is_goopter_direct_pay_approved;
+            ob_start();
+            ?>
+            <tr valign="top">
+                <th scope="row" class="titledesc">
+                    <label for="<?php echo esc_attr($field_key); ?>"><?php echo wp_kses_post($data['title']); ?> <?php echo wp_kses_post($this->get_tooltip_html($data)); ?></label>
+                </th>
+                <td class="forminp">
+                    <fieldset>
+                        <legend class="screen-reader-text"><span><?php echo wp_kses_post($data['title']); ?></span></legend>
+                        <label for="<?php echo esc_attr($field_key); ?>">
+                            <input <?php disabled($is_disabled, true); ?> class="<?php echo esc_attr($data['class']); ?>" type="checkbox" name="<?php echo esc_attr($field_key); ?>" id="<?php echo esc_attr($field_key); ?>" style="<?php echo esc_attr($data['css']); ?>" value="1" <?php !$is_disabled && checked($this->get_option($key), 'yes'); ?> <?php echo wp_kses_post($this->get_custom_attribute_html($data)); // WPCS: XSS ok.          ?> /> <?php echo wp_kses_post($data['label']); ?>
+                            <?php
+                            if ($is_goopter_direct_pay_enabled) {
+                                ?>
+                                <img src="<?php echo esc_url(PAYPAL_FOR_WOOCOMMERCE_ASSET_URL . 'assets/images/ppcp_check_mark_status.png'); ?>" width="25" height="25" style="display: inline-block;margin: 0 5px -10px 10px;">
+                                <b><?php echo esc_html__('Clover Pay is connected!', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce');} ?></b>
+                        </label>
+                        <?php
+                        echo wp_kses_post($this->get_description_html($data));
+                        ?>
+                    </fieldset>
+                </td>
+            </tr>
+            <?php
+            return ob_get_clean();
+        }
+    }
+
     public function goopter_get_signup_link($testmode, $featureName = 'tokenized_payments') {
         try {
             if (!class_exists('Goopter_PayPal_PPCP_Seller_Onboarding')) {
@@ -1147,6 +1196,10 @@ class Goopter_WC_Gateway_PPCP extends WC_Payment_Gateway {
     }
 
     public function validate_checkbox_enable_paypal_google_pay_field($key, $value) {
+        return ! is_null( $value ) ? 'yes' : 'no';
+    }
+
+    public function validate_checkbox_enable_goopter_direct_pay_field($key, $value) {
         return ! is_null( $value ) ? 'yes' : 'no';
     }
 

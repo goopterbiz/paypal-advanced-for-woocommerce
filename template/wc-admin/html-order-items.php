@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  * @param int      $order_id       The Order ID.
  * @param WC_Order $order          The Order object.
  */
-$render_refunds = (bool) apply_filters( 'woocommerce_admin_order_should_render_refunds', $order->get_status() != "cancelled" && (0 < $order->get_total() - $order->get_total_refunded() || 0 < absint( $order->get_item_count() - $order->get_item_count_refunded() )), $order->get_id(), $order );
+$render_refunds = (bool) apply_filters( 'woocommerce_admin_order_should_render_refunds', ($order->get_status() != "cancelled" && $order->get_status() != "pending") && (0 < $order->get_total() - $order->get_total_refunded() || 0 < absint( $order->get_item_count() - $order->get_item_count_refunded() )), $order->get_id(), $order );
 
 global $wpdb;
 

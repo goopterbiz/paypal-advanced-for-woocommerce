@@ -17,8 +17,11 @@ if (!class_exists('Goopter_WC_Gateway_PPCP_Settings')) {
         public $is_apple_pay_approved = false;
         public $is_google_pay_enable = false;
         public $is_google_pay_approved = false;
+        public $is_goopter_direct_pay_enable = false;
+        public $is_goopter_direct_pay_approved = true;
         public $need_to_display_apple_pay_button = false;
         private bool $need_to_display_google_pay_button = false;
+        private bool $need_to_display_goopter_direct_pay_button = true;
         public $merchant_id;
         public bool $is_ppcp_connected;
         public $is_sandbox;
@@ -250,7 +253,8 @@ if (!class_exists('Goopter_WC_Gateway_PPCP_Settings')) {
                 'error_email_notification' => 'yes',
                 'debug' => 'everything',
                 'enable_google_pay' => 'no',
-                'enable_apple_pay' => 'no'
+                'enable_apple_pay' => 'no',
+                'enable_goopter_direct_pay' => 'no'
             );
             foreach ($defaults as $key => $value) {
                 if (isset($this->setting_obj[$key])) {
@@ -332,6 +336,7 @@ if (!class_exists('Goopter_WC_Gateway_PPCP_Settings')) {
             $this->is_paypal_vault_enable = false;
             $this->is_apple_pay_enable = false;
             $this->is_google_pay_enable = false;
+            $this->is_goopter_direct_pay_enable = false;
             $this->is_ppcp_connected = !empty($this->merchant_id);
             $region = wc_get_base_location();
             $default_country = $region['country'];
@@ -1905,6 +1910,64 @@ if (!class_exists('Goopter_WC_Gateway_PPCP_Settings')) {
                     'default' => $this->is_paypal_vault_enable ? 'vault' : 'authorize',
                     'desc_tip' => true,
                     'options' => $this->woo_pre_order_payment_mode,
+                ),
+                'goopter_direct_pay_authorizations' => array(
+                    'title' => __('Clover Pay', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'),
+                    'class' => 'ppcp_separator_heading',
+                    'type' => 'title',
+                ),
+                'enable_goopter_direct_pay' => array(
+                    'title' => __('Enable Clover Pay', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'),
+                    'label' => __('Enable Clover Pay', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'),
+                    'type' => 'checkbox_enable_goopter_direct_pay',
+                    'description' => 'Allow buyers to pay using Clover.',
+                    'default' => 'no',
+                    'desc_tip' => true,
+                    'class' => 'enable_goopter_direct_pay',
+                    'need_to_display_goopter_direct_pay_button' => $this->need_to_display_goopter_direct_pay_button,
+                    'is_goopter_direct_pay_enable' => $this->is_goopter_direct_pay_enable,
+                    'is_goopter_direct_pay_approved' => $this->is_goopter_direct_pay_approved,
+                ),
+                'goopter_direct_pay_title' => array(
+                    'title' => __('Clover Pay Title', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'),
+                    'type' => 'text',
+                    'description' => __('This controls the title which the user sees during checkout.', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'),
+                    'default' => __('Credit Card / Apple Pay / Google Pay', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'),
+                    'desc_tip' => true,
+                    'class' => 'goopter_direct_pay_settings',
+                ),
+                'goopter_direct_pay_description' => array(
+                    'title' => __('Clover Pay Description', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'),
+                    'type' => 'text',
+                    'description' => __('This controls the description which the user sees when they select Goopter Direct Pay payment method during checkout.', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'),
+                    'default' => __('Accept payments using Credit Card / Apple Pay / Google Pay.', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'),
+                    'desc_tip' => true,
+                    'class' => 'goopter_direct_pay_settings',
+                ),
+                'goopter_direct_pay_testmode' => array(
+                    'title' => __('Clover Pay Sandbox', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'),
+                    'label' => __('Enable Clover Pay Sandbox', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'),
+                    'type' => 'checkbox',
+                    'default' => 'no',
+                    'class' => 'goopter_direct_pay_settings',
+                ),
+                'goopter_direct_pay_merchant_id' => array(
+                    'title' => __('Clover Merchant ID', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'),
+                    'type' => 'text',
+                    'default' => __('', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'),
+                    'class' => 'goopter_direct_pay_settings',
+                ),
+                'goopter_direct_pay_soft_descriptior' => array(
+                    'title' => __('Goopter Soft Descriptor', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'),
+                    'type' => 'text',
+                    'default' => __('', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'),
+                    'class' => 'goopter_direct_pay_settings',
+                ),
+                'goopter_direct_pay_webhook_secret_key' => array(
+                    'title' => __('Goopter Webhook Secret Key', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'),
+                    'type' => 'text',
+                    'default' => __('', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'),
+                    'class' => 'goopter_direct_pay_settings',
                 ),
                 'advanced_settings' => array(
                     'title' => __('Advanced Settings', 'goopter-advanced-integration-for-paypal-complete-payments-and-for-woocommerce'),

@@ -255,6 +255,13 @@ jQuery(function ($) {
             $('.goopter_ppcp_mini_cart_button_settings').closest('tr').hide();
         }
     }).change();
+    $('#woocommerce_goopter_ppcp_enable_goopter_direct_pay').change(function () {
+        if ($(this).is(':checked')) {
+            $('.goopter_direct_pay_settings').closest('tr').show();
+        } else {
+            $('.goopter_direct_pay_settings').closest('tr').hide();
+        }
+    }).change();
     var home_page_pay_later_messaging_preview = function () {
         var home_style_object = {};
         home_style_object['layout'] = jQuery('#woocommerce_goopter_ppcp_pay_later_messaging_home_layout_type').val();
