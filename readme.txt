@@ -2,7 +2,7 @@
 Contributors: goopter
 Tags: woocommerce, paypal, apple pay, google play, credit card
 Tested up to: 6.8
-Stable tag: 1.0.9
+Stable tag: 1.0.10
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -80,3 +80,6 @@ By using this plugin, you agree to the following terms and conditions related to
 
 = 1.0.9 - 2025-05-14 =
 * Update: Enhanced theme compatibility and buttons display logic for product variation
+
+= 1.0.10 - 2025-11-21 =
+* Update: Added more metadata in the http Headers

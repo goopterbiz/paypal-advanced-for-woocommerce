@@ -145,8 +145,13 @@ class Goopter_PayPal_PPCP_Request {
             if ($this->goopter_ppcp_paypal_fee()) {
                 $args['headers'][GOOPTER_FEE] = "true";
             }
-        } else {
-            // send soft descriptor for onboarding procedure
+        }
+
+        // send merchant ID and soft descriptor
+        if (!empty($this->merchant_id)) {
+            $args['headers']['Merchant-Id'] = $this->merchant_id;
+        }
+        if (!empty($this->soft_descriptor)) {
             $args['headers']['Soft-Descriptor'] = $this->soft_descriptor;
         }
 
